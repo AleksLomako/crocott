@@ -1,11 +1,10 @@
 import { React } from "react";
 import './FormInput.css';
 
-function FormInput({ id, label, name, value, onChange, type, placeholder, minLength, maxLength, pattern, errorMessage }) {
+function FormInput({ id, name, value, onChange, type, placeholder, minLength, maxLength, pattern, errorMessage, icon, onClick}) {
 
     return (
         <div className="form-input">
-            <label className="form-input__label htmlFor={id}">{label}</label>
             <input className="form-input__input"
                 name={name}
                 value={value}
@@ -16,7 +15,9 @@ function FormInput({ id, label, name, value, onChange, type, placeholder, minLen
                 minLength={minLength}
                 maxLength={maxLength}
                 pattern={pattern}
-                required />
+                required 
+                />
+                {id === "password" ? <img src={icon} alt="Icon" className="form-input__icon" onClick={onClick}></img> : ''}
             <span className="form-input__error">{errorMessage}</span>
         </div>
 

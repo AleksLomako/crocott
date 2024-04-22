@@ -1,234 +1,222 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import './App.css';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
-import Footer from '../Footer/Footer';
-import Movies from './../Movies/Movies';
-import SavedMovies from './../SavedMovies/SavedMovies';
-import Profile from './../Profile/Profile';
-import Register from './../Register/Register';
-import Login from './../Login/Login';
-import NotFoundPage from './../NotFoundPage/NotFoundPage';
+import SignInCode from '../SignInCode/SignInCode';
+import SignInLogin from '../SignInLogin/SignInLogin';
 import mainApi from '../../utils/MainApi';
-import beatfilmMoviesUrl from '../../utils/constants';
-import Preloader from './../Preloader/Preloader';
+
 
 
 function App() {
+  const nameDevice = localStorage.getItem('deviceInfo_crocOTT')
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [auth, setAuth] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // состояние авторизации пользователя
-  const [currentUser, setCurrentUser] = useState({}); //Данные текущего пользователя\
-  const [savedMoviesList, setSavedMoviesList] = useState([]); // Сохраненные фильмы
   const [apiError, setApiError] = useState(''); //Ошибка от сервера
-  const [loading, setLoading] = useState(false);
 
 
-  // Проверка токена
-  useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    const path = location.pathname;
-    if (jwt) {
-      setLoading(true);
-      mainApi.checkToken(jwt)
-        .then((res) => {
-          if (res) {
-            setIsLoggedIn(true);
-            navigate(path, { replace: true });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setLoading(false);
-        })
+  // const [nowLocation, setNowLocation] = useState(''); // Текущая локация
+
+
+  // Check Token
+  useEffect(() =>{
+    localStorage.setItem("deviceName_crocOTT", "LG TESTING")
+		localStorage.setItem("deviceVersion_crocOTT", "02.08.09")
+		localStorage.setItem("deviceDdrSize_crocOTT", "2")
+		// console.log(localStorage.getItem("deviceName_crocOTT"));
+		// console.log(localStorage.getItem("deviceVersion_crocOTT"));
+
+
+    // localStorage.removeItem('jwt_CrocOtt');
+
+
+    const jwt = localStorage.getItem('jwt_CrocOtt');
+    if (jwt === null){
+      navigate('/signinlogin')
+      // console.log("JWT NULL");
+      // setAuth(false)
+      // if (location.pathname === ''){
+      //   navigate('/signinlogin')
+      // } 
+      // else{
+      //   navigate('/signincode')
+      // }
+      // else if (location.pathname === '/signinlogin'){
+        
+      //   navigate('/signincode')
+      // }
     }
-  }, []);
-
-  //Получение информации о текущем пользователе и фильмах
-  useEffect(() => {
-    if (isLoggedIn) {
-      setLoading(true)
-      mainApi.getUserInfo().then(res => {
-        setCurrentUser(res.user);
-      })
-        .catch((err) => {
-          console.log(err);
-        });
-      mainApi.getSavedMovies().then((res) => {
-        setSavedMoviesList(res);
-      })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() =>
-          setLoading(false)
-        );
+    else {
+      checkToken(jwt)
     }
-  }, [isLoggedIn]);
+
+  },[])
+
+
+
+// Check Token
+  function checkToken(jwt){
+    mainApi.checkToken(jwt)
+    .then((res)=>{
+      if(res){
+        setIsLoggedIn(true)
+        navigate('/test_main')
+      }
+    })
+    .catch((err) => {
+      console.log(err.error);
+      navigate('/signinlogin')
+    })
+  }
+
+
+
+  // useEffect(() => {
+  //   // localStorage.removeItem("jwtCrocOtt")
+    
+
+  //   if (localStorage.getItem("jwtCrocOtt") === null) {
+  //     console.log(localStorage.getItem("jwtCrocOtt"));
+  //     navigate('/signincode')
+  //     setAuth(false)
+  //     // if (location.pathname === '/signinlogin') {
+  //     //   navigate('/signincode')
+  //     // } else if (location.pathname === '/signincode') {
+  //     //   navigate('/signinlogin')
+  //     // } else{
+  //     //   setIsLoggedIn(true)
+  //     //   navigate('/test_main')
+  //     // }
+
+  //   }
+  //   else {
+  //     setIsLoggedIn(true)
+  //     navigate('/test_main')
+  //   }
+  // }, [auth])
+
+
+  // Check Token
+  // useEffect(() => {
+  //   const jwt = localStorage.getItem('jwt_CrocOtt');
+  //   // const path = location.pathname;
+  //   if (jwt) {
+  //     // setLoading(true);
+  //     mainApi.checkToken(jwt)
+  //       .then((res) => {
+  //         if (res) {
+  //           setIsLoggedIn(true);
+  //           navigate('/test_main')
+  //           // navigate(path, { replace: true });
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       })
+  //       .finally(() => {
+  //         // setLoading(false);
+  //       })
+  //   }
+  // }, []);
+
 
   // Обработчик входа в приложение
-  function handleLogin({ email, password }) {
-    setLoading(true)
-    mainApi.authorize(email, password)
+  function handleLogin(values) {
+    const authorization = mainApi.createHeaders(values.name, values.password);
+    let deviceId = ''
+    // console.log(authorization);
+    mainApi.getListDevices(authorization)
       .then((res) => {
-        localStorage.setItem('jwt', res.token);
-        setIsLoggedIn(true);
-        setApiError('');
-        navigate('/movies');
+        console.log("list Device");
+        console.log(res);
       })
-      .catch((err) => {
-        console.log(err);
-        setApiError(err);
-      })
-      .finally(() => {
-        setLoading(false)
-      });
-  };
-
-  // Обработчик регистрации
-  function handleRegister({ name, email, password }) {
-    setLoading(true);
-    mainApi.register(name, email, password)
-      .then((res) => {
-        handleLogin({ email, password })
-      })
-      .catch((err) => {
-        setApiError(err);
-        console.log(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  // Редактирование профиля
-  function handleEditProfile(user) {
-    setLoading(true);
-    mainApi.updateUserInfo(user.name, user.email)
-      .then((newUser) => {
-        setCurrentUser(newUser);
-      })
-      .catch((err) => {
-        setApiError(err)
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-
-  // Сохранение фильма
-  function handleSaveMovie(movie) {
-    const imageUrl = `${beatfilmMoviesUrl}/${movie.image.url}`;
-    let saveMovie = {
-      nameRU: movie.nameRU,
-      nameEN: movie.nameEN,
-      director: movie.director,
-      country: movie.country,
-      year: movie.year,
-      duration: movie.duration,
-      description: movie.description,
-      trailerLink: movie.trailerLink,
-      image: imageUrl,
-      thumbnail: imageUrl,
-      id: movie.id,
-    }
-    mainApi.saveMovie(saveMovie)
-      .then((newMovie) => {
-        setSavedMoviesList([newMovie, ...savedMoviesList]);
-      })
-      .catch((err) => {
-        setApiError(err)
-      })
-  }
-
-  // Удаление фильма из сохраненных
-  function handleDeleteMovie(movie) {
-    const saveMovie = savedMoviesList.find((item) => item.movieId === movie.id || item.movieId === movie.movieId)
-    mainApi.deleteSavedMovie(saveMovie._id)
       .then(() => {
-        setSavedMoviesList((state) => state.filter((c) => (movie.id === c.movieId || movie.movieId === c.movieId) ? false : true))
-      })
+        console.log("add Device");
+        mainApi.addDevice(authorization, localStorage.getItem("deviceName_crocOTT"))
+          .then((res) => {
+            console.log(res);
+            deviceId = res.data.device.id;
+          })
+          // CATCH
+          .then(() => {
+            // TESTING////////////////////////
+            const dataForLogin = {
+              "project": {
+                "name": "CrocOTT",
+                "version": "1.4.6"
+              },
+              "os": {
+                "name": "webos",
+                "version": localStorage.getItem("deviceVersion_crocOTT"),
+                "ram_free": 0
+              },
+              "cpu_brand": "Lg"
+            }
+            dataForLogin.os.arch = localStorage.getItem("deviceName_crocOTT");
+            dataForLogin.id = deviceId;
+            dataForLogin.os.ram_total = Number(localStorage.getItem("deviceDdrSize_crocOTT"));
+            console.log(dataForLogin);
+
+            mainApi.login(authorization, dataForLogin)
+              .then((res) => {
+                localStorage.setItem('jwt_CrocOtt', res.data.access_token)
+                setIsLoggedIn(true)
+                navigate('/test_main');
+              })
+
+
+            ///////////////////////////////////////
+          })
+
+
+        })
       .catch((err) => {
-        setApiError(err)
-      });
+        setApiError(err.error.message)
+      })
+  };
+
+  // function handleLogin(values) {
+  //   console.log(values)
+  //   // document.getElementById("test").textContent = values.name + values.password + values.url;
+
+  //   localStorage.setItem("jwtCrocOtt", values.name + values.password + values.url)
+  //   navigate('/test_main');
+  // }
+
+  function handleLoginCode(values) {
+    // setIsLoggedIn(true)
+    // navigate('/test_main')
   }
 
-  // Выход из текущего профиля
-  function handleLogOut() {
-    setApiError('');
-    setCurrentUser({});
-    setIsLoggedIn(false);
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('inputMovie');
-    localStorage.removeItem('moviesList');
-    localStorage.setItem('moviesList', "")
-    localStorage.setItem('shortSavedMovies', '')
-    localStorage.removeItem('checkboxState');
-    localStorage.removeItem('shortSavedMovies');
-    navigate('/', { replace: true });
+
+  function handleLogOut(){
+    console.log("LOGOUT");
+    setIsLoggedIn(false)
+    localStorage.removeItem('deviceInfo_crocOTT')
+    navigate('/signinlogin')
   }
+
 
   return (
-    <>
-      {loading && <Preloader />}
-      <CurrentUserContext.Provider value={currentUser}>
-        <>
-          <Routes>
-            <Route path="/" element={
-              <>
-                <Header isBlueTheme={true} isLoggedIn={isLoggedIn} />
-                <Main />
-                <Footer />
-              </>
-            }
-            />
-            <Route path="/movies" element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <Header isLoggedIn={isLoggedIn} />
-                <Movies
-                  savedMoviesList={savedMoviesList}
-                  onSaveClick={handleSaveMovie}
-                  onDeleteClick={handleDeleteMovie} />
-                <Footer />
-              </ProtectedRoute>
-            }
-            />
-            <Route path="/saved-movies" element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <Header isLoggedIn={isLoggedIn} />
-                <SavedMovies
-                  savedMoviesList={savedMoviesList}
-                  onDeleteClick={handleDeleteMovie} />
-                <Footer />
-              </ProtectedRoute>
-            }
-            />
-            <Route path="/profile" element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <Header isLoggedIn={isLoggedIn} />
-                <Profile
-                  onUpdateUser={handleEditProfile}
-                  onExitProfile={handleLogOut}
-                  apiError={apiError}
-                  setApiError={setApiError}
-                />
-              </ProtectedRoute>
-            }
-            />
-            <Route path="/signup" element={isLoggedIn ? <Navigate to="/movies" replace /> : <Register onRegister={handleRegister} errorMessage={apiError} />} />
-            <Route path="/signin" element={isLoggedIn ? <Navigate to="/movies" replace /> : <Login onLogin={handleLogin} errorMessage={apiError} />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </>
-      </CurrentUserContext.Provider>
-    </>
+    <div className="page">
+      {/* <h1 id='test'></h1> */}
+      <Routes>
+        <Route path="/test_main" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <Header onExit={handleLogOut} />
+            <Main />
+          </ProtectedRoute>
+        }
+        />
+        <Route path="/signincode" element={isLoggedIn ? <Navigate to="/test_main" replace /> : <SignInCode onLoginCode={handleLoginCode} errorMessage={apiError} />} />
+        <Route path="/signinlogin" element={isLoggedIn ? <Navigate to="/test_main" replace /> : <SignInLogin onLogin={handleLogin} errorMessage={apiError} />} />
+      </Routes>
+    </div>
   );
 }
 

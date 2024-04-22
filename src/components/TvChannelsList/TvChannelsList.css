@@ -1,0 +1,7 @@
+.channels__list {
+    padding-left: 40px;
+    display: flex;
+    flex-direction: column;
+    height: 850px;
+    overflow-y: scroll;
+}

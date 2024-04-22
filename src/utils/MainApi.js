@@ -4,129 +4,116 @@ class MainApi {
         this._headers = options.headers;
     }
 
-    // проверка ответа
+    // Check Response
     async _checkResponse(res) {
         const result = await res.json();
-        return res.ok ? result : Promise.reject(result.message);
+        return res.ok ? result : Promise.reject(result);
     }
-    
-    // получение токена из заголовока
+
+    // Get token from header
     setJwt() {
-        this._headers.Authorization = `Bearer ${localStorage.getItem('jwt')}`;
-    }
-    // USERS
-
-    // регистрация
-    register(name, email, password) {
-        return fetch(`${this._url}/signup`, {
-            method: 'POST',
-            headers: this._headers,
-            body: JSON.stringify({
-                name,
-                email,
-                password
-            })
-        })
-            .then(res => this._checkResponse(res));
+        this._headers.authorization = `Bearer ${localStorage.getItem('jwt_CrocOtt')}`;
     }
 
-    // авторизация
-    authorize(email, password) {
-        return fetch(`${this._url}/signin`, {
-            method: 'POST',
-            headers: this._headers,
-            body: JSON.stringify({
-                email,
-                password
-            })
-        })
-            .then(res => this._checkResponse(res));
-    }
-
-    // проверка токена
+    // Check Token
     checkToken(token) {
-        return fetch(`${this._url}/users/me`, {
-            method: 'GET',
-            headers: {
-                headers: this._headers,
-                Authorization: `Bearer ${token}`
-            }
-        })
-            .then(res => this._checkResponse(res));
-    }
-
-    // получение данных пользователя
-    getUserInfo() {
-        this.setJwt()
-        return fetch(`${this._url}/users/me`, {
-            headers: this._headers
-        })
-            .then(res => this._checkResponse(res));
-    }
-
-    // обновление данных пользователя
-    updateUserInfo(name, email) {
-        this.setJwt()
-        return fetch(`${this._url}/users/me`, {
-            method: 'PATCH',
+        this._headers.authorization = `Bearer ${token}`
+        return fetch(`${this._url}/client/profile`, {
             headers: this._headers,
-            body: JSON.stringify({
-                name,
-                email
-            })
         })
             .then(res => this._checkResponse(res));
     }
 
-    // MOVIES
+    // CLIENT
+    // BASIC AUTH
 
-    // добавление фильма в "сохраненные"
-    saveMovie(data) {
-        this.setJwt()
-        return fetch(`${this._url}/movies`, {
+    // Create Headers for auth
+    // headers with login + password 
+    createHeaders(login, password) {
+        return 'Basic ' + window.btoa(login + ":" + password);
+    }
+
+    // headers with code 
+    createHeadersWithCode(code) {
+        return 'Code ' + code;
+    }
+
+    // get list devices
+    getListDevices(authorization) {
+        this._headers.authorization = authorization
+        return fetch(`${this._url}/client/devices`, {
+            method: 'GET',
+            headers: this._headers,
+        })
+            .then(res => this._checkResponse(res));
+    }
+
+    // add device
+    addDevice(authorization, name) {
+        this._headers.authorization = authorization
+        return fetch(`${this._url}/client/devices/add`, {
             method: 'POST',
             headers: this._headers,
             body: JSON.stringify({
-                country: data.country,
-                director: data.director,
-                duration: data.duration,
-                year: data.year,
-                description: data.description,
-                image: data.image,
-                trailerLink: data.trailerLink,
-                thumbnail: data.thumbnail,
-                movieId: data.id,
-                nameRU: data.nameRU,
-                nameEN: data.nameEN,
+                name
             })
         })
             .then(res => this._checkResponse(res));
     }
 
-    // получение сохраненных фильмов
-    getSavedMovies() {
-        this.setJwt()
-        return fetch(`${this._url}/movies`, {
+    // login
+    login(authorization, data) {
+        this._headers.authorization = authorization
+        console.log(JSON.stringify(
+            data
+        ));
+        return fetch(`${this._url}/client/login`, {
+            method: 'POST',
+            headers: this._headers,
+            body: JSON.stringify(
+                data
+            )
+        })
+            .then(res => this._checkResponse(res));
+    }
+
+    // get profile
+    getProfile() {
+        this.setJwt();
+        return fetch(`${this._url}/client/profile`, {
             headers: this._headers
         })
             .then(res => this._checkResponse(res));
     }
 
-    // удаление сохраненного фильма
-    deleteSavedMovie(id) {
-        this.setJwt()
-        return fetch(`${this._url}/movies/${id}`, {
-            method: 'DELETE',
+    // get full content
+    getFullContent() {
+        this.setJwt();
+        return fetch(`${this._url}/client/full_content`, {
             headers: this._headers
         })
             .then(res => this._checkResponse(res));
     }
+
+
+
+    // NOT AUTH
+    // get info
+    getInfo() {
+        return fetch(`${this._url}/info`, {
+        })
+            .then(res => this._checkResponse(res));
+    }
+
 }
 
+
+
 const mainApi = new MainApi({
-    baseUrl: 'https://api.alekslomako.movies.nomoredomainsmonster.ru',
+    baseUrl: 'https://ott.fastotv.com/panel_pro/api',
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
     }
 })
 

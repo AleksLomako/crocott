@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import isEmail from 'validator/es/lib/isEmail';
 
 function useFormWithValidation() {
 
@@ -11,21 +10,6 @@ function useFormWithValidation() {
     const handleChangeInputs = (event) => {
         const target = event.target;
         const { name, value } = target;
-        
-        // проверка имени
-        if (name === "name" && target.validity.patternMismatch) {
-            target.setCustomValidity('Имя должно содержать только латиницу, кириллицу, пробел или дефис.')
-        } else {
-            target.setCustomValidity('');
-        }
-        // проверка email
-        if (name === "email") {
-            if (isEmail(value)) {
-                target.setCustomValidity('');
-            } else {
-                target.setCustomValidity('Введен некорректый адрес электронной почты.');
-            }
-        }
 
         setValues({ ...values, [name]: value });
         setErrors({ ...errors, [name]: target.validationMessage });

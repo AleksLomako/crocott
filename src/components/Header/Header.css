@@ -1,81 +1,51 @@
 .header {
     display: flex;
-    padding: 18px 14px;
-    justify-content: space-between;
     align-items: center;
-    position: relative;
-}
-
-.header_blue-theme {
-    background: #465DFF;
+    margin-bottom: 30px;
 }
 
 .header__logo {
-    background: url('../../images/logo-auth.svg');
-    width: 38px;
-    height: 38px;
+    width: 65px;
+    height: 65px;
+    margin-right: 50px;
 }
 
-.header__logo:hover{
-    opacity: 0.7;
-}
-
-.header__sign-links {
+.header__navigate{
     display: flex;
-    gap: 14px;
+    justify-content: space-between;
+    width: 80%;
     align-items: center;
 }
 
-.header__signup-link {
-    text-decoration: none;
-    cursor: pointer;
+.header__links {
+    display: flex;
+    justify-content: space-around;
+    width: 35%;
+}
+
+.header__link {
     color: #FFF;
-    font-size: 10px;
+    font-size: 26px;
     font-weight: 500;
-    line-height: 16px;
-}
-
-.header__signup-link:hover {
-    opacity: 0.7;
-}
-
-.header__signin-link {
-    text-decoration: none;
+    line-height: 29px;
     cursor: pointer;
-    border-radius: 3px;
-    background: #2BE080;
-    color: #000;
-    font-size: 10px;
-    font-weight: 500;
-    line-height: 16px;
-    padding: 5px 12px;
 }
 
-.header__signin-link:hover {
-    opacity: 0.8;
+.header__link_active{
+    border-bottom: 3px solid #ffc107;
+    /* text-decoration: underline;
+    text-decoration-color: #ffc107;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 23px; */
 }
 
-@media screen and (min-width: 768px) {
-    .header {
-        padding: 18px 30px;
-    }
-
-    .header__sign-links {
-        gap: 30px;
-    }
-
-    .header__signup-link {
-        font-size: 12px;
-    }
-
-    .header__signin-link {
-        font-size: 12px;
-        padding: 8px 20px;
-    }
+.header__settings {
+    display: flex;
+    justify-content: space-between;
+    width: 8%;
 }
 
-@media screen and (min-width: 1280px) {
-    .header {
-        padding: 18px 70px;
-    }
+.header__icon {
+    width: 33px;
+    height: 33px;
 }

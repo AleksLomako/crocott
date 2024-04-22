@@ -1,20 +1,29 @@
-.page {
-    display: flex;
-    flex-direction: column;
+.body {
+    height: 100%;
     width: 100%;
     margin: 0px auto;
     padding: 0px;
     font-family: 'Inter', Arial, sans-serif;
     font-style: normal;
-    color: #000;
-    min-width: 320px;
-    max-width: 1280px;
+    color: #ffffff;
+    background-color: #000;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+}
+
+html, 
+.root {
+    height: 100%;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 ul,
@@ -39,67 +48,6 @@ input:disabled {
     background-color: transparent;
 }
 
-.section-header {
-    display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid;
-    margin-bottom: 60px;
-}
-
-.section-title {
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
-    letter-spacing: -0.72px;
-    margin: 0px;
-    margin-bottom: 28px;
-}
-
-.section-subtitle {
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 22px;
-    letter-spacing: -0.72px;
-    margin: 0px;
-}
-
-.section-text {
-    font-size: 11px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 16px;
-    margin: 0px;
-}
-
-@media screen and (min-width: 768px) {
-    .section-header {
-        margin-bottom: 70px;
-    }
-
-    .section-title {
-        font-size: 22px;
-        line-height: 27px;
-        letter-spacing: -0.88px;
-        margin-bottom: 23px;
-    }
-
-    .section-subtitle {
-        font-size: 20px;
-        line-height: 24px;
-        letter-spacing: -0.8px;
-    }
-
-    .section-text {
-        font-size: 12px;
-        line-height: 18px;
-    }
-}
-
-@media screen and (min-width: 1280px) {
-    .section-text {
-        font-size: 14px;
-        line-height: 20px;
-    }
+a{
+    text-decoration: none;
 }
