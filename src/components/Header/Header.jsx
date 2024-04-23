@@ -14,10 +14,10 @@ function Header({onExit}) {
             <img className="header__logo" src={Logo} alt="logo"></img>
             <nav className="header__navigate">
                 <div className="header__links">
-                    <NavLink to="/test_main" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>LiveTV</NavLink>
-                    <NavLink to="/movies" className="header__link">Movies</NavLink>
-                    <NavLink to="/series" className="header__link">Series</NavLink>
-                    <NavLink to="/packages" className="header__link">Packages</NavLink>
+                    <NavLink to="/test_main" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>LiveTV</NavLink>
+                    <NavLink to="/movies" tabIndex="0" className="header__link">Movies</NavLink>
+                    <NavLink to="/series" tabIndex="0" className="header__link">Series</NavLink>
+                    <NavLink to="/packages" tabIndex="0" className="header__link">Packages</NavLink>
                 </div>
                 <div className="header__settings">
                     <Link to="/settings">

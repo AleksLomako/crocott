@@ -11,6 +11,10 @@ import mainApi from '../../utils/MainApi';
 
 
 function App() {
+
+  // localStorage.removeItem('jwt_CrocOtt');
+
+
   const nameDevice = localStorage.getItem('deviceInfo_crocOTT')
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,7 +36,7 @@ function App() {
 		// console.log(localStorage.getItem("deviceVersion_crocOTT"));
 
 
-    // localStorage.removeItem('jwt_CrocOtt');
+    
 
 
     const jwt = localStorage.getItem('jwt_CrocOtt');
@@ -196,9 +200,9 @@ function App() {
 
   function handleLogOut(){
     console.log("LOGOUT");
-    setIsLoggedIn(false)
-    localStorage.removeItem('deviceInfo_crocOTT')
-    navigate('/signinlogin')
+    setIsLoggedIn(false);
+    localStorage.removeItem('jwt_CrocOtt');
+    navigate('/signinlogin');
   }
 
 

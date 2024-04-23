@@ -1,7 +1,28 @@
-.channels__list {
+.channels {
     padding-left: 40px;
     display: flex;
     flex-direction: column;
     height: 850px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    visibility: hidden;
+}
+
+.channels__list,
+.channels:hover {
+    visibility: visible;
+    /* scrollbar-width: thin;
+    scrollbar-color: #f3eded4d transparent; */
+}
+
+.channels::-webkit-scrollbar {
+    width: 6px;
+}
+
+.channels::-webkit-scrollbar-thumb {
+    background-color: rgba(243, 237, 237, 0.301);
+    border-radius: 20px;
+}
+
+.channels::-webkit-scrollbar-track {
+    background-color: transparent;
 }
