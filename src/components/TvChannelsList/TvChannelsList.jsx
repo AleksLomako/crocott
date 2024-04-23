@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import './TvChannelsList.css';
 import TvChannelCard from '../TvChannelCard/TvChannelCard';
 import content from '../../utils/content';
