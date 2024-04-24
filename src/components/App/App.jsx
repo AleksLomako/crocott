@@ -28,19 +28,19 @@ function App() {
 
 
   // Check Token
-  useEffect(() =>{
+  useEffect(() => {
     localStorage.setItem("deviceName_crocOTT", "LG TESTING")
-		localStorage.setItem("deviceVersion_crocOTT", "02.08.09")
-		localStorage.setItem("deviceDdrSize_crocOTT", "2")
-		// console.log(localStorage.getItem("deviceName_crocOTT"));
-		// console.log(localStorage.getItem("deviceVersion_crocOTT"));
+    localStorage.setItem("deviceVersion_crocOTT", "02.08.09")
+    localStorage.setItem("deviceDdrSize_crocOTT", "2")
+    // console.log(localStorage.getItem("deviceName_crocOTT"));
+    // console.log(localStorage.getItem("deviceVersion_crocOTT"));
 
 
-    
+
 
 
     const jwt = localStorage.getItem('jwt_CrocOtt');
-    if (jwt === null){
+    if (jwt === null) {
       navigate('/signinlogin')
       // console.log("JWT NULL");
       // setAuth(false)
@@ -51,7 +51,7 @@ function App() {
       //   navigate('/signincode')
       // }
       // else if (location.pathname === '/signinlogin'){
-        
+
       //   navigate('/signincode')
       // }
     }
@@ -59,30 +59,30 @@ function App() {
       checkToken(jwt)
     }
 
-  },[])
+  }, [])
 
 
 
-// Check Token
-  function checkToken(jwt){
+  // Check Token
+  function checkToken(jwt) {
     mainApi.checkToken(jwt)
-    .then((res)=>{
-      if(res){
-        setIsLoggedIn(true)
-        navigate('/test_main')
-      }
-    })
-    .catch((err) => {
-      console.log(err.error);
-      navigate('/signinlogin')
-    })
+      .then((res) => {
+        if (res) {
+          setIsLoggedIn(true)
+          navigate('/test_main')
+        }
+      })
+      .catch((err) => {
+        console.log(err.error);
+        navigate('/signinlogin')
+      })
   }
 
 
 
   // useEffect(() => {
   //   // localStorage.removeItem("jwtCrocOtt")
-    
+
 
   //   if (localStorage.getItem("jwtCrocOtt") === null) {
   //     console.log(localStorage.getItem("jwtCrocOtt"));
@@ -178,7 +178,7 @@ function App() {
           })
 
 
-        })
+      })
       .catch((err) => {
         setApiError(err.error.message)
       })
@@ -198,7 +198,7 @@ function App() {
   }
 
 
-  function handleLogOut(){
+  function handleLogOut() {
     console.log("LOGOUT");
     setIsLoggedIn(false);
     localStorage.removeItem('jwt_CrocOtt');
@@ -208,12 +208,17 @@ function App() {
 
   return (
     <div className="page">
-      {/* <h1 id='test'></h1> */}
       <Routes>
         <Route path="/test_main" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleLogOut} />
             <Main />
+          </ProtectedRoute>
+        }
+        />
+        <Route path="/movies" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <Header onExit={handleLogOut} />
           </ProtectedRoute>
         }
         />
