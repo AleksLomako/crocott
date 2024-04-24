@@ -13,6 +13,11 @@ function TvChannelsList({onClick}) {
 
     return (
         <div className="channels">
+            {/* <div className="channels__item">
+                <button></button>
+                <p>First</p>
+                <button></button>
+            </div> */}
             <ul className="channels__list">
                 {
                     channels[0].map((channel, index) => (

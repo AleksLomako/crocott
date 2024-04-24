@@ -4,6 +4,11 @@
     align-items: center;
 }
 
+.channel:focus { 
+    outline: 3px solid #ffc107; 
+    outline-offset: 6px; 
+}
+
 .channel__icon {
     width: 60px;
     height: 60px;

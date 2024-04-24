@@ -11,7 +11,7 @@ function handleChannelClick() {
 }
 
     return (
-        <li className="channel focus" urls={urls} tabIndex="0" id={display_name} onClick={handleChannelClick}>
+        <li className="channel" urls={urls} tabIndex="0" id={display_name} onClick={handleChannelClick}>
                 <img className="channel__icon" src={icon} alt="Icon channel" />
                 <p className="channel__name">{display_name}</p>
         </li>

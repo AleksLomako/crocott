@@ -32,8 +32,8 @@
 }
 
 .header__link:focus {
-    outline: 4px groove #ffc107;
-    outline-offset: 6px;
+    outline: 3px solid #ffc107; 
+    outline-offset: 6px; 
 }
 
 .header__link_active {

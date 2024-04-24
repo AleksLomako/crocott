@@ -20,10 +20,10 @@ function Header({onExit}) {
                     <NavLink to="/packages" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Packages</NavLink>
                 </div>
                 <div className="header__settings">
-                    <Link to="/settings" tabIndex="0" className="focus">
+                    <Link to="/settings" tabIndex="0" className="header__link">
                         <img className="header__icon" src={IconGear} alt="Gear icon" />
                     </Link>
-                    <Link to="/signinlogin" onClick={onExit} tabIndex="0" className="focus">
+                    <Link to="/signinlogin" onClick={onExit} tabIndex="0" className="header__link">
                         <img className="header__icon" src={IconPower} alt="Power button" />
                     </Link>
                 </div>

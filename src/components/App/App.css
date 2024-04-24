@@ -51,8 +51,3 @@ input:disabled {
 a{
     text-decoration: none;
 }
-
-.focus:focus {
-    outline: 4px groove #ffc107;
-    outline-offset: 6px;
-}
