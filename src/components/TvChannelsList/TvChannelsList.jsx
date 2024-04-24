@@ -2,6 +2,8 @@ import React from "react";
 import './TvChannelsList.css';
 import TvChannelCard from '../TvChannelCard/TvChannelCard';
 import content from '../../utils/content';
+import IconArrowBack from '../../images/icons8-back-50.png';
+import IconArrowForward from '../../images/icons8-forward-50.png';
 
 function TvChannelsList({onClick}) {
 
@@ -13,11 +15,11 @@ function TvChannelsList({onClick}) {
 
     return (
         <div className="channels">
-            {/* <div className="channels__item">
-                <button></button>
-                <p>First</p>
-                <button></button>
-            </div> */}
+            <div className="channels__item">
+                <img className="channels__icon" src={IconArrowBack} alt="arrow" tabIndex="0"></img>
+                <p className="channels__text">First</p>
+                <img className="channels__icon" src={IconArrowForward} alt="arrow" tabIndex="0"></img>
+            </div>
             <ul className="channels__list">
                 {
                     channels[0].map((channel, index) => (

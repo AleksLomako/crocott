@@ -1,6 +1,6 @@
 .channels {
     /* padding-left: 40px; */
-    padding: 20px 10px 0px 40px;
+    /* padding: 20px 10px 0px 40px; */
     display: flex;
     flex-direction: column;
     height: 850px;
@@ -8,7 +8,12 @@
     visibility: hidden;
 }
 
+.channels__list{
+    padding: 20px 10px 0px 30px;
+}
+
 .channels__list,
+.channels__item,
 .channels:hover {
     visibility: visible;
     /* scrollbar-width: thin;
@@ -26,4 +31,27 @@
 
 .channels::-webkit-scrollbar-track {
     background-color: transparent;
+}
+
+.channels__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 9px;
+}
+
+.channels__icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.channels__icon:focus { 
+    outline: 4px solid #ffc107; 
+    outline-offset: 1px; 
+    background-color: rgba(85, 84, 84, 0.5);
+}
+
+.channels__text {
+    margin: 0px;
 }

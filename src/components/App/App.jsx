@@ -11,8 +11,9 @@ import mainApi from '../../utils/MainApi';
 
 
 function App() {
-
   // localStorage.removeItem('jwt_CrocOtt');
+  const authorizationBasic = localStorage.getItem("Basic_authorization_CrocOtt");
+  const authorizationCode = localStorage.getItem("Code_authorization_CrocOtt");
 
 
   const nameDevice = localStorage.getItem('deviceInfo_crocOTT')
@@ -32,35 +33,15 @@ function App() {
     localStorage.setItem("deviceName_crocOTT", "LG TESTING")
     localStorage.setItem("deviceVersion_crocOTT", "02.08.09")
     localStorage.setItem("deviceDdrSize_crocOTT", "2")
-    // console.log(localStorage.getItem("deviceName_crocOTT"));
-    // console.log(localStorage.getItem("deviceVersion_crocOTT"));
-
-
-
-
 
     const jwt = localStorage.getItem('jwt_CrocOtt');
     if (jwt === null) {
       navigate('/signinlogin')
-      // console.log("JWT NULL");
-      // setAuth(false)
-      // if (location.pathname === ''){
-      //   navigate('/signinlogin')
-      // } 
-      // else{
-      //   navigate('/signincode')
-      // }
-      // else if (location.pathname === '/signinlogin'){
-
-      //   navigate('/signincode')
-      // }
     }
     else {
       checkToken(jwt)
     }
-
   }, [])
-
 
 
   // Check Token
@@ -74,7 +55,20 @@ function App() {
       })
       .catch((err) => {
         console.log(err.error);
-        navigate('/signinlogin')
+        try {
+          const refresh_token = localStorage.getItem('jwt_refresh_CrocOtt');
+          if (authorizationBasic !== null) {
+            mainApi.refreshToken(authorizationBasic, refresh_token)
+              .then((res) => { saveJwt(res) })
+          }
+          else if (authorizationCode !== null) {
+            mainApi.refreshToken(authorizationCode, refresh_token)
+              .then((res) => { saveJwt(res) })
+          }
+        }
+        catch {
+          navigate('/signinlogin')
+        }
       })
   }
 
@@ -132,6 +126,7 @@ function App() {
   // Обработчик входа в приложение
   function handleLogin(values) {
     const authorization = mainApi.createHeaders(values.name, values.password);
+    localStorage.setItem("Basic_authorization_CrocOtt", authorization)
     let deviceId = ''
     // console.log(authorization);
     mainApi.getListDevices(authorization)
@@ -193,16 +188,26 @@ function App() {
   // }
 
   function handleLoginCode(values) {
+    // localStorage.setItem("Code_authorization_CrocOtt", authorization)
     // setIsLoggedIn(true)
     // navigate('/test_main')
   }
 
 
+  function saveJwt(res) {
+    localStorage.setItem('jwt_CrocOtt', res.data.access_token)
+    localStorage.setItem('jwt_refresh_CrocOtt', res.data.refresh_token)
+  }
+
+
   function handleLogOut() {
     console.log("LOGOUT");
+    navigate('/signinlogin');
     setIsLoggedIn(false);
     localStorage.removeItem('jwt_CrocOtt');
-    navigate('/signinlogin');
+    localStorage.removeItem('jwt_refresh_CrocOtt')
+    localStorage.removeItem("Basic_authorization_CrocOtt")
+    localStorage.removeItem("Code_authorization_CrocOtt")
   }
 
 
@@ -219,6 +224,28 @@ function App() {
         <Route path="/movies" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleLogOut} />
+            <h2>MOVIES</h2>
+          </ProtectedRoute>
+        }
+        />
+        <Route path="/series" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <Header onExit={handleLogOut} />
+            <h2>SERIES</h2>
+          </ProtectedRoute>
+        }
+        />
+        <Route path="/packages" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <Header onExit={handleLogOut} />
+            <h2>PACKAGES</h2>
+          </ProtectedRoute>
+        }
+        />
+        <Route path="/settings" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <Header onExit={handleLogOut} />
+            <h2>SETTINGS</h2>
           </ProtectedRoute>
         }
         />

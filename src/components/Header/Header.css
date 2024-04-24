@@ -8,6 +8,7 @@
     width: 65px;
     height: 65px;
     margin-right: 50px;
+    margin-left: 30px;
 }
 
 .header__navigate {
@@ -32,8 +33,9 @@
 }
 
 .header__link:focus {
-    outline: 3px solid #ffc107; 
-    outline-offset: 6px; 
+    outline: 4px solid #ffc107; 
+    outline-offset: 1px; 
+    background-color: rgba(85, 84, 84, 0.5);
 }
 
 .header__link_active {

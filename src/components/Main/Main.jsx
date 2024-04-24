@@ -1,10 +1,6 @@
 import { React, useState, useEffect, useCallback } from 'react';
 import './Main.css';
 import TvChannelsList from '../TvChannelsList/TvChannelsList';
-
-
-// import { useEffect, useState, useCallback } from 'react';
-
 import Player from '../Player/Player';
 
 function Main() {
@@ -12,86 +8,122 @@ function Main() {
     const [loading, setLoading] = useState(false);
 
 
-    // NAVIGATION
-    const [elementIndex, setElementIndex] = useState(0);
-    const [elementNav, setElementNav] = useState('.header');
-    const [endIndex, setEndIndex] = useState(0);
-    const [headerElemList, setHeaderElemList] = useState('');
-    const [channelsElemList, setChannelsElemList] = useState('');
-
-    useEffect(() => {
-        const header = document.querySelector('.header');
-        setHeaderElemList(header.querySelectorAll('a'));
-        const channels = document.querySelector('.channels');
-        setChannelsElemList(channels.querySelectorAll('li'));
-    }, []);
-
-
-    function runNav() {
-        if (document.activeElement.className === "body") {
-            document.querySelector('.header__link_active').focus();
-        }
-    }
-
-
-    const handleKeyPress = useCallback((e) => {
-        console.log(e.keyCode);
-        console.log(elementNav);
-        let indexElem = elementIndex;
-        //  HEADER NAV
-        if (elementNav === ".header") {
-            setEndIndex(headerElemList.length)
-            if (e.code === "ArrowRight" && indexElem !== endIndex - 1) {
-                indexElem = elementIndex + 1;
-                headerElemList[indexElem].focus();
-                setElementIndex(indexElem)
-            }
-            else if (e.code === "ArrowLeft" && elementIndex !== 0) {
-                indexElem = elementIndex - 1;
-                headerElemList[indexElem].focus();
-                setElementIndex(indexElem)
-            }
-            else if (e.code === "ArrowDown") {
-                setElementNav('.channels');
-                setElementIndex(0)
-                channelsElemList[0].focus()
+        // NAVIGATION
+        const [elementIndex, setElementIndex] = useState(0);
+        const [elementNav, setElementNav] = useState('.header');
+        const [endIndex, setEndIndex] = useState(0);
+        const [headerElemList, setHeaderElemList] = useState('');
+        const [channelsElemList, setChannelsElemList] = useState('');
+    
+    
+        function runNav() {
+            if (document.activeElement.className === "body") {
+                document.querySelector('.header__link_active').focus();
             }
         }
-        // CHANNEL NAV
-        else if (elementNav === ".channels") {
-            setEndIndex(channelsElemList.length)
-            if (e.code === "ArrowDown" && indexElem !== endIndex - 1) {
-                indexElem = elementIndex + 1;
-                channelsElemList[indexElem].focus();
-                setElementIndex(indexElem)
+    
+    
+        const handleKeyPress = useCallback((e) => {
+            console.log(e.keyCode);
+            console.log(elementNav);
+            let indexElem = elementIndex;
+            //  HEADER NAV
+            if (elementNav === ".header") {
+                setEndIndex(headerElemList.length)
+                if (e.code === "ArrowRight" && indexElem !== endIndex - 1) {
+                    indexElem = elementIndex + 1;
+                    headerElemList[indexElem].focus();
+                    setElementIndex(indexElem)
+                }
+                else if (e.code === "ArrowLeft" && elementIndex !== 0) {
+                    indexElem = elementIndex - 1;
+                    headerElemList[indexElem].focus();
+                    setElementIndex(indexElem)
+                }
+                else if (e.code === "ArrowDown") {
+                    setElementNav('.channels');
+                    setElementIndex(0)
+                    channelsElemList[0].focus()
+                }
             }
-            else if (e.code === "ArrowUp" && elementIndex !== 0) {
-                indexElem = elementIndex - 1;
-                channelsElemList[indexElem].focus();
-                setElementIndex(indexElem)
+            // CHANNEL NAV
+            else if (elementNav === ".channels") {
+                setEndIndex(channelsElemList.length)
+                if (e.code === "ArrowDown" && indexElem !== endIndex - 1) {
+                    indexElem = elementIndex + 1;
+                    channelsElemList[indexElem].focus();
+                    setElementIndex(indexElem)
+                }
+                else if (e.code === "ArrowUp" && elementIndex !== 0) {
+                    indexElem = elementIndex - 1;
+                    channelsElemList[indexElem].focus();
+                    setElementIndex(indexElem)
+                }
+                else if (e.code === "ArrowUp" && elementIndex === 0) {
+                    setElementNav('.header');
+                    setElementIndex(0)
+                    headerElemList[0].focus();
+                }
+                else if (e.code === "Enter") {
+                    document.activeElement.click();
+                }
             }
-            else if (e.code === "ArrowUp" && elementIndex === 0) {
-                setElementNav('.header');
-                setElementIndex(0)
-                headerElemList[0].focus();
+        }, [elementIndex, elementNav, endIndex, headerElemList, channelsElemList])
+    
+    
+        const handleClickOutside = useCallback((e) => {
+            let indexElem = 0;
+            let elementClassName = (document.activeElement.className.split(' ')[0]);
+            if (channelsElemList !== '' && document.activeElement.className === "channel") {
+                channelsElemList.forEach((element) => {
+                    if (document.activeElement === element) {
+                        channelsElemList[indexElem].focus();
+                        setElementIndex(indexElem);
+                        setElementNav('.channels')
+                    }
+                    indexElem++
+                })
             }
-            else if (e.code === "Enter"){
-                document.activeElement.click();
+            else if (headerElemList !== '' && elementClassName === "header__link") {
+                headerElemList.forEach((element) => {
+                    if (document.activeElement === element) {
+                        headerElemList[indexElem].focus();
+                        setElementIndex(indexElem);
+                        setElementNav('.header')
+                    }
+                    indexElem++
+                })
             }
-        }
-    }, [elementIndex, elementNav, endIndex, headerElemList, channelsElemList])
-
-    useEffect(() => {
-        // attach the e listener
-        document.addEventListener('keydown', handleKeyPress);
-        runNav();
-
-        // remove the e listener
-        return () => {
-            document.removeEventListener('keydown', handleKeyPress);
-        };
-    }, [handleKeyPress]);
-    // ////////////////////////////////////////////////////////////////////////
+        }, [headerElemList, channelsElemList]);
+    
+    
+    
+    
+    
+        useEffect(() => {
+            // attach the e listener
+            document.addEventListener('keydown', handleKeyPress);
+            document.addEventListener('click', handleClickOutside);
+            runNav();
+    
+            // remove the e listener
+            return () => {
+                document.removeEventListener('keydown', handleKeyPress);
+                document.addEventListener('click', handleClickOutside);
+            };
+        }, [handleKeyPress, handleClickOutside]);
+    
+    
+    
+    
+        useEffect(() => {
+            const header = document.querySelector('.header');
+            setHeaderElemList(header.querySelectorAll('a'));
+            const channels = document.querySelector('.channels');
+            setChannelsElemList(channels.querySelectorAll('li'));
+            channels.querySelectorAll('li')[0].click();
+        }, []);
+        // ////////////////////////////////////////////////////////////////////////
 
 
 

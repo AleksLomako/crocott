@@ -3,45 +3,55 @@ import './AuthForm.css';
 
 function AuthForm({ title, children, button, link, onSubmit, name, disabled, className, errorMessage, onClick }) {
 
-    // NAVIGATION
-    const [startFocus, setStartFocus] = useState(0);
+    // NAVIGATION AUTH FORM
     const [focusElementsList, setFocusElementsList] = useState([]);
-    const [focusElement, setFocusElement] = useState('');
     const [elementIndex, setElementIndex] = useState(0);
-
-
-    const handleKeyPress = useCallback((event) => {
-        // console.log(`Key pressed: ${event.code}`);
-        // console.log(elementIndex);
+    const handleKeyPress = useCallback((e) => {
         let indexTest = elementIndex;
-        if (event.code === "ArrowDown") {
-            indexTest = elementIndex + 1;
-            if (focusElementsList[indexTest]) {
-                focusElementsList[indexTest].focus();
-                setElementIndex(indexTest)
+        if (document.activeElement.className !== "body") {
+            if (e.code === "ArrowDown") {
+                indexTest = elementIndex + 1;
+                if (focusElementsList[indexTest]) {
+                    focusElementsList[indexTest].focus();
+                    setElementIndex(indexTest)
+                }
+            }
+            else if (e.code === "ArrowUp") {
+                if (elementIndex !== 0) {
+                    indexTest = elementIndex - 1;
+                    focusElementsList[indexTest].focus();
+                    setElementIndex(indexTest)
+                }
             }
         }
-        else if (event.code === "ArrowUp") {
-            if (elementIndex !== 0) {
-                indexTest = elementIndex - 1;
-                focusElementsList[indexTest].focus();
-                setElementIndex(indexTest)
-            }
+        else {
+            focusElementsList[0].focus();
+            setElementIndex(0)
         }
-
     }, [focusElementsList, elementIndex]);
 
 
+    const handleClickOutside = useCallback((e) => {
+        focusElementsList.forEach((element) => {
+            if (document.activeElement === element) {
+                setElementIndex(focusElementsList.indexOf(element))
+            }
+        })
+
+
+    }, [focusElementsList]);
+
 
     useEffect(() => {
-        // attach the event listener
+        // attach the e listeners
         document.addEventListener('keydown', handleKeyPress);
-
-        // remove the event listener
+        document.addEventListener('click', handleClickOutside);
+        // remove the e listener
         return () => {
             document.removeEventListener('keydown', handleKeyPress);
+            document.addEventListener('click', handleClickOutside);
         };
-    }, [handleKeyPress]);
+    }, [handleKeyPress, handleClickOutside]);
 
 
 
@@ -53,12 +63,10 @@ function AuthForm({ title, children, button, link, onSubmit, name, disabled, cla
                 elemList.push(e.querySelectorAll("input, a, button")[i])
             }
         });
-
-        // console.log(elemList);
-
         elemList[0].focus();
         setFocusElementsList(elemList)
     }, [])
+    /////////////////////////////////////////////////////////////////////////////
 
 
     return (

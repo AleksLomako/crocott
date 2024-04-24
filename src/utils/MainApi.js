@@ -24,6 +24,19 @@ class MainApi {
             .then(res => this._checkResponse(res));
     }
 
+    // refresh token
+    refreshToken(authorization, refresh_token) {
+        this._headers.authorization = authorization
+        return fetch(`${this._url}/client/refresh_token`, {
+            method: 'POST',
+            headers: this._headers,
+            body: JSON.stringify({
+                refresh_token
+            })
+        })
+            .then(res => this._checkResponse(res));
+    }
+    
     // CLIENT
     // BASIC AUTH
 
