@@ -46,9 +46,11 @@ function App() {
 
   // Check Token
   function checkToken(jwt) {
+    const refresh_token = localStorage.getItem('jwt_refresh_CrocOtt');
     mainApi.checkToken(jwt)
       .then((res) => {
         if (res) {
+          getContentFull();
           setIsLoggedIn(true)
           navigate('/test_main')
         }
@@ -56,12 +58,17 @@ function App() {
       .catch((err) => {
         console.log(err.error);
         try {
-          const refresh_token = localStorage.getItem('jwt_refresh_CrocOtt');
-          if (authorizationBasic !== null) {
+          
+          console.log(refresh_token);
+          if (authorizationBasic !== null && refresh_token !== null) {
             mainApi.refreshToken(authorizationBasic, refresh_token)
-              .then((res) => { saveJwt(res) })
+              .then((res) => { 
+                saveJwt(res) 
+              })
+              console.log("TOKEN");
+              navigate('/signinlogin')
           }
-          else if (authorizationCode !== null) {
+          else if (authorizationCode !== null && refresh_token !== null) {
             mainApi.refreshToken(authorizationCode, refresh_token)
               .then((res) => { saveJwt(res) })
           }
@@ -73,54 +80,61 @@ function App() {
   }
 
 
+   // TESTING
+   function getContentFull() {
+    mainApi.getFullContent()
+      .then((res) => {
+        if (res) {
 
-  // useEffect(() => {
-  //   // localStorage.removeItem("jwtCrocOtt")
+          localStorage.setItem('fullContent_crocOTT', JSON.stringify(res));
+          const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
+    createContent(content)
+          // console.log(JSON.parse(localStorage.getItem('fullContent_crocOTT')));
+        }
 
-
-  //   if (localStorage.getItem("jwtCrocOtt") === null) {
-  //     console.log(localStorage.getItem("jwtCrocOtt"));
-  //     navigate('/signincode')
-  //     setAuth(false)
-  //     // if (location.pathname === '/signinlogin') {
-  //     //   navigate('/signincode')
-  //     // } else if (location.pathname === '/signincode') {
-  //     //   navigate('/signinlogin')
-  //     // } else{
-  //     //   setIsLoggedIn(true)
-  //     //   navigate('/test_main')
-  //     // }
-
-  //   }
-  //   else {
-  //     setIsLoggedIn(true)
-  //     navigate('/test_main')
-  //   }
-  // }, [auth])
+      })
 
 
-  // Check Token
-  // useEffect(() => {
-  //   const jwt = localStorage.getItem('jwt_CrocOtt');
-  //   // const path = location.pathname;
-  //   if (jwt) {
-  //     // setLoading(true);
-  //     mainApi.checkToken(jwt)
-  //       .then((res) => {
-  //         if (res) {
-  //           setIsLoggedIn(true);
-  //           navigate('/test_main')
-  //           // navigate(path, { replace: true });
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       })
-  //       .finally(() => {
-  //         // setLoading(false);
-  //       })
-  //   }
-  // }, []);
+    createContent()
+  }
+
+  function createContent() {
+    const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
+    const streams = [];
+    const moviaes = [];
+    const serials = [];
+    content.data.packages.forEach(packag => {
+      if (packag.streams.length !== 0) {
+        packag.streams.forEach(stream => {
+          streams.push(stream)
+        });
+      }
+      else if (packag.vods.length !== 0) {
+        packag.vods.forEach(vod => {
+          moviaes.push(vod)
+        });
+      }
+      else if (packag.serials.length !== 0) {
+        packag.serials.forEach(serial => {
+          serials.push(serial)
+        });
+      }
+    })
+    localStorage.setItem('streams_crocOTT', JSON.stringify(streams))
+    localStorage.setItem('moviaes_crocOTT', JSON.stringify(moviaes))
+    localStorage.setItem('serials_crocOTT', JSON.stringify(serials))
+  }
+
+
+
+
+
+
+
+
+
+
+
 
 
   // Обработчик входа в приложение
@@ -163,7 +177,8 @@ function App() {
 
             mainApi.login(authorization, dataForLogin)
               .then((res) => {
-                localStorage.setItem('jwt_CrocOtt', res.data.access_token)
+                saveJwt(res);
+                // localStorage.setItem('jwt_CrocOtt', res.data.access_token)
                 setIsLoggedIn(true)
                 navigate('/test_main');
               })
@@ -179,13 +194,6 @@ function App() {
       })
   };
 
-  // function handleLogin(values) {
-  //   console.log(values)
-  //   // document.getElementById("test").textContent = values.name + values.password + values.url;
-
-  //   localStorage.setItem("jwtCrocOtt", values.name + values.password + values.url)
-  //   navigate('/test_main');
-  // }
 
   function handleLoginCode(values) {
     // localStorage.setItem("Code_authorization_CrocOtt", authorization)

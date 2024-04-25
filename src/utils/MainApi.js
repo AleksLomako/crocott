@@ -30,9 +30,8 @@ class MainApi {
         return fetch(`${this._url}/client/refresh_token`, {
             method: 'POST',
             headers: this._headers,
-            body: JSON.stringify({
-                refresh_token
-            })
+            body: refresh_token
+            
         })
             .then(res => this._checkResponse(res));
     }
@@ -123,7 +122,7 @@ class MainApi {
 
 
 const mainApi = new MainApi({
-    baseUrl: 'https://ott.fastotv.com/panel_pro/api',
+    baseUrl: 'https://ott.crocott.com/panel_pro/api',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
