@@ -26,12 +26,15 @@ class MainApi {
 
     // refresh token
     refreshToken(authorization, refresh_token) {
+        console.log(authorization);
+        console.log(refresh_token);
         this._headers.authorization = authorization
         return fetch(`${this._url}/client/refresh_token`, {
             method: 'POST',
             headers: this._headers,
-            body: refresh_token
-            
+            body: JSON.stringify(
+                {"refresh_token":refresh_token}
+            )    
         })
             .then(res => this._checkResponse(res));
     }

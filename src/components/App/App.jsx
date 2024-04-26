@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import Header from '../Header/Header';
@@ -15,12 +15,7 @@ function App() {
   const authorizationBasic = localStorage.getItem("Basic_authorization_CrocOtt");
   const authorizationCode = localStorage.getItem("Code_authorization_CrocOtt");
 
-
-  const nameDevice = localStorage.getItem('deviceInfo_crocOTT')
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const [auth, setAuth] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // состояние авторизации пользователя
   const [apiError, setApiError] = useState(''); //Ошибка от сервера
 
@@ -58,19 +53,27 @@ function App() {
       .catch((err) => {
         console.log(err.error);
         try {
-          
-          console.log(refresh_token);
           if (authorizationBasic !== null && refresh_token !== null) {
             mainApi.refreshToken(authorizationBasic, refresh_token)
               .then((res) => { 
-                saveJwt(res) 
+                saveJwt(res)
+                navigate('/test_main')
               })
-              console.log("TOKEN");
-              navigate('/signinlogin')
+              .catch((err) =>{
+                console.log(err);
+                navigate('/signinlogin')
+              })
           }
           else if (authorizationCode !== null && refresh_token !== null) {
             mainApi.refreshToken(authorizationCode, refresh_token)
-              .then((res) => { saveJwt(res) })
+              .then((res) => { 
+                saveJwt(res)
+                navigate('/test_main') 
+              })
+              .catch((err) =>{
+                console.log(err);
+                navigate('/signinlogin')
+              })
           }
         }
         catch {
