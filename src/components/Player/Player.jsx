@@ -1,4 +1,4 @@
-import { React, useEffect} from "react";
+import { React, useEffect } from "react";
 import './Player.css';
 
 function Player({ videoData, setVideoData }) {
@@ -39,7 +39,7 @@ function Player({ videoData, setVideoData }) {
         document.body.appendChild(sp);
         // AUTOPLAY VIDEO
         if (document.getElementById('videoStream')) {
-            // setTimeout(function () { playVideo(); }, 1000);
+            setTimeout(function () { playVideo(); }, 1000);
         }
         return () => {
             document.body.removeChild(sp);
@@ -47,10 +47,16 @@ function Player({ videoData, setVideoData }) {
     }, [setVideoData, videoData]);
 
 
-    // function playVideo() {
-    //     let playBtn = document.querySelector('.vjs-big-play-button');
-    //     playBtn.click();
-    // }
+    function playVideo() {
+        try{
+            let playBtn = document.querySelector('.vjs-big-play-button');
+            playBtn.click();
+        }
+        catch{
+            console.log("await player");
+        }
+        
+    }
 
     return (
         <div id="video" className="video-style">

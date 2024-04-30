@@ -24,6 +24,11 @@ html,
     display: flex;
     flex-direction: column;
     height: 100%;
+    padding: 30px 10px 30px 10px;
+}
+
+h1,h2,p {
+    margin: 0px;
 }
 
 ul,

@@ -1,45 +1,34 @@
 import { React, useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Main.css';
 import TvChannelsList from '../TvChannelsList/TvChannelsList';
 import Player from '../Player/Player';
 
 function Main() {
+    // Player
     const [videoData, setVideoData] = useState({})
     const [loading, setLoading] = useState(false);
-
-
+    // LIVE TV
+    const [activeGroup, setActiveGroup] = useState("All")
+    const [activeGroupIndex, setActiveGroupIndex] = useState(0)
     // NAVIGATION
+    const navigate = useNavigate();
     const [elementIndex, setElementIndex] = useState(0);
-    const [elementNav, setElementNav] = useState('.header');
+    const [elementNav, setElementNav] = useState('');
     const [endIndex, setEndIndex] = useState(0);
     const [headerElemList, setHeaderElemList] = useState('');
     const [channelsElemList, setChannelsElemList] = useState('');
     const channelsGroupsElement = document.querySelector('.channels__item');
 
 
-    function runNav() {
-        if (document.activeElement.className === "body") {
-            document.querySelector('.header__link_active').focus();
-        }
-    }
-
-
     const handleKeyPress = useCallback((e) => {
-        // console.log(e.keyCode);
-        console.log(elementNav);
+        let indexGroup = activeGroupIndex
         let indexElem = elementIndex;
         //  HEADER NAV
         if (elementNav === ".header") {
-            setEndIndex(headerElemList.length)
-            if (e.code === "ArrowRight" && indexElem !== endIndex - 1) {
-                indexElem = elementIndex + 1;
-                headerElemList[indexElem].focus();
-                setElementIndex(indexElem)
-            }
-            else if (e.code === "ArrowLeft" && elementIndex !== 0) {
-                indexElem = elementIndex - 1;
-                headerElemList[indexElem].focus();
-                setElementIndex(indexElem)
+            if (e.code === "ArrowRight") {
+                document.activeElement.blur();
+                navigate('/movies')
             }
             else if (e.code === "ArrowDown") {
                 setElementNav('.groups');
@@ -49,12 +38,15 @@ function Main() {
         }
         // GROUPS NAV
         else if (elementNav === ".groups") {
-            console.log("GROUPS NAV");
-            if (e.code === "ArrowRight") {
-                console.log("NEXT GROUP");
+            if (e.code === "ArrowRight" && activeGroupIndex !== groupsList().length - 1) {
+                indexGroup = activeGroupIndex + 1
+                setActiveGroupIndex(indexGroup)
+                setActiveGroup(groupsList()[indexGroup])
             }
-            else if (e.code === "ArrowLeft") {
-                console.log("PREV GROUP");
+            else if (e.code === "ArrowLeft" && activeGroupIndex !== 0) {
+                indexGroup = activeGroupIndex - 1
+                setActiveGroupIndex(indexGroup)
+                setActiveGroup(groupsList()[indexGroup])
             }
             else if (e.code === "ArrowUp") {
                 setElementNav('.header');
@@ -71,9 +63,12 @@ function Main() {
         else if (elementNav === ".channels") {
             setEndIndex(channelsElemList.length)
             if (e.code === "ArrowDown" && indexElem !== endIndex - 1) {
-                indexElem = elementIndex + 1;
-                channelsElemList[indexElem].focus();
-                setElementIndex(indexElem)
+                try {
+                    indexElem = elementIndex + 1;
+                    channelsElemList[indexElem].focus();
+                    setElementIndex(indexElem)
+                }
+                catch { }
             }
             else if (e.code === "ArrowUp" && elementIndex !== 0) {
                 indexElem = elementIndex - 1;
@@ -89,8 +84,7 @@ function Main() {
                 document.activeElement.click();
             }
         }
-
-    }, [elementIndex, elementNav, endIndex, headerElemList, channelsElemList, channelsGroupsElement])
+    }, [navigate, activeGroupIndex, elementIndex, elementNav, endIndex, headerElemList, channelsElemList, channelsGroupsElement])
 
 
     const handleClickOutside = useCallback((e) => {
@@ -119,16 +113,15 @@ function Main() {
     }, [headerElemList, channelsElemList]);
 
 
+
+
+
     useEffect(() => {
-        // attach the e listener
         document.addEventListener('keydown', handleKeyPress);
         document.addEventListener('click', handleClickOutside);
-        runNav();
-
-        // remove the e listener
         return () => {
             document.removeEventListener('keydown', handleKeyPress);
-            document.addEventListener('click', handleClickOutside);
+            document.removeEventListener('click', handleClickOutside);
         };
     }, [handleKeyPress, handleClickOutside]);
 
@@ -140,18 +133,46 @@ function Main() {
         setHeaderElemList(header.querySelectorAll('a'));
         const channels = document.querySelector('.channels');
         setChannelsElemList(channels.querySelectorAll('li'));
-        channels.querySelectorAll('li')[0].click();
+    }, [activeGroup])
+
+
+
+    useEffect(() => {
+        const header = document.querySelector('.header');
+        setHeaderElemList(header.querySelectorAll('a'));
+        const channels = document.querySelector('.channels');
+        setChannelsElemList(channels.querySelectorAll('li'));
+        if (channels.querySelectorAll('li').length !== 0) {
+            // console.log(channels.querySelectorAll('li').length);
+            const activeChannel = channels.querySelectorAll('li')[0]
+            activeChannel.click();
+            activeChannel.focus();
+            setElementNav('.channels')
+            setEndIndex(channels.querySelectorAll('li').length)
+        }
+        else {
+            header.querySelectorAll('a')[0].focus();
+            setElementNav('.header')
+        }
     }, []);
-    // ////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
 
 
-
+    // live TV TESTING
+    const content = JSON.parse(localStorage.getItem('streams_crocOTT'))
+    const groupsList = () => {
+        let groups = ["All"]
+        content.forEach(stream => {
+            stream.groups.forEach(group => {
+                groups.push(group)
+            })
+        });
+        return groups.filter((item, i, ar) => ar.indexOf(item) === i)
+    };
 
 
     function test(display_name, urls) {
         setLoading(true)
-        // console.log(display_name, urls);
-
         setVideoData({
             "videoUrl": urls[0]["url"],
             "videoName": display_name
@@ -160,10 +181,13 @@ function Main() {
 
     return (
         <main className="livetv">
-            <TvChannelsList onClick={test} />
+             <TvChannelsList onClick={test} activeGroup={activeGroup} />
             <div>
                 {loading && <Player videoData={videoData} setVideoData={setVideoData} />}
-                <h1>{videoData.videoName}</h1>
+                <h1 className="livetv__title">{videoData.videoName}</h1>
+                <h2 className="livetv__program">Young and Hungry</h2>
+                <p className="livetv__description">The official languages are English and Maori, with Wellington as the capital. For everyday communication and business meetings, 
+                it is English that is used, but Maori is officially recognized as the co-official language.</p>
             </div>
             <div></div>
         </main>

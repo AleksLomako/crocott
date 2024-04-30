@@ -4,23 +4,17 @@ import './App.css';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import Header from '../Header/Header';
 import Main from '../Main/Main';
+import Movies from '../Movies/Movies';
 import SignInCode from '../SignInCode/SignInCode';
 import SignInLogin from '../SignInLogin/SignInLogin';
 import mainApi from '../../utils/MainApi';
 
 
-
 function App() {
-  // localStorage.removeItem('jwt_CrocOtt');
-  const authorizationBasic = localStorage.getItem("Basic_authorization_CrocOtt");
-  const authorizationCode = localStorage.getItem("Code_authorization_CrocOtt");
-
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false); // состояние авторизации пользователя
   const [apiError, setApiError] = useState(''); //Ошибка от сервера
-
-
-  // const [nowLocation, setNowLocation] = useState(''); // Текущая локация
+  const [token, setToken] = useState('')
 
 
   // Check Token
@@ -36,73 +30,85 @@ function App() {
     else {
       checkToken(jwt)
     }
-  }, [])
+  }, [token])
 
 
   // Check Token
   function checkToken(jwt) {
-    const refresh_token = localStorage.getItem('jwt_refresh_CrocOtt');
     mainApi.checkToken(jwt)
       .then((res) => {
         if (res) {
-          getContentFull();
           setIsLoggedIn(true)
+          getContentFull();
           navigate('/test_main')
         }
       })
       .catch((err) => {
         console.log(err.error);
-        try {
-          if (authorizationBasic !== null && refresh_token !== null) {
-            mainApi.refreshToken(authorizationBasic, refresh_token)
-              .then((res) => { 
-                saveJwt(res)
-                navigate('/test_main')
-              })
-              .catch((err) =>{
-                console.log(err);
-                navigate('/signinlogin')
-              })
-          }
-          else if (authorizationCode !== null && refresh_token !== null) {
-            mainApi.refreshToken(authorizationCode, refresh_token)
-              .then((res) => { 
-                saveJwt(res)
-                navigate('/test_main') 
-              })
-              .catch((err) =>{
-                console.log(err);
-                navigate('/signinlogin')
-              })
-          }
-        }
-        catch {
-          navigate('/signinlogin')
-        }
+        // alert("ERROR TOKEN")
+        refreshToken();
       })
   }
 
 
-   // TESTING
-   function getContentFull() {
-    mainApi.getFullContent()
-      .then((res) => {
-        if (res) {
+  function refreshToken() {
 
-          localStorage.setItem('fullContent_crocOTT', JSON.stringify(res));
-          const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
-    createContent(content)
-          // console.log(JSON.parse(localStorage.getItem('fullContent_crocOTT')));
-        }
-
-      })
-
-
-    createContent()
+    console.log("TOKEN");
+    const refresh_token = localStorage.getItem('jwt_refresh_CrocOtt');
+    const authorizationBasic = localStorage.getItem("Basic_authorization_CrocOtt");
+    const authorizationCode = localStorage.getItem("Code_authorization_CrocOtt");
+    try {
+      if (authorizationBasic !== null && refresh_token !== null) {
+        mainApi.refreshToken(authorizationBasic, refresh_token)
+          .then((res) => {
+            saveJwt(res)
+            setToken(res.data.access_token)
+            // console.log("TOKEN REFRESH");
+            // navigate('/test_main')
+          })
+          .catch((err) => {
+            console.log(err);
+            navigate('/signinlogin')
+          })
+      }
+      else if (authorizationCode !== null && refresh_token !== null) {
+        mainApi.refreshToken(authorizationCode, refresh_token)
+          .then((res) => {
+            saveJwt(res)
+            setToken(res.data.access_token)
+            // console.log("TOKEN REFRESH");
+            // navigate('/test_main')
+          })
+          .catch((err) => {
+            console.log(err);
+            navigate('/signinlogin')
+          })
+      }
+    }
+    catch {
+      console.log("EXIT");
+      navigate('/signinlogin')
+    }
   }
 
-  function createContent() {
+
+  // TESTING
+  function getContentFull() {
+    // mainApi.getFullContent()
+    //   .then((res) => {
+    //     if (res) {
+    //       localStorage.setItem('fullContent_crocOTT', JSON.stringify(res));
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   })
+    parseFullContent()
+  }
+
+  function parseFullContent() {
     const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
+    console.log(content);
     const streams = [];
     const moviaes = [];
     const serials = [];
@@ -128,80 +134,61 @@ function App() {
     localStorage.setItem('serials_crocOTT', JSON.stringify(serials))
   }
 
+ // Обработчик входа в приложение
+ function handleLogin(values) {
+  const authorization = mainApi.createHeaders(values.name, values.password);
+  localStorage.setItem("Basic_authorization_CrocOtt", authorization)
+  let deviceId = ''
+  // console.log(authorization);
+  mainApi.getListDevices(authorization)
+    .then((res) => {
+      console.log("list Device");
+      console.log(res);
+    })
+    .then(() => {
+      console.log("add Device");
+      mainApi.addDevice(authorization, localStorage.getItem("deviceName_crocOTT"))
+        .then((res) => {
+          console.log(res);
+          deviceId = res.data.device.id;
+        })
+        // CATCH
+        .then(() => {
+          // TESTING////////////////////////
+          const dataForLogin = {
+            "project": {
+              "name": "CrocOTT",
+              "version": "1.4.6"
+            },
+            "os": {
+              "name": "webos",
+              "version": localStorage.getItem("deviceVersion_crocOTT"),
+              "ram_free": 0
+            },
+            "cpu_brand": "Lg"
+          }
+          dataForLogin.os.arch = localStorage.getItem("deviceName_crocOTT");
+          dataForLogin.id = deviceId;
+          dataForLogin.os.ram_total = Number(localStorage.getItem("deviceDdrSize_crocOTT"));
+          console.log(dataForLogin);
 
-
-
-
-
-
-
-
-
-
-
-
-  // Обработчик входа в приложение
-  function handleLogin(values) {
-    const authorization = mainApi.createHeaders(values.name, values.password);
-    localStorage.setItem("Basic_authorization_CrocOtt", authorization)
-    let deviceId = ''
-    // console.log(authorization);
-    mainApi.getListDevices(authorization)
-      .then((res) => {
-        console.log("list Device");
-        console.log(res);
-      })
-      .then(() => {
-        console.log("add Device");
-        mainApi.addDevice(authorization, localStorage.getItem("deviceName_crocOTT"))
-          .then((res) => {
-            console.log(res);
-            deviceId = res.data.device.id;
-          })
-          // CATCH
-          .then(() => {
-            // TESTING////////////////////////
-            const dataForLogin = {
-              "project": {
-                "name": "CrocOTT",
-                "version": "1.4.6"
-              },
-              "os": {
-                "name": "webos",
-                "version": localStorage.getItem("deviceVersion_crocOTT"),
-                "ram_free": 0
-              },
-              "cpu_brand": "Lg"
-            }
-            dataForLogin.os.arch = localStorage.getItem("deviceName_crocOTT");
-            dataForLogin.id = deviceId;
-            dataForLogin.os.ram_total = Number(localStorage.getItem("deviceDdrSize_crocOTT"));
-            console.log(dataForLogin);
-
-            mainApi.login(authorization, dataForLogin)
-              .then((res) => {
-                saveJwt(res);
-                // localStorage.setItem('jwt_CrocOtt', res.data.access_token)
-                setIsLoggedIn(true)
-                navigate('/test_main');
-              })
-
-
-            ///////////////////////////////////////
-          })
-
-
-      })
-      .catch((err) => {
-        setApiError(err.error.message)
-      })
-  };
+          mainApi.login(authorization, dataForLogin)
+            .then((res) => {
+              saveJwt(res);
+              setIsLoggedIn(true)
+              navigate('/test_main');
+            })
+        })
+    })
+    .catch((err) => {
+      setApiError(err.error.message)
+    })
+};
 
 
   function handleLoginCode(values) {
     // localStorage.setItem("Code_authorization_CrocOtt", authorization)
     // setIsLoggedIn(true)
-    // navigate('/test_main')
   }
 
 
@@ -219,6 +206,8 @@ function App() {
     localStorage.removeItem('jwt_refresh_CrocOtt')
     localStorage.removeItem("Basic_authorization_CrocOtt")
     localStorage.removeItem("Code_authorization_CrocOtt")
+    localStorage.removeItem('fullContent_crocOTT');
+    localStorage.removeItem('streams_crocOTT')
   }
 
 
@@ -235,7 +224,7 @@ function App() {
         <Route path="/movies" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleLogOut} />
-            <h2>MOVIES</h2>
+            <Movies />
           </ProtectedRoute>
         }
         />

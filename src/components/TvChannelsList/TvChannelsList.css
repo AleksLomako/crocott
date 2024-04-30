@@ -6,7 +6,7 @@
 .channels__wrap {
     display: flex;
     flex-direction: column;
-    height: 700px;
+    height: calc(100vh - 135px);
     overflow-y: scroll;
     visibility: hidden;
 }
@@ -40,6 +40,10 @@
     justify-content: space-between;
     padding: 10px 9px;
     position: relative;
+}
+
+.channels__item:focus {
+    outline: 4px solid #ffc107;
 }
 
 .channels__icon {

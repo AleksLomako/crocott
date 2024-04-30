@@ -36,6 +36,8 @@
   font-family: VideoJS;
   font-weight: 400;
   font-style: normal;
+
+  
 }
 
 .video-js .vjs-big-play-button .vjs-icon-placeholder:before,
@@ -2018,6 +2020,7 @@ video::-webkit-media-text-track-display {
 .video-js.vjs-paused .vjs-big-play-button,
 .vjs-paused.vjs-has-started.video-js .vjs-big-play-button {
   display: block;
+  display: none;
 }
 
 .video-js .vjs-load-progress div,

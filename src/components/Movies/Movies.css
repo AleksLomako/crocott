@@ -1,0 +1,16 @@
+.movies {
+    display: flex;
+    justify-content: center;
+}
+
+.movies__list {
+    display: flex;
+    justify-content: space-evenly;
+    width: 38%;
+}
+
+.movies__item {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 29px;
+}
