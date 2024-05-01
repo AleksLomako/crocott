@@ -3,6 +3,11 @@
   justify-content: center;
 }
 
+.video-style:focus {
+  outline: 4px solid #ffc107; 
+  outline-offset: 2px; 
+}
+
 .hide {
   display: none;
 }

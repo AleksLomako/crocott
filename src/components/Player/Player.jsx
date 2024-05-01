@@ -59,7 +59,7 @@ function Player({ videoData, setVideoData }) {
     }
 
     return (
-        <div id="video" className="video-style">
+        <div id="video" className="video-style" tabIndex={0}>
         </div>
     );
 }

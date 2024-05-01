@@ -16,9 +16,16 @@ function App() {
   const [apiError, setApiError] = useState(''); //Ошибка от сервера
   const [token, setToken] = useState('')
 
+// CONTENT
+const [liveTvList, setLiveTvList] = useState([]);
+// const [moviesList, setMoviesList] = useState([]);
+
+
 
   // Check Token
   useEffect(() => {
+
+    
     localStorage.setItem("deviceName_crocOTT", "LG TESTING")
     localStorage.setItem("deviceVersion_crocOTT", "02.08.09")
     localStorage.setItem("deviceDdrSize_crocOTT", "2")
@@ -98,11 +105,15 @@ function App() {
     //   .then((res) => {
     //     if (res) {
     //       localStorage.setItem('fullContent_crocOTT', JSON.stringify(res));
+    //       parseFullContent()
     //     }
     //   })
     //   .catch((err) => {
     //     console.log(err);
     //   })
+
+
+
     parseFullContent()
   }
 
@@ -110,7 +121,7 @@ function App() {
     const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
     console.log(content);
     const streams = [];
-    const moviaes = [];
+    const movies = [];
     const serials = [];
     content.data.packages.forEach(packag => {
       if (packag.streams.length !== 0) {
@@ -120,7 +131,7 @@ function App() {
       }
       else if (packag.vods.length !== 0) {
         packag.vods.forEach(vod => {
-          moviaes.push(vod)
+          movies.push(vod)
         });
       }
       else if (packag.serials.length !== 0) {
@@ -130,7 +141,9 @@ function App() {
       }
     })
     localStorage.setItem('streams_crocOTT', JSON.stringify(streams))
-    localStorage.setItem('moviaes_crocOTT', JSON.stringify(moviaes))
+    setLiveTvList(JSON.parse(localStorage.getItem('streams_crocOTT')))
+
+    localStorage.setItem('movies_crocOTT', JSON.stringify(movies))
     localStorage.setItem('serials_crocOTT', JSON.stringify(serials))
   }
 
@@ -175,6 +188,7 @@ function App() {
           mainApi.login(authorization, dataForLogin)
             .then((res) => {
               saveJwt(res);
+              getContentFull();
               setIsLoggedIn(true)
               navigate('/test_main');
             })
@@ -217,7 +231,7 @@ function App() {
         <Route path="/test_main" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleLogOut} />
-            <Main />
+            <Main liveTvList={liveTvList} />
           </ProtectedRoute>
         }
         />

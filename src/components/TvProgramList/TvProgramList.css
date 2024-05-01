@@ -1,0 +1,29 @@
+.programs {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 135px);
+    overflow-y: scroll;
+    visibility: hidden;
+}
+
+.programs__list {
+    padding: 20px 10px 0px 30px;
+}
+
+.programs,
+.programs__list {
+    visibility: visible;
+}
+
+.programs::-webkit-scrollbar {
+    width: 6px;
+}
+
+.programs::-webkit-scrollbar-thumb {
+    background-color: rgba(243, 237, 237, 0.301);
+    border-radius: 20px;
+}
+
+.programs::-webkit-scrollbar-track {
+    background-color: transparent;
+}
