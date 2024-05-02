@@ -1,6 +1,6 @@
 import React from "react";
-
 import './Movies.css';
+import MoviesList from "../MoviesList/MoviesList";
 
 
 function Movies() {
@@ -13,6 +13,7 @@ function Movies() {
                 <li className="movies__item">Films</li>
                 <li className="movies__item">Cartoons</li>
             </div>
+            <MoviesList />
         </section>
     );
 }

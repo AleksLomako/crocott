@@ -113,7 +113,7 @@ class MainApi {
     // get Tv programs
     getTvPrograms(channelId){
         // console.log(channelId);
-        console.log(`${this._url}/client/content/epg/${channelId}`);
+        // console.log(`${this._url}/client/content/epg/${channelId}`);
         this.setJwt();
         return fetch(`${this._url}/client/content/epg/${channelId}`, {
             headers: this._headers

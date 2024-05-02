@@ -119,7 +119,7 @@ const [liveTvList, setLiveTvList] = useState([]);
 
   function parseFullContent() {
     const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
-    console.log(content);
+    // console.log(content);
     const streams = [];
     const movies = [];
     const serials = [];

@@ -95,8 +95,8 @@ function Main({liveTvList}) {
         }
         // PLAYER NAV
         else if (elementNav === ".player"){
-            console.log(elementNav);
-            console.log(document.activeElement);
+            // console.log(elementNav);
+            // console.log(document.activeElement);
             if(e.code ==="ArrowLeft"){
                 setElementNav('.channels');
                 channelsElemList[elementIndex].focus()
@@ -198,7 +198,7 @@ function Main({liveTvList}) {
         // TV PROGRAMS
         mainApi.getTvPrograms(id)
         .then((res)=>{
-            console.log(res);
+            // console.log(res);
             setTvProgram(res.data.epg)
             // console.log(new Date(tvProgram[0].start));
             // console.log(new Date(tvProgram[0].start).getFullYear());
@@ -225,8 +225,6 @@ function Main({liveTvList}) {
             "videoName": display_name
         })
     }
-
-
 
     // console.log(tvProgram[0].title);
 

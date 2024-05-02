@@ -27,3 +27,9 @@
 .programs::-webkit-scrollbar-track {
     background-color: transparent;
 }
+
+
+.test{
+    text-align: center;
+    margin-top: 50px;
+}

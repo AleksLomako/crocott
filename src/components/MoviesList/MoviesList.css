@@ -1,0 +1,12 @@
+.movieslist {
+    width: 100%;
+}
+
+.movieslist__items {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 150px);
+    grid-template-rows: repeat(auto-fit, 200px);
+    justify-content: center;
+    gap: 25px;
+}

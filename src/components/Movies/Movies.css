@@ -1,6 +1,8 @@
 .movies {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .movies__list {
