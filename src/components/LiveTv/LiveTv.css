@@ -23,3 +23,9 @@
     font-weight: 400;
     line-height: normal;
 }
+
+.livetv__description:focus{
+    outline: 4px solid #ffc107;
+    outline-offset: 2px;
+    background-color: rgba(85, 84, 84, 0.5);
+}

@@ -3,11 +3,12 @@ import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import Header from '../Header/Header';
-import Main from '../Main/Main';
+import LiveTv from '../LiveTv/LiveTv';
 import Movies from '../Movies/Movies';
 import SignInCode from '../SignInCode/SignInCode';
 import SignInLogin from '../SignInLogin/SignInLogin';
 import mainApi from '../../utils/MainApi';
+import saveJwt from '../../utils/saveJwt';
 
 
 function App() {
@@ -18,14 +19,13 @@ function App() {
 
 // CONTENT
 const [liveTvList, setLiveTvList] = useState([]);
+const [logo, setLogo] = useState('https://ott.crocott.com/panel_pro/api/runtime_folder/static/6629d363418e8b5418d68f8a.png')
 // const [moviesList, setMoviesList] = useState([]);
 
 
 
   // Check Token
   useEffect(() => {
-
-    
     localStorage.setItem("deviceName_crocOTT", "LG TESTING")
     localStorage.setItem("deviceVersion_crocOTT", "02.08.09")
     localStorage.setItem("deviceDdrSize_crocOTT", "2")
@@ -52,15 +52,12 @@ const [liveTvList, setLiveTvList] = useState([]);
       })
       .catch((err) => {
         console.log(err.error);
-        // alert("ERROR TOKEN")
         refreshToken();
       })
   }
 
 
   function refreshToken() {
-
-    console.log("TOKEN");
     const refresh_token = localStorage.getItem('jwt_refresh_CrocOtt');
     const authorizationBasic = localStorage.getItem("Basic_authorization_CrocOtt");
     const authorizationCode = localStorage.getItem("Code_authorization_CrocOtt");
@@ -70,8 +67,6 @@ const [liveTvList, setLiveTvList] = useState([]);
           .then((res) => {
             saveJwt(res)
             setToken(res.data.access_token)
-            // console.log("TOKEN REFRESH");
-            // navigate('/test_main')
           })
           .catch((err) => {
             console.log(err);
@@ -83,8 +78,6 @@ const [liveTvList, setLiveTvList] = useState([]);
           .then((res) => {
             saveJwt(res)
             setToken(res.data.access_token)
-            // console.log("TOKEN REFRESH");
-            // navigate('/test_main')
           })
           .catch((err) => {
             console.log(err);
@@ -93,9 +86,15 @@ const [liveTvList, setLiveTvList] = useState([]);
       }
     }
     catch {
-      console.log("EXIT");
       navigate('/signinlogin')
     }
+  }
+
+  function getInfo() {
+    mainApi.getInfo()
+      .then((res) => {
+        setLogo(res.data.brand.logo)
+      })
   }
 
 
@@ -119,7 +118,6 @@ const [liveTvList, setLiveTvList] = useState([]);
 
   function parseFullContent() {
     const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
-    // console.log(content);
     const streams = [];
     const movies = [];
     const serials = [];
@@ -142,7 +140,6 @@ const [liveTvList, setLiveTvList] = useState([]);
     })
     localStorage.setItem('streams_crocOTT', JSON.stringify(streams))
     setLiveTvList(JSON.parse(localStorage.getItem('streams_crocOTT')))
-
     localStorage.setItem('movies_crocOTT', JSON.stringify(movies))
     localStorage.setItem('serials_crocOTT', JSON.stringify(serials))
   }
@@ -152,7 +149,6 @@ const [liveTvList, setLiveTvList] = useState([]);
   const authorization = mainApi.createHeaders(values.name, values.password);
   localStorage.setItem("Basic_authorization_CrocOtt", authorization)
   let deviceId = ''
-  // console.log(authorization);
   mainApi.getListDevices(authorization)
     .then((res) => {
       console.log("list Device");
@@ -188,6 +184,7 @@ const [liveTvList, setLiveTvList] = useState([]);
           mainApi.login(authorization, dataForLogin)
             .then((res) => {
               saveJwt(res);
+              getInfo();
               getContentFull();
               setIsLoggedIn(true)
               navigate('/test_main');
@@ -205,11 +202,6 @@ const [liveTvList, setLiveTvList] = useState([]);
     // setIsLoggedIn(true)
   }
 
-
-  function saveJwt(res) {
-    localStorage.setItem('jwt_CrocOtt', res.data.access_token)
-    localStorage.setItem('jwt_refresh_CrocOtt', res.data.refresh_token)
-  }
 
 
   function handleLogOut() {
@@ -230,8 +222,8 @@ const [liveTvList, setLiveTvList] = useState([]);
       <Routes>
         <Route path="/test_main" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <Header onExit={handleLogOut} />
-            <Main liveTvList={liveTvList} />
+            <Header onExit={handleLogOut} logo={logo}/>
+            <LiveTv liveTvList={liveTvList} />
           </ProtectedRoute>
         }
         />

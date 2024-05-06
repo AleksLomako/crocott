@@ -5,34 +5,33 @@ import TvProgramCard from "../TvProgramCard/TvProgramCard";
 
 function TvProgramList({ tvProgram }) {
 
-    ///////////     ДАТА
-    // const start = tvProgram.map(el => {
-    //     return (el.start)
-    // })
+    const checkTvProgram = (tvProgram) => {
+        let data = [];
+        if (tvProgram) {
+            if (tvProgram.length !== 0) {
+                data = tvProgram
+            }
+        }
+        return data
+    }
 
-    // const date = start.map(el => {
-    //     return (new Date(el))
-    // })
-
-    // function padTo2Digits(num) {
-    //     return num.toString().padStart(2, '0'); // Преобразует 9 в 09, а 10 оставит без изменений
-    // }
-
-    // date.forEach(el => {
-    //     console.log(padTo2Digits(el.getDate()) + '.' + padTo2Digits(el.getMonth() + 1))
-    // })
-
+    const programs = checkTvProgram(tvProgram).map(function (prog) {
+        return prog
+    })
 
     return (
         <div className="programs">
-            {/* <ul className="programs__list">
-                {tvProgram.map((program, index) => (
+            <ul className="programs__list">
+                {programs.map((program, index) => (
                     <TvProgramCard
+                        key={index}
                         title={program.title}
-                        key={index} />
+                        programInfo={program.dateInfo}
+                        programActive={program.active}
+                    />
                 ))}
-            </ul> */}
-            <p className="test">No programs available</p>
+            </ul>
+
         </div>
     );
 }

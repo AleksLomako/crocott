@@ -1,7 +1,7 @@
 .programs {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 135px);
+    height: calc(100vh - 143px);
     overflow-y: scroll;
     visibility: hidden;
 }

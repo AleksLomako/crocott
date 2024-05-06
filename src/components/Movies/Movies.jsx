@@ -7,7 +7,7 @@ function Movies() {
 
     return (
         <section className="movies">
-            <div className="movies__list">
+            <div className="movies__links">
                 <li className="movies__item">First</li>
                 <li className="movies__item">Sports</li>
                 <li className="movies__item">Films</li>

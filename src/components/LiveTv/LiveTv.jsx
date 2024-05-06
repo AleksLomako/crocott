@@ -1,21 +1,26 @@
 import { React, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Main.css';
+import './LiveTv.css';
 import TvChannelsList from '../TvChannelsList/TvChannelsList';
 import Player from '../Player/Player';
 import TvProgramList from '../TvProgramList/TvProgramList';
 import mainApi from '../../utils/MainApi';
+import saveJwt from '../../utils/saveJwt';
+import processingProgramData from '../../utils/processingProgData';
 
-function Main({liveTvList}) {
-    // Player
+function LiveTv({ liveTvList }) {
+    // PLAYER STATES
     const [videoData, setVideoData] = useState({})
     const [loading, setLoading] = useState(false);
-    // LIVE TV
+    // LIVE TV GROUPS STATES
     const [activeGroup, setActiveGroup] = useState("All")
     const [activeGroupIndex, setActiveGroupIndex] = useState(0)
-    // Live Tv program
+    // Live Tv program STATES
     const [tvProgram, setTvProgram] = useState([])
-    // NAVIGATION
+    const [processedProgData, setProcessedProgData] = useState('')
+    const [programDesc, setProgramDesc] = useState('')
+    const [programTitle, setProgramTitle] = useState('')
+    // NAVIGATION STATES
     const navigate = useNavigate();
     const [elementIndex, setElementIndex] = useState(0);
     const [elementNav, setElementNav] = useState('');
@@ -23,19 +28,25 @@ function Main({liveTvList}) {
     const [headerElemList, setHeaderElemList] = useState('');
     const [channelsElemList, setChannelsElemList] = useState('');
     const channelsGroupsElement = document.querySelector('.channels__item');
-    
+    const [fullScreen, setFullScreen] = useState(false)
 
 
+    // HANDLE REMOTE CONTROL
     const handleKeyPress = useCallback((e) => {
+        // HANDLE BACK KEY
+        if (e.keyCode === 461) {
+            console.log("NO SET");
+        }
+        // INDEXES
         let indexGroup = activeGroupIndex
         let indexElem = elementIndex;
         //  HEADER NAV
         if (elementNav === ".header") {
-            if (e.code === "ArrowRight") {
+            if (e.keyCode === 39) {
                 document.activeElement.blur();
                 navigate('/movies')
             }
-            else if (e.code === "ArrowDown") {
+            else if (e.keyCode === 40) {
                 setElementNav('.groups');
                 setElementIndex(0)
                 channelsGroupsElement.focus()
@@ -43,22 +54,22 @@ function Main({liveTvList}) {
         }
         // GROUPS NAV
         else if (elementNav === ".groups") {
-            if (e.code === "ArrowRight" && activeGroupIndex !== groupsList().length - 1) {
+            if (e.keyCode === 39 && activeGroupIndex !== groupsList().length - 1) {
                 indexGroup = activeGroupIndex + 1
                 setActiveGroupIndex(indexGroup)
                 setActiveGroup(groupsList()[indexGroup])
             }
-            else if (e.code === "ArrowLeft" && activeGroupIndex !== 0) {
+            else if (e.keyCode === 37 && activeGroupIndex !== 0) {
                 indexGroup = activeGroupIndex - 1
                 setActiveGroupIndex(indexGroup)
                 setActiveGroup(groupsList()[indexGroup])
             }
-            else if (e.code === "ArrowUp") {
+            else if (e.keyCode === 38) {
                 setElementNav('.header');
                 setElementIndex(0)
                 headerElemList[0].focus()
             }
-            else if (e.code === "ArrowDown") {
+            else if (e.keyCode === 40) {
                 setElementNav('.channels');
                 setElementIndex(0)
                 channelsElemList[0].focus()
@@ -67,7 +78,7 @@ function Main({liveTvList}) {
         // CHANNEL NAV
         else if (elementNav === ".channels") {
             setEndIndex(channelsElemList.length)
-            if (e.code === "ArrowDown" && indexElem !== endIndex - 1) {
+            if (e.keyCode === 40 && indexElem !== endIndex - 1) {
                 try {
                     indexElem = elementIndex + 1;
                     channelsElemList[indexElem].focus();
@@ -75,39 +86,55 @@ function Main({liveTvList}) {
                 }
                 catch { }
             }
-            else if (e.code === "ArrowUp" && elementIndex !== 0) {
+            else if (e.keyCode === 38 && elementIndex !== 0) {
                 indexElem = elementIndex - 1;
                 channelsElemList[indexElem].focus();
                 setElementIndex(indexElem)
             }
-            else if (e.code === "ArrowUp" && elementIndex === 0) {
+            else if (e.keyCode === 38 && elementIndex === 0) {
                 setElementNav('.groups');
                 setElementIndex(0)
                 channelsGroupsElement.focus()
             }
-            else if (e.code === "Enter") {
+            else if (e.keyCode === 13) {
                 document.activeElement.click();
             }
-            else if(e.code ==="ArrowRight"){
+            else if (e.keyCode === 39) {
                 setElementNav('.player');
                 document.getElementById('video').focus()
             }
         }
         // PLAYER NAV
-        else if (elementNav === ".player"){
-            // console.log(elementNav);
-            // console.log(document.activeElement);
-            if(e.code ==="ArrowLeft"){
+        else if (elementNav === ".player") {
+            document.getElementById('video').focus()
+            if (e.keyCode === 37 && fullScreen === false) {
                 setElementNav('.channels');
                 channelsElemList[elementIndex].focus()
             }
-            else if (e.code === "Enter") {
+
+            else if (e.keyCode === 38 && fullScreen === false) {
+                setElementNav('.header');
+                setElementIndex(0)
+                headerElemList[0].focus()
+            }
+
+            else if (e.keyCode === 13) {
                 document.querySelector('.vjs-fullscreen-control').click()
+                if (fullScreen === false) {
+                    setFullScreen(true)
+                }
+                else {
+                    setFullScreen(false)
+                }
+            }
+            else if (e.keyCode === 461 && fullScreen === true) {
+                document.querySelector('.vjs-fullscreen-control').click()
+                setFullScreen(false)
             }
         }
-    }, [navigate, activeGroupIndex, elementIndex, elementNav, endIndex, headerElemList, channelsElemList, channelsGroupsElement])
+    }, [fullScreen, navigate, activeGroupIndex, elementIndex, elementNav, endIndex, headerElemList, channelsElemList, channelsGroupsElement])
 
-
+    // HANDLE CLICK MOUSE OUTSIDE
     const handleClickOutside = useCallback((e) => {
         let indexElem = 0;
         let elementClassName = (document.activeElement.className.split(' ')[0]);
@@ -133,7 +160,7 @@ function Main({liveTvList}) {
         }
     }, [headerElemList, channelsElemList]);
 
-
+    // ADD & REMOVE LISTENER
     useEffect(() => {
         document.addEventListener('keydown', handleKeyPress);
         document.addEventListener('click', handleClickOutside);
@@ -143,42 +170,38 @@ function Main({liveTvList}) {
         };
     }, [handleKeyPress, handleClickOutside]);
 
-
-
-
+    // LIVE TV LIST & ACTIVE GROUP
     useEffect(() => {
         // console.log(liveTvList);
-        if (liveTvList.length !==0){
+        if (liveTvList.length !== 0) {
             const header = document.querySelector('.header');
             setHeaderElemList(header.querySelectorAll('a'));
             const channels = document.querySelector('.channels__list');
             setChannelsElemList(channels.querySelectorAll('li'));
-        }    
+        }
     }, [activeGroup, liveTvList])
 
 
-
+    // SELECT (header, channels) element for navigation
     useEffect(() => {
-        if (liveTvList.length !==0){
-            const header = document.querySelector('.header');
+        const header = document.querySelector('.header');
         setHeaderElemList(header.querySelectorAll('a'));
-        const channels = document.querySelector('.channels__list');
-        setChannelsElemList(channels.querySelectorAll('li'));
-        if (channels.querySelectorAll('li').length !== 0) {
-            const activeChannel = channels.querySelectorAll('li')[0]
-            activeChannel.click();
-            activeChannel.focus();
-            setElementNav('.channels')
-            setEndIndex(channels.querySelectorAll('li').length)
+        if (liveTvList.length !== 0) {
+            const channels = document.querySelector('.channels__list');
+            setChannelsElemList(channels.querySelectorAll('li'));
+            if (channels.querySelectorAll('li').length !== 0) {
+                const activeChannel = channels.querySelectorAll('li')[0]
+                activeChannel.click();
+                activeChannel.focus();
+                setElementNav('.channels')
+                setEndIndex(channels.querySelectorAll('li').length)
+            }
         }
         else {
             header.querySelectorAll('a')[0].focus();
             setElementNav('.header')
         }
-        }
-        
-    }, []);
-    //////////////////////////////////////////////////////////////////////////
+    }, [liveTvList]);
 
 
     // live TV TESTING
@@ -193,32 +216,106 @@ function Main({liveTvList}) {
         return groups.filter((item, i, ar) => ar.indexOf(item) === i)
     };
 
-
-    function handleChannelClick(display_name, urls, id) {
-        // TV PROGRAMS
-        mainApi.getTvPrograms(id)
-        .then((res)=>{
-            // console.log(res);
-            setTvProgram(res.data.epg)
-            // console.log(new Date(tvProgram[0].start));
-            // console.log(new Date(tvProgram[0].start).getFullYear());
-            // console.log(new Date(tvProgram[0].start).getDate());
-            // console.log(new Date(tvProgram[0].start).getMonth() +1);
-
-            // console.log(new Date(tvProgram[0].start), "-", new Date(tvProgram[0].start).getMonth());
-            // console.log((new Date(tvProgram[0].stop)));
-            // console.log(new Date(tvProgram[0].stop) - new Date(tvProgram[0].start));
-
-        })
-        .then(()=>{
-            startPlayer(display_name, urls)
-        })
-        .catch((err)=>{
-            console.log(err);
-        })        
+    // CHECK TOKEN 
+    function checkToken(id) {
+        const jwt = localStorage.getItem('jwt_CrocOtt');
+        mainApi.checkToken(jwt)
+            .then((res) => {
+                if (res) {
+                    mainApi.getTvPrograms(id)
+                        .then((res) => {
+                            setTvProgram(res.data.epg)
+                        })
+                }
+            })
+            .catch((err) => {
+                console.log(err.error);
+                refreshToken(id);
+            })
     }
 
-    function startPlayer(display_name, urls){
+    // UPDATE PROGRAM DATA
+    function updateProgramData() {
+        const programs = processingProgramData(tvProgram)
+        setProcessedProgData(programs)
+        setProgramDesc('')
+        setProgramTitle('')
+        try {
+            setProgramDesc(programs[0].desc)
+            setProgramTitle(programs[0].title)
+            setTimeout(function () { setActiveProgram(); }, programs[0].timeout * 1000);
+        }
+        catch { }
+    }
+
+
+    function setActiveProgram() {
+        updateProgramData()
+
+    }
+
+
+    useEffect(() => {
+        updateProgramData()
+    }, [tvProgram])
+
+
+
+
+
+
+    function refreshToken(id) {
+        console.log("REFRESH");
+        const refresh_token = localStorage.getItem('jwt_refresh_CrocOtt');
+        const authorizationBasic = localStorage.getItem("Basic_authorization_CrocOtt");
+        const authorizationCode = localStorage.getItem("Code_authorization_CrocOtt");
+        try {
+            if (authorizationBasic !== null && refresh_token !== null) {
+                mainApi.refreshToken(authorizationBasic, refresh_token)
+                    .then((res) => {
+                        saveJwt(res)
+                    })
+                    .then(() => {
+                        checkToken(id)
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        navigate('/signinlogin')
+                    })
+            }
+            else if (authorizationCode !== null && refresh_token !== null) {
+                mainApi.refreshToken(authorizationBasic, refresh_token)
+                    .then((res) => {
+                        saveJwt(res)
+                    })
+                    .then(() => {
+                        checkToken(id)
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        navigate('/signinlogin')
+                    })
+            }
+        }
+        catch {
+            navigate('/signinlogin')
+        }
+
+    }
+
+    function getTvPrograms(id) {
+        checkToken(id)
+    }
+
+
+    function handleChannelClick(display_name, urls, id) {
+        getTvPrograms(id)
+        startPlayer(display_name, urls)
+
+
+    }
+
+    function startPlayer(display_name, urls) {
         setLoading(true)
         setVideoData({
             "videoUrl": urls[0]["url"],
@@ -226,20 +323,18 @@ function Main({liveTvList}) {
         })
     }
 
-    // console.log(tvProgram[0].title);
-
     return (
         <main className="livetv">
             <TvChannelsList onClick={handleChannelClick} activeGroup={activeGroup} />
             <div>
                 {loading && <Player videoData={videoData} setVideoData={setVideoData} />}
-                <h1 className="livetv__title">{videoData.videoName}</h1>
-                {/* <h2 className="livetv__program">{tvProgram[0].title}</h2> */}
-                <p className="livetv__description"></p>
+                <h1 className="livetv__title" >{videoData.videoName}</h1>
+                <h2 className="livetv__program" >{programTitle}</h2>
+                <p className="livetv__description" tabIndex="0">{programDesc}</p>
             </div>
-            <TvProgramList tvProgram={tvProgram} />
+            <TvProgramList tvProgram={processedProgData} />
         </main>
     )
 }
 
-export default Main;
+export default LiveTv;

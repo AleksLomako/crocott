@@ -1,8 +1,6 @@
 import React from "react";
 import './TvChannelsList.css';
 import TvChannelCard from '../TvChannelCard/TvChannelCard';
-// import IconArrowBack from '../../images/icons8-back-50.png';
-// import IconArrowForward from '../../images/icons8-forward-50.png';
 
 
 function TvChannelsList({ onClick, activeGroup}) {
@@ -38,11 +36,9 @@ function TvChannelsList({ onClick, activeGroup}) {
     return (
         <div className="content">
             <div className="channels__item" tabIndex="0">
-                <p>&lt;</p>
-                {/* <img className="channels__icon" src={IconArrowBack} alt="arrow" tabIndex="0"></img> */}
+                <span className="channels__icon">&lt;</span>
                 <p className="channels__text">{activeGroup}</p>
-                <p>&gt;</p>
-                {/* <img className="channels__icon" src={IconArrowForward} alt="arrow" tabIndex="0"></img> */}
+                <span className="channels__icon">&gt;</span>
             </div>
             <div className="channels__wrap">
                 <ul className="channels__list">

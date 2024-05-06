@@ -2,14 +2,26 @@
     margin-bottom: 30px;
 }
 
-.program__title {
-    font-size: 22px;
-    font-weight: 400;
-    line-height: 29px;
-}
 
 .program:focus {
     outline: 4px solid #ffc107; 
     outline-offset: 2px; 
     background-color: rgba(85, 84, 84, 0.5);
+}
+
+.program_active {
+    outline: 2px solid #ffc107; 
+    outline-offset: 3px;
+}
+
+.program__title {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 29px;
+    margin-bottom: 4px;
+}
+
+.program__time {
+    font-size: 14px;
+    color: rgba(243, 237, 237, 0.5);
 }

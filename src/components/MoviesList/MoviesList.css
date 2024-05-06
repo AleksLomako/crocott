@@ -3,10 +3,17 @@
 }
 
 .movieslist__items {
-    width: 100%;
+    /* width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fit, 150px);
     grid-template-rows: repeat(auto-fit, 200px);
     justify-content: center;
-    gap: 25px;
+    gap: 25px; */
+
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 25px;
+    row-gap: 25px;
+    height: calc(100vh - 163px);
+    overflow-y: scroll;
 }

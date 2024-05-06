@@ -1,5 +1,7 @@
 .moviecard {
     position: relative;
+    width: 145px;
+    height: 210px;
 }
 
 .moviecard__img {

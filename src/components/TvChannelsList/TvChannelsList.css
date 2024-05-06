@@ -6,7 +6,7 @@
 .channels__wrap {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 135px);
+    height: calc(100vh - 153px);
     overflow-y: scroll;
     visibility: hidden;
 }
@@ -42,22 +42,16 @@
     position: relative;
 }
 
+
 .channels__item:focus {
-    outline: 4px solid #ffc107;
+    outline: none;
+}
+
+.channels__item:focus>span {
+    color: #ffc107;
 }
 
 .channels__icon {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-.channels__icon:focus {
-    outline: 4px solid #ffc107;
-    outline-offset: 1px;
-    background-color: rgba(85, 84, 84, 0.5);
-}
-
-.channels__text {
-    margin: 0px;
+    font-size: 24px;
+    color: rgba(243, 237, 237, 0.5);
 }

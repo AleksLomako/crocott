@@ -1,17 +1,17 @@
 import React from 'react';
 import './Header.css';
-import Logo from '../../images/logo.png';
+// import Logo from '../../images/logo.png';
 import IconGear from '../../images/icon-gear.png'
 import IconPower from '../../images/icons8-shutdown.png';
 
 import { NavLink, Link } from 'react-router-dom';
 
-function Header({onExit}) {
+function Header({onExit, logo}) {
 
 
     return (
         <header className="header">
-            <img className="header__logo" src={Logo} alt="logo"></img>
+            <img className="header__logo" src={logo} alt="logo"></img>
             <nav className="header__navigate">
                 <div className="header__links">
                     <NavLink to="/test_main" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>LiveTV</NavLink>
