@@ -20,6 +20,7 @@ function LiveTv({ liveTvList }) {
     const [processedProgData, setProcessedProgData] = useState('')
     const [programDesc, setProgramDesc] = useState('')
     const [programTitle, setProgramTitle] = useState('')
+    const [programElemList, setProgramElemList] = useState('')
     // NAVIGATION STATES
     const navigate = useNavigate();
     const [elementIndex, setElementIndex] = useState(0);
@@ -30,13 +31,8 @@ function LiveTv({ liveTvList }) {
     const channelsGroupsElement = document.querySelector('.channels__item');
     const [fullScreen, setFullScreen] = useState(false)
 
-
     // HANDLE REMOTE CONTROL
     const handleKeyPress = useCallback((e) => {
-        // HANDLE BACK KEY
-        if (e.keyCode === 461) {
-            console.log("NO SET");
-        }
         // INDEXES
         let indexGroup = activeGroupIndex
         let indexElem = elementIndex;
@@ -111,13 +107,11 @@ function LiveTv({ liveTvList }) {
                 setElementNav('.channels');
                 channelsElemList[elementIndex].focus()
             }
-
             else if (e.keyCode === 38 && fullScreen === false) {
-                setElementNav('.header');
+                setElementNav('.groups');
                 setElementIndex(0)
-                headerElemList[0].focus()
+                channelsGroupsElement.focus()
             }
-
             else if (e.keyCode === 13) {
                 document.querySelector('.vjs-fullscreen-control').click()
                 if (fullScreen === false) {
@@ -127,9 +121,43 @@ function LiveTv({ liveTvList }) {
                     setFullScreen(false)
                 }
             }
-            else if (e.keyCode === 461 && fullScreen === true) {
+            else if (e.keyCode === 461 && fullScreen === true){
                 document.querySelector('.vjs-fullscreen-control').click()
                 setFullScreen(false)
+            }
+
+            else if (e.keyCode === 39) {
+                if (processedProgData.length !== 0) {
+                    setElementNav('.programs');
+                    setElementIndex(0);
+                    document.querySelector('.program_active').focus();
+                    let programsList = document.querySelector('.programs__list');
+                    setProgramElemList(programsList.querySelectorAll('.program'));
+                }
+            }
+        }
+        // PROGRAM NAV
+        else if (elementNav === ".programs") {
+            setEndIndex(processedProgData.length)
+            if (e.keyCode === 37) {
+                setElementNav('.player');
+                setElementIndex(0);
+                document.getElementById('video').focus();
+            }
+            else if (e.keyCode === 40 && indexElem !== endIndex - 1) {
+                indexElem = elementIndex + 1;
+                programElemList[indexElem].focus()
+                setElementIndex(indexElem)
+            }
+            else if (e.keyCode === 38 && elementIndex !== 0) {
+                indexElem = elementIndex - 1;
+                programElemList[indexElem].focus()
+                setElementIndex(indexElem)
+            }
+            else if (e.keyCode === 38 && elementIndex === 0) {
+                setElementNav('.groups');
+                setElementIndex(0)
+                channelsGroupsElement.focus()
             }
         }
     }, [fullScreen, navigate, activeGroupIndex, elementIndex, elementNav, endIndex, headerElemList, channelsElemList, channelsGroupsElement])
@@ -172,7 +200,6 @@ function LiveTv({ liveTvList }) {
 
     // LIVE TV LIST & ACTIVE GROUP
     useEffect(() => {
-        // console.log(liveTvList);
         if (liveTvList.length !== 0) {
             const header = document.querySelector('.header');
             setHeaderElemList(header.querySelectorAll('a'));
@@ -180,7 +207,6 @@ function LiveTv({ liveTvList }) {
             setChannelsElemList(channels.querySelectorAll('li'));
         }
     }, [activeGroup, liveTvList])
-
 
     // SELECT (header, channels) element for navigation
     useEffect(() => {
@@ -248,24 +274,17 @@ function LiveTv({ liveTvList }) {
         catch { }
     }
 
-
+    // SET ACTIVE PROGRAM
     function setActiveProgram() {
         updateProgramData()
-
     }
-
 
     useEffect(() => {
         updateProgramData()
     }, [tvProgram])
 
 
-
-
-
-
     function refreshToken(id) {
-        console.log("REFRESH");
         const refresh_token = localStorage.getItem('jwt_refresh_CrocOtt');
         const authorizationBasic = localStorage.getItem("Basic_authorization_CrocOtt");
         const authorizationCode = localStorage.getItem("Code_authorization_CrocOtt");
@@ -303,6 +322,7 @@ function LiveTv({ liveTvList }) {
 
     }
 
+
     function getTvPrograms(id) {
         checkToken(id)
     }
@@ -311,8 +331,6 @@ function LiveTv({ liveTvList }) {
     function handleChannelClick(display_name, urls, id) {
         getTvPrograms(id)
         startPlayer(display_name, urls)
-
-
     }
 
     function startPlayer(display_name, urls) {

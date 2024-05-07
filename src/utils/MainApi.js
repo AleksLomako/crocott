@@ -33,12 +33,12 @@ class MainApi {
             method: 'POST',
             headers: this._headers,
             body: JSON.stringify(
-                {"refresh_token":refresh_token}
-            )    
+                { "refresh_token": refresh_token }
+            )
         })
             .then(res => this._checkResponse(res));
     }
-    
+
     // CLIENT
     // BASIC AUTH
 
@@ -65,7 +65,7 @@ class MainApi {
 
     // add device
     addDevice(authorization, name) {
-        this._headers.authorization = authorization
+        this._headers.authorization = authorization;
         return fetch(`${this._url}/client/devices/add`, {
             method: 'POST',
             headers: this._headers,
@@ -78,10 +78,7 @@ class MainApi {
 
     // login
     login(authorization, data) {
-        this._headers.authorization = authorization
-        console.log(JSON.stringify(
-            data
-        ));
+        this._headers.authorization = authorization;
         return fetch(`${this._url}/client/login`, {
             method: 'POST',
             headers: this._headers,
@@ -111,9 +108,7 @@ class MainApi {
     }
 
     // get Tv programs
-    getTvPrograms(channelId){
-        // console.log(channelId);
-        // console.log(`${this._url}/client/content/epg/${channelId}`);
+    getTvPrograms(channelId) {
         this.setJwt();
         return fetch(`${this._url}/client/content/epg/${channelId}`, {
             headers: this._headers

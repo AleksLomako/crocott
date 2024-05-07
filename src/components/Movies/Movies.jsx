@@ -3,7 +3,11 @@ import './Movies.css';
 import MoviesList from "../MoviesList/MoviesList";
 
 
-function Movies() {
+function Movies({ moviesList }) {
+
+
+    const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
+    console.log(content);
 
     return (
         <section className="movies">
@@ -13,7 +17,7 @@ function Movies() {
                 <li className="movies__item">Films</li>
                 <li className="movies__item">Cartoons</li>
             </div>
-            <MoviesList />
+            <MoviesList moviesList={moviesList} />
         </section>
     );
 }
