@@ -3,14 +3,18 @@ import './MovieCard.css';
 import ViewCountEye from '../../images/icons8-eye-24.png';
 
 
-function MovieCard({movieImg, movieCount}) {
+function MovieCard(movie) {
+
+    function handleClick() {
+        movie.onMovieClick(movie)
+    }
 
     return (
-        <li className="moviecard">
-            <img className="moviecard__img" src={movieImg} alt="Eye" />
+        <li className="moviecard" tabIndex={0} onClick={handleClick}>
+            <img className="moviecard__img" src={movie.movieImg} alt="Eye" />
             <button className="moviecard__btn">
                 <img className="moviecard__eye" src={ViewCountEye} alt="Eye" />
-                <p className="moviecard__count">{movieCount}</p>
+                <p className="moviecard__count">{movie.movieCount}</p>
             </button>
         </li>
     );

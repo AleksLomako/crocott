@@ -53,7 +53,7 @@ function Player({ videoData, setVideoData }) {
             playBtn.click();
         }
         catch{
-            console.log("await player");
+            // console.log("await player");
         }
         
     }

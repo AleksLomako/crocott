@@ -1,0 +1,68 @@
+.popup {
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    transition: visibility 0s, opacity 0.5s linear;
+}
+
+.popup_opened {
+    display: flex;
+    flex-direction: column;
+    visibility: visible;
+}
+
+.popup__header {
+    display: flex;
+    justify-content: space-between;
+    padding: 30px 40px;
+    align-items: center;
+}
+
+.popup__back-btn{
+    width: 18%;
+    display: flex;
+}
+
+.popup__icon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.popup__title {
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.popup__header-buttons {
+    display: flex;
+    width: 18%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup__play-btn {
+    background-color: #ffc107;
+    display: flex;
+    align-items: center;
+    padding: 7px 25px;
+    border-radius: 23px;
+    cursor: pointer;
+}
+
+.popup__play-btn_trailer {
+    background-color: #000;
+    color: #ffc107;
+    font-size: 22px;
+    font-weight: 500;
+    border: 2px solid rgba(85, 84, 84, 0.5)
+}
+
+.popup__play-text {
+    font-size: 22px;
+    font-weight: 500;
+}

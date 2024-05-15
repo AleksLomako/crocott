@@ -1,13 +1,20 @@
-import React from "react";
+import { React, useState } from 'react';
 import './Movies.css';
 import MoviesList from "../MoviesList/MoviesList";
+import MoviePopup from '../MoviePopup/MoviePopup';
 
 
 function Movies({ moviesList }) {
 
+    const [selectedMovie, setSelectedMovie] = useState(null);
 
-    const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
-    console.log(content);
+    // console.log(moviesList)
+
+    function handleMovieClick(movie) {
+        // console.log(movie)
+        setSelectedMovie(movie)
+    }
+
 
     return (
         <section className="movies">
@@ -17,7 +24,11 @@ function Movies({ moviesList }) {
                 <li className="movies__item">Films</li>
                 <li className="movies__item">Cartoons</li>
             </div>
-            <MoviesList moviesList={moviesList} />
+            <MoviesList
+                onMovieClick={handleMovieClick}
+                moviesList={moviesList} />
+            <MoviePopup
+                movie={selectedMovie} />
         </section>
     );
 }
