@@ -11,8 +11,11 @@ function Movies({ moviesList }) {
     // console.log(moviesList)
 
     function handleMovieClick(movie) {
-        // console.log(movie)
         setSelectedMovie(movie)
+    }
+
+    function handleCloseMovie() {
+        setSelectedMovie(null);
     }
 
 
@@ -28,7 +31,8 @@ function Movies({ moviesList }) {
                 onMovieClick={handleMovieClick}
                 moviesList={moviesList} />
             <MoviePopup
-                movie={selectedMovie} />
+                movie={selectedMovie}
+                onClose={handleCloseMovie} />
         </section>
     );
 }
