@@ -15,3 +15,18 @@
     line-height: 16px;
     margin: 0px 0px 9px;
 }
+
+.footer__link:focus {
+    border-radius: 3px;
+    outline: #ffc107 solid 2px;
+}
+
+.footer__link_lang{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer__icon {
+    padding-right: 7px;
+}

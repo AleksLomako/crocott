@@ -56,6 +56,11 @@
     cursor: pointer;
 }
 
+.auth__submit-button:focus{
+    outline: #ffc107 solid 1px;
+    box-shadow: #ffc107 0px 1px 0px, #ffc107 0px 0px 8px;
+}
+
 .auth__submit-button_disabled {
     background: #212020;
     color: #9c9b98;
@@ -71,4 +76,10 @@
     text-decoration: none;
     cursor: pointer;
     text-align: center;
+}
+
+.auth__link:focus {
+    border-radius: 3px;
+    border: 1px solid #ffc107 ;
+    outline: #ffc107 solid 2px;
 }

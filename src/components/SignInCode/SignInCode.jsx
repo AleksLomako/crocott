@@ -48,7 +48,7 @@ function SignInCode({ onLoginCode, errorMessage }) {
                     type="url"
                     id="login-url"
                     placeholder="Url"
-                    value={values.url || ''} //сделать дефолтное значение "https://ott.fastotv.com"
+                    value={values.url ?? 'https://ott.crocott.com'}
                     onChange={handleChangeInputs}
                     errorMessage={errors.url || ''}
                 />

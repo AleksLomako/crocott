@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import AuthForm from "../AuthForm/AuthForm";
 import FormInput from "../FormInput/FormInput";
@@ -12,10 +12,6 @@ function SignInLogin({ onLogin, errorMessage }) {
     const navigate = useNavigate();
     const { values, errors, isValid, handleChangeInputs} = useFormWithValidation();
     const [visible, setVisible] = useState(true);
-
-    // useEffect(() => {
-    //     resetFormInputs();
-    // }, [resetFormInputs]);
 
 
     // Сохранение данных формы
@@ -66,7 +62,7 @@ function SignInLogin({ onLogin, errorMessage }) {
                     type="url"
                     id="login-url"
                     placeholder="Url"
-                    value={values.url || ''} //сделать дефолтное значение "https://ott.fastotv.com"
+                    value={values.url ?? 'https://ott.crocott.com'} 
                     onChange={handleChangeInputs}
                     errorMessage={errors.url || ''}
                 />
