@@ -7,21 +7,32 @@ function AuthForm({ title, children, button, link, onSubmit, name, disabled, cla
     const [focusElementsList, setFocusElementsList] = useState([]);
     const [elementIndex, setElementIndex] = useState(0);
     const handleKeyPress = useCallback((e) => {
-        let indexTest = elementIndex;
+        let index = elementIndex;
         if (document.activeElement.className !== "body") {
             if (e.code === "ArrowDown") {
-                indexTest = elementIndex + 1;
-                if (focusElementsList[indexTest]) {
-                    focusElementsList[indexTest].focus();
-                    setElementIndex(indexTest)
+                index = elementIndex + 1;
+                if (focusElementsList[index]) {
+                    focusElementsList[index].focus();
+                    setElementIndex(index)
                 }
             }
             else if (e.code === "ArrowUp") {
                 if (elementIndex !== 0) {
-                    indexTest = elementIndex - 1;
-                    focusElementsList[indexTest].focus();
-                    setElementIndex(indexTest)
+                    index = elementIndex - 1;
+                    focusElementsList[index].focus();
+                    setElementIndex(index)
                 }
+            }
+            else if (e.keyCode === 13) {
+                index = elementIndex + 1;
+                if (focusElementsList[index] && focusElementsList[index].tagName !== "A") {
+                    focusElementsList[index].focus();
+                    setElementIndex(index)
+                }
+            //     else {
+            //         focusElementsList[index].onClick()
+            //     }
+
             }
         }
         else {

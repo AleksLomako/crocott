@@ -3,6 +3,10 @@
     grid-template-columns: 1fr 2fr 1fr;
 }
 
+.livetv__player {
+    padding-top: 6px;
+}
+
 .livetv__title {
     font-size: 26px;
     font-weight: 500;

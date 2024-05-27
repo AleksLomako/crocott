@@ -4,8 +4,6 @@ import './TvChannelCard.css';
 
 function TvChannelCard({ icon, display_name, urls, onClick, id }) {
 
-
-
 function handleChannelClick() {
     onClick(display_name, urls, id);
 }

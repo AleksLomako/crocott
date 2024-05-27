@@ -8,6 +8,11 @@
   outline-offset: 2px; 
 }
 
+.video-style__active {
+  outline: 4px solid #ffc107;
+  outline-offset: 2px;
+}
+
 .hide {
   display: none;
 }

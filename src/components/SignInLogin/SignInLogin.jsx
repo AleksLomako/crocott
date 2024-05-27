@@ -13,13 +13,11 @@ function SignInLogin({ onLogin, errorMessage }) {
     const { values, errors, isValid, handleChangeInputs} = useFormWithValidation();
     const [visible, setVisible] = useState(true);
 
-
-    // Сохранение данных формы
     function handleSubmitLogin(e) {
         e.preventDefault();
         onLogin(values);
     }
-    // Клик по ссылке на роут регистрации по коду
+
     function handleClickRoute() {
         navigate('/signincode')
     }

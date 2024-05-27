@@ -31,8 +31,16 @@ function LiveTv({ liveTvList }) {
     const channelsGroupsElement = document.querySelector('.channels__item');
     const [fullScreen, setFullScreen] = useState(false)
 
+
+    const [scrollY, setScrollY] = useState('')
+
     // HANDLE REMOTE CONTROL
     const handleKeyPress = useCallback((e) => {
+        e.preventDefault();
+
+
+
+
         // INDEXES
         let indexGroup = activeGroupIndex
         let indexElem = elementIndex;
@@ -50,15 +58,29 @@ function LiveTv({ liveTvList }) {
         }
         // GROUPS NAV
         else if (elementNav === ".groups") {
-            if (e.keyCode === 39 && activeGroupIndex !== groupsList().length - 1) {
-                indexGroup = activeGroupIndex + 1
-                setActiveGroupIndex(indexGroup)
-                setActiveGroup(groupsList()[indexGroup])
+            if (e.keyCode === 39) {
+                if (activeGroupIndex !== groupsList().length - 1) {
+                    indexGroup = activeGroupIndex + 1
+                    setActiveGroupIndex(indexGroup)
+                    setActiveGroup(groupsList()[indexGroup])
+                }
+                else {
+                    indexGroup = 0;
+                    setActiveGroupIndex(indexGroup)
+                    setActiveGroup(groupsList()[indexGroup])
+                }
             }
-            else if (e.keyCode === 37 && activeGroupIndex !== 0) {
-                indexGroup = activeGroupIndex - 1
-                setActiveGroupIndex(indexGroup)
-                setActiveGroup(groupsList()[indexGroup])
+            else if (e.keyCode === 37) {
+                if (activeGroupIndex !== 0) {
+                    indexGroup = activeGroupIndex - 1
+                    setActiveGroupIndex(indexGroup)
+                    setActiveGroup(groupsList()[indexGroup])
+                }
+                else {
+                    indexGroup = groupsList().length - 1;
+                    setActiveGroupIndex(indexGroup)
+                    setActiveGroup(groupsList()[indexGroup])
+                }
             }
             else if (e.keyCode === 38) {
                 setElementNav('.header');
@@ -79,6 +101,17 @@ function LiveTv({ liveTvList }) {
                     indexElem = elementIndex + 1;
                     channelsElemList[indexElem].focus();
                     setElementIndex(indexElem)
+                    // SCROLL POSITION
+                    // console.log(window.screen.height);
+
+                    setScrollY('')
+                    if (scrollY === 'end') {
+                        channelsElemList[indexElem].scrollIntoView(false)
+                    }
+                    let scroll = channelsElemList[indexElem].getBoundingClientRect();
+                    if (scroll.y > window.screen.height - 305) {
+                        setScrollY('end')
+                    }
                 }
                 catch { }
             }
@@ -86,6 +119,17 @@ function LiveTv({ liveTvList }) {
                 indexElem = elementIndex - 1;
                 channelsElemList[indexElem].focus();
                 setElementIndex(indexElem)
+                // SCROLL POSITION
+                setScrollY('')
+                if (scrollY === 'start') {
+                    channelsElemList[indexElem].scrollIntoView(true)
+
+                }
+                let scroll = channelsElemList[indexElem].getBoundingClientRect();
+                console.log(scroll.y);
+                if (scroll.y < 172) {
+                    setScrollY('start')
+                }
             }
             else if (e.keyCode === 38 && elementIndex === 0) {
                 setElementNav('.groups');
@@ -102,15 +146,20 @@ function LiveTv({ liveTvList }) {
         }
         // PLAYER NAV
         else if (elementNav === ".player") {
-            document.getElementById('video').focus()
+            let player = document.getElementById('video');
+            player.classList.add('video-style__active')
+            // document.getElementById('video').focus()
+
             if (e.keyCode === 37 && fullScreen === false) {
                 setElementNav('.channels');
                 channelsElemList[elementIndex].focus()
+                player.classList.remove('video-style__active')
             }
             else if (e.keyCode === 38 && fullScreen === false) {
                 setElementNav('.groups');
                 setElementIndex(0)
                 channelsGroupsElement.focus()
+                player.classList.remove('video-style__active')
             }
             else if (e.keyCode === 13) {
                 document.querySelector('.vjs-fullscreen-control').click()
@@ -121,11 +170,6 @@ function LiveTv({ liveTvList }) {
                     setFullScreen(false)
                 }
             }
-            else if (e.keyCode === 461 && fullScreen === true){
-                document.querySelector('.vjs-fullscreen-control').click()
-                setFullScreen(false)
-            }
-
             else if (e.keyCode === 39) {
                 if (processedProgData.length !== 0) {
                     setElementNav('.programs');
@@ -133,6 +177,7 @@ function LiveTv({ liveTvList }) {
                     document.querySelector('.program_active').focus();
                     let programsList = document.querySelector('.programs__list');
                     setProgramElemList(programsList.querySelectorAll('.program'));
+                    player.classList.remove('video-style__active')
                 }
             }
         }
@@ -148,11 +193,31 @@ function LiveTv({ liveTvList }) {
                 indexElem = elementIndex + 1;
                 programElemList[indexElem].focus()
                 setElementIndex(indexElem)
+                // SCROLL POSITION
+                setScrollY('')
+                if (scrollY === 'end') {
+                    programElemList[indexElem].scrollIntoView(false)
+                }
+                let scroll = programElemList[indexElem].getBoundingClientRect();
+                if (scroll.y > window.screen.height - 305) {
+                    setScrollY('end')
+                }
             }
             else if (e.keyCode === 38 && elementIndex !== 0) {
                 indexElem = elementIndex - 1;
                 programElemList[indexElem].focus()
                 setElementIndex(indexElem)
+                // SCROLL POSITION
+                setScrollY('')
+                if (scrollY === 'start') {
+                    programElemList[indexElem].scrollIntoView(true)
+
+                }
+                let scroll = programElemList[indexElem].getBoundingClientRect();
+                console.log(scroll.y);
+                if (scroll.y < 172) {
+                    setScrollY('start')
+                }
             }
             else if (e.keyCode === 38 && elementIndex === 0) {
                 setElementNav('.groups');

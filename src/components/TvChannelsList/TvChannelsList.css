@@ -6,8 +6,9 @@
 .channels__wrap {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 153px);
+    height: calc(100vh - 190px);
     overflow-y: scroll;
+    scroll-padding: 6px 0px 6px 0px;
     visibility: hidden;
 }
 

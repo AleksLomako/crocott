@@ -3,24 +3,23 @@ import './MoviesList.css';
 import MovieCard from "../MovieCard/MovieCard";
 
 
-function MoviesList({ moviesList, onMovieClick }) {
-
-    // const movies = JSON.parse(localStorage.getItem('movies_crocOTT'));
+function MoviesList({ groupMoviesList, onMovieClick }) {
 
 
     return (
         <div className="movieslist">
-            <ul className="movieslist__items">
-                {moviesList.map((movie) => (
+            {groupMoviesList ? <ul className="movieslist__items">
+                {groupMoviesList.map((movie) => (
                     <MovieCard
-                        movie={movie}
                         movieImg={movie.vod.preview_icon}
                         movieCount={movie.view_count}
                         key={movie.id}
                         onMovieClick={onMovieClick}
+                        movie={movie}
                     />
                 ))}
-            </ul>
+
+            </ul> : ''}
         </div>
     );
 }

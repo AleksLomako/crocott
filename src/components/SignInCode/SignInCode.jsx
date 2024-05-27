@@ -10,13 +10,11 @@ function SignInCode({ onLoginCode, errorMessage }) {
     const navigate = useNavigate();
     const { values, errors, isValid, handleChangeInputs } = useFormWithValidation();
 
-    // Сохранение данных формы
     function handleSubmitCode(e) {
         e.preventDefault();
         onLoginCode(values);
     }
 
-    // Клик по ссылке на роут регистрации по коду
     function handleClickRoute() {
         navigate('/signinlogin')
     }

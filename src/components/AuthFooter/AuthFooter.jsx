@@ -1,19 +1,28 @@
 import { React } from "react";
+import { useEffect, useState } from 'react';
 import './AuthFooter.css';
-import { Link } from "react-router-dom";
 import LangIcon from '../../images/icons8-world-24.png';
+import mainApi from '../../utils/MainApi';
 
 function AuthFooter() {
+    const [linkPrivacyTerms, setLinkPrivacyTerms] = useState('')
+    useEffect(() => {
+        mainApi.getInfo()
+            .then((res) => {
+                setLinkPrivacyTerms(res.data.brand.landing)
+            })
+    }, [linkPrivacyTerms])
+
 
     return (
         <footer className="footer">
-            <Link to="#" className="footer__link footer__link_lang">
+            <a href="!#" className="footer__link footer__link_lang">
                 <img className="footer__icon" src={LangIcon} alt="Icon World" />
                 <p>English</p>
-            </Link>
-            <Link className="footer__link" to="https://fastotv.com/#/privacy">Privacy policy</Link>
-            <Link className="footer__link" to="https://fastotv.com/#/terms">Terms & conditions</Link>
-            <p className="footer__link">1.4.13</p>
+            </a>
+            <a className="footer__link" href={linkPrivacyTerms + "/#/pivacy"}>Privacy policy</a>
+            <a className="footer__link" href={linkPrivacyTerms + "/#/terms"}>Terms & conditions</a>
+            <p className="footer__link">1.0.0</p>
         </footer>
 
     );
