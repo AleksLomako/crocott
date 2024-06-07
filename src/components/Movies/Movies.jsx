@@ -8,7 +8,7 @@ import MoviePopup from '../MoviePopup/MoviePopup';
 function Movies({ moviesList }) {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const header = document.querySelector('.header__link_active');
-    const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
+    const content = JSON.parse(localStorage.getItem('movies_crocOTT'));
     const navigate = useNavigate();
     // GROUPS NAVIGATE CONST
     const [moviesGroups, setMoviesGroups] = useState('');

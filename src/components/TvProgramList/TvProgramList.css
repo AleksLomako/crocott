@@ -3,7 +3,6 @@
     flex-direction: column;
     height: calc(100vh - 143px);
     overflow-y: scroll;
-    scroll-padding: 5px 0px 5px 0px;
     visibility: hidden;
 }
 
@@ -11,8 +10,8 @@
     padding: 6px 10px 0px 30px;
 }
 
-.programs,
-.programs__list {
+.programs__list,
+.programs:hover{
     visibility: visible;
 }
 
@@ -29,8 +28,22 @@
     background-color: transparent;
 }
 
-
-.test{
-    text-align: center;
-    margin-top: 50px;
+.programs__list_empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 15px;
+    padding-top: 250px;
 }
+
+.programs__icon {
+    width: 40px;
+    height: 40px;
+}
+
+.programs__text {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 22px;
+}
+

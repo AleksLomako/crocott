@@ -24,6 +24,16 @@ const processingProgramData = (tvProgram) => {
                     newProgramDataList.dateInfo = dateTime;
                     data.push(newProgramDataList);
                 }
+                else {
+                    let newProgramDataList = {}
+                    newProgramDataList.desc = element.desc;
+                    newProgramDataList.title = element.title;
+                    newProgramDataList.active = '';
+                    newProgramDataList.timeout = '';
+                    let dateTime = convertTvProgramDate(element.start, element.stop);
+                    newProgramDataList.dateInfo = dateTime;
+                    data.push(newProgramDataList);
+                }
             });
         }
     }

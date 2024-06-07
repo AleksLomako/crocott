@@ -16,7 +16,7 @@ function AuthFooter() {
 
     return (
         <footer className="footer">
-            <a href="!#" className="footer__link footer__link_lang">
+            <a href="#" className="footer__link footer__link_lang">
                 <img className="footer__icon" src={LangIcon} alt="Icon World" />
                 <p>English</p>
             </a>

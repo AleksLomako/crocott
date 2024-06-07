@@ -41,6 +41,10 @@ function Player({ videoData, setVideoData }) {
         if (document.getElementById('videoStream')) {
             setTimeout(function () { playVideo(); }, 1000);
         }
+        else {
+            console.log("NOT VIDEO STREEM");
+            // setTimeout(function () { playVideo(); }, 2000);
+        }
         return () => {
             document.body.removeChild(sp);
         }
@@ -48,14 +52,17 @@ function Player({ videoData, setVideoData }) {
 
 
     function playVideo() {
-        try{
+        console.log("PLAY VIDEO");
+        try {
+            console.log('TRY');
             let playBtn = document.querySelector('.vjs-big-play-button');
             playBtn.click();
         }
-        catch{
-            // console.log("await player");
+        catch {
+            console.log("await player");
+            setTimeout(function () { playVideo(); }, 2000);
         }
-        
+
     }
 
     return (

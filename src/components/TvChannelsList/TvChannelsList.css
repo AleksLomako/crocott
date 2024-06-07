@@ -8,7 +8,6 @@
     flex-direction: column;
     height: calc(100vh - 190px);
     overflow-y: scroll;
-    scroll-padding: 6px 0px 6px 0px;
     visibility: hidden;
 }
 
@@ -17,7 +16,6 @@
 }
 
 .channels__list,
-.channels__item,
 .channels__wrap:hover {
     visibility: visible;
 }
@@ -42,7 +40,6 @@
     padding: 10px 9px;
     position: relative;
 }
-
 
 .channels__item:focus {
     outline: none;

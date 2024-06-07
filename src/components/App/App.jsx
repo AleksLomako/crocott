@@ -97,26 +97,27 @@ function App() {
 
   // TESTING
   function getContentFull() {
+
     mainApi.getFullContent()
       .then((res) => {
         if (res) {
-          localStorage.setItem('fullContent_crocOTT', JSON.stringify(res));
-          parseFullContent()
+          parseFullContent(res)
         }
       })
       .catch((err) => {
         console.log(err);
       })
-
-
-
-    // parseFullContent()
   }
 
-  function parseFullContent() {
-    const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
+  function parseFullContent(res) {
+    console.log(res);
+    // const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
+    const content = res
     const streams = [];
-    const movies = [];
+    const movies = { 'data': {} };
+    const vodsList = [];
+    movies.data = { "packages": [] }
+
     const serials = [];
     content.data.packages.forEach(packag => {
       if (packag.streams.length !== 0) {
@@ -125,8 +126,11 @@ function App() {
         });
       }
       else if (packag.vods.length !== 0) {
+        movies.data.packages.push(packag)
+
         packag.vods.forEach(vod => {
-          movies.push(vod)
+          vodsList.push(vod)
+
         });
       }
       else if (packag.serials.length !== 0) {
@@ -138,8 +142,7 @@ function App() {
     localStorage.setItem('streams_crocOTT', JSON.stringify(streams))
     setLiveTvList(JSON.parse(localStorage.getItem('streams_crocOTT')))
     localStorage.setItem('movies_crocOTT', JSON.stringify(movies))
-    setMoviesList(JSON.parse(localStorage.getItem('movies_crocOTT')))
-
+    setMoviesList(vodsList)
     localStorage.setItem('serials_crocOTT', JSON.stringify(serials))
   }
 
@@ -160,31 +163,55 @@ function App() {
 
   // LOGIN 
   function login(authorization) {
-    let deviceId = ''
+    let deviceId = JSON.parse(localStorage.getItem('deviceId_Crocott'));
     let dataForLogin = JSON.parse(localStorage.getItem("deviceData_Crocott"))
-    mainApi.getListDevices(authorization)
-      .then((res) => {
-      })
-      .then(() => {
-        mainApi.addDevice(authorization, dataForLogin.os.arch)
-          .then((res) => {
-            deviceId = res.data.device.id;
-          })
-          .then(() => {
-            dataForLogin.id = deviceId;
-            mainApi.login(authorization, dataForLogin)
-              .then((res) => {
-                saveJwt(res);
-                getInfo();
-                getContentFull();
-                setIsLoggedIn(true)
-                navigate('/test_main');
-              })
-          })
-      })
-      .catch((err) => {
-        setApiError(err.error.message)
-      })
+    if (deviceId !== null) {
+      dataForLogin.id = deviceId;
+      mainApi.login(authorization, dataForLogin)
+        .then((res) => {
+          saveJwt(res);
+          getInfo();
+          getContentFull();
+          setIsLoggedIn(true)
+          navigate('/test_main');
+        })
+        .catch((err) => {
+          setApiError(err.error.message)
+        })
+    }
+    else {
+      mainApi.getListDevices(authorization)
+        .then((res) => {
+        })
+        .then(() => {
+          mainApi.addDevice(authorization, dataForLogin.os.arch)
+            .then((res) => {
+              deviceId = res.data.device.id;
+              localStorage.setItem("deviceId_Crocott", JSON.stringify(deviceId))
+            })
+            .then(() => {
+              dataForLogin.id = deviceId;
+              mainApi.login(authorization, dataForLogin)
+                .then((res) => {
+                  saveJwt(res);
+                  getInfo();
+                  getContentFull();
+                  setIsLoggedIn(true)
+                  navigate('/test_main');
+                })
+            })
+        })
+        .catch((err) => {
+          if (err.error.message === 'wrong login or password') {
+            setApiError('Wrong login or password');
+          } else if (err.error.message === 'wrong code') {
+            setApiError('Wrong code');
+          }
+          else {
+            setApiError(err.error.message);
+          }
+        })
+    }
   }
 
   // LOGOUT
@@ -192,11 +219,11 @@ function App() {
     navigate('/signinlogin');
     setIsLoggedIn(false);
     localStorage.removeItem('jwt_CrocOtt');
-    localStorage.removeItem('jwt_refresh_CrocOtt')
-    localStorage.removeItem("Basic_authorization_CrocOtt")
-    localStorage.removeItem("Code_authorization_CrocOtt")
-    localStorage.removeItem('fullContent_crocOTT');
-    localStorage.removeItem('streams_crocOTT')
+    localStorage.removeItem('jwt_refresh_CrocOtt');
+    localStorage.removeItem("Basic_authorization_CrocOtt");
+    localStorage.removeItem("Code_authorization_CrocOtt");
+    localStorage.removeItem('streams_crocOTT');
+    localStorage.removeItem('movies_crocOTT');
   }
 
 

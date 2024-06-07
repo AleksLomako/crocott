@@ -1,5 +1,6 @@
 import React from "react";
 import './TvProgramList.css';
+import Point from '../../images/icons8-high-importance-48.png';
 import TvProgramCard from "../TvProgramCard/TvProgramCard";
 
 
@@ -21,17 +22,23 @@ function TvProgramList({ tvProgram }) {
 
     return (
         <div className="programs">
-            <ul className="programs__list">
-                {programs.map((program, index) => (
-                    <TvProgramCard
-                        key={index}
-                        title={program.title}
-                        programInfo={program.dateInfo}
-                        programActive={program.active}
-                    />
-                ))}
-            </ul>
-
+            {programs.length === 0 ? (
+                    <div className="programs__list programs__list_empty">
+                        <img className="programs__icon" src={Point} alt="Exclamation point" />
+                        <p className="programs__text">No programs available</p>
+                    </div>
+            ) : (
+                    <ul className="programs__list">
+                        {programs.map((program, index) => (
+                            <TvProgramCard
+                                key={index}
+                                title={program.title}
+                                programInfo={program.dateInfo}
+                                programActive={program.active}
+                            />
+                        ))}
+                    </ul>
+            )}
         </div>
     );
 }

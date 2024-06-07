@@ -10,15 +10,15 @@
     color: #FFF;
     text-decoration: none;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 22px;
     font-weight: 500;
-    line-height: 16px;
-    margin: 0px 0px 9px;
+    line-height: 24px;
+    margin: 0px 0px 12px;
 }
 
 .footer__link:focus {
     border-radius: 3px;
-    outline: #ffc107 solid 2px;
+    outline: #ffc107 solid 3px;
 }
 
 .footer__link_lang{

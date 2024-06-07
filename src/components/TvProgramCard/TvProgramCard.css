@@ -4,13 +4,13 @@
 
 
 .program:focus {
-    outline: 4px solid #ffc107; 
-    outline-offset: 2px; 
+    outline: 4px solid #ffc107;
+    outline-offset: 2px;
     background-color: rgba(85, 84, 84, 0.5);
 }
 
 .program_active {
-    outline: 2px solid #ffc107; 
+    outline: 2px solid #ffc107;
     outline-offset: 3px;
 }
 
@@ -23,5 +23,9 @@
 
 .program__time {
     font-size: 14px;
+    color: rgba(243, 237, 237, 0.5);
+}
+
+.program_last {
     color: rgba(243, 237, 237, 0.5);
 }

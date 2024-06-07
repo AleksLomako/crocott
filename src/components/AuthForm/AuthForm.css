@@ -1,6 +1,6 @@
 .auth {
-    padding: 250px 0px 0px;
-    width: 38%;
+    padding: 200px 0px 0px;
+    width: 35%;
     margin: auto;
     display: flex;
     flex-direction: column;
@@ -9,10 +9,10 @@
 
 .auth__title {
     margin: 0px;
-    font-size: 26px;
+    font-size: 50px;
     font-weight: 500;
-    line-height: 29px;
-    padding-bottom: 25px;
+    line-height: 42px;
+    padding-bottom: 35px;
     text-align: center;
 }
 
@@ -22,10 +22,10 @@
 }
 
 .auth__error {
-    margin-bottom: 10px;
+    margin-bottom: 16px;
     color: #f6361dcc;
-    font-size: 11px;
-    line-height: 13px;
+    font-size: 20px;
+    line-height: 19px;
     font-weight: 400;
     text-align: center;
     display: none;
@@ -46,10 +46,10 @@
     background: #ffc107;
     border: 0;
     color: #000;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 500;
-    line-height: 15px;
-    padding: 16px;
+    line-height: 20px;
+    padding: 17px;
     text-align: center;
     margin: 0 auto;
     width: 100%;
@@ -69,17 +69,23 @@
 
 .auth__link {
     color: #FFF;
-    font-size: 16px;
+    font-size: 22px;
     font-weight: 500;
-    line-height: 16px;
-    margin: 10px 0px 0px;
+    line-height: 24px;
+    margin: 18px 0px 0px;
     text-decoration: none;
     cursor: pointer;
     text-align: center;
 }
 
-.auth__link:focus {
+/* .auth__link:focus {
     border-radius: 3px;
     border: 1px solid #ffc107 ;
+    outline: #ffc107 solid 2px;
+} */
+
+.active {
+    border-radius: 3px !important;
+    border: 1px solid #ffc107 !important;
     outline: #ffc107 solid 2px;
 }
