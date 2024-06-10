@@ -1,7 +1,12 @@
 class MainApi {
     constructor(options) {
-        this._url = options.baseUrl;
+        this._url = localStorage.getItem('url_CrocOtt') + '/panel_pro/api';
         this._headers = options.headers;
+    }
+
+    // Check Url
+    checkUrl() {
+        this._url = localStorage.getItem('url_CrocOtt') + '/panel_pro/api';
     }
 
     // Check Response
@@ -17,6 +22,7 @@ class MainApi {
 
     // Check Token
     checkToken(token) {
+        this.checkUrl()
         this._headers.authorization = `Bearer ${token}`
         return fetch(`${this._url}/client/profile`, {
             headers: this._headers,
@@ -55,6 +61,7 @@ class MainApi {
 
     // get list devices
     getListDevices(authorization) {
+        this.checkUrl()
         this._headers.authorization = authorization
         return fetch(`${this._url}/client/devices`, {
             method: 'GET',
@@ -65,6 +72,7 @@ class MainApi {
 
     // add device
     addDevice(authorization, name) {
+        this.checkUrl()
         this._headers.authorization = authorization;
         return fetch(`${this._url}/client/devices/add`, {
             method: 'POST',
@@ -78,6 +86,7 @@ class MainApi {
 
     // login
     login(authorization, data) {
+        this.checkUrl()
         this._headers.authorization = authorization;
         return fetch(`${this._url}/client/login`, {
             method: 'POST',
@@ -91,6 +100,7 @@ class MainApi {
 
     // get profile
     getProfile() {
+        this.checkUrl()
         this.setJwt();
         return fetch(`${this._url}/client/profile`, {
             headers: this._headers
@@ -100,6 +110,7 @@ class MainApi {
 
     // get full content
     getFullContent() {
+        this.checkUrl()
         this.setJwt();
         return fetch(`${this._url}/client/full_content`, {
             headers: this._headers
@@ -109,6 +120,7 @@ class MainApi {
 
     // get Tv programs
     getTvPrograms(channelId) {
+        this.checkUrl()
         this.setJwt();
         return fetch(`${this._url}/client/content/epg/${channelId}`, {
             headers: this._headers
@@ -121,6 +133,7 @@ class MainApi {
     // NOT AUTH
     // get info
     getInfo() {
+        this.checkUrl()
         return fetch(`${this._url}/info`, {
         })
             .then(res => this._checkResponse(res));
@@ -131,7 +144,8 @@ class MainApi {
 
 
 const mainApi = new MainApi({
-    baseUrl: 'https://ott.crocott.com/panel_pro/api',
+    // baseUrl: 'https://ott.crocott.com/panel_pro/api',
+    baseUrl: localStorage.getItem('url_CrocOtt') + '/panel_pro/api',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

@@ -11,6 +11,9 @@ function AuthFooter() {
             .then((res) => {
                 setLinkPrivacyTerms(res.data.brand.landing)
             })
+            .catch((err) => {
+                console.log(err);
+            })
     }, [linkPrivacyTerms])
 
 

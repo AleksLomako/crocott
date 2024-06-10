@@ -5,7 +5,7 @@ import IconGear from '../../images/icon-gear.png'
 import IconPower from '../../images/icons8-shutdown.png';
 import { NavLink, Link } from 'react-router-dom';
 
-function Header({onExit, logo}) {
+function Header({ onExit, logo }) {
 
 
     return (

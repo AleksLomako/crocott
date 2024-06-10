@@ -13,20 +13,19 @@ import saveJwt from '../../utils/saveJwt';
 
 function App() {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // состояние авторизации пользователя
-  const [apiError, setApiError] = useState(''); //Ошибка от сервера
-  const [token, setToken] = useState('')
-
-  // CONTENT
-  const [logo, setLogo] = useState('https://ott.crocott.com/panel_pro/api/runtime_folder/static/6629d363418e8b5418d68f8a.png')
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [apiError, setApiError] = useState('');
+  const [token, setToken] = useState('');
+  const [logo, setLogo] = useState('https://ott.crocott.com/panel_pro/api/runtime_folder/static/6629d363418e8b5418d68f8a.png');
   const [liveTvList, setLiveTvList] = useState([]);
   const [moviesList, setMoviesList] = useState([]);
-  const [serialsList, setSerialsList] = useState([]);
-
-
+  // const [serialsList, setSerialsList] = useState([]);
 
   // Check Token
   useEffect(() => {
+
+    // localStorage.removeItem('url_CrocOtt')
+
     const jwt = localStorage.getItem('jwt_CrocOtt');
     if (jwt === null) {
       navigate('/signinlogin')
@@ -35,7 +34,6 @@ function App() {
       checkToken(jwt)
     }
   }, [token])
-
 
   // Check Token
   function checkToken(jwt) {
@@ -53,7 +51,7 @@ function App() {
       })
   }
 
-
+  // Refresh Token
   function refreshToken() {
     const refresh_token = localStorage.getItem('jwt_refresh_CrocOtt');
     const authorizationBasic = localStorage.getItem("Basic_authorization_CrocOtt");
@@ -87,6 +85,7 @@ function App() {
     }
   }
 
+  // Get LOGO (get info)
   function getInfo() {
     mainApi.getInfo()
       .then((res) => {
@@ -94,10 +93,8 @@ function App() {
       })
   }
 
-
-  // TESTING
+  // Get Full Content
   function getContentFull() {
-
     mainApi.getFullContent()
       .then((res) => {
         if (res) {
@@ -109,36 +106,38 @@ function App() {
       })
   }
 
+  // Parse Full Content
   function parseFullContent(res) {
-    console.log(res);
-    // const content = JSON.parse(localStorage.getItem('fullContent_crocOTT'));
     const content = res
     const streams = [];
     const movies = { 'data': {} };
     const vodsList = [];
     movies.data = { "packages": [] }
-
     const serials = [];
+    // parse
     content.data.packages.forEach(packag => {
+      // create streams
       if (packag.streams.length !== 0) {
         packag.streams.forEach(stream => {
           streams.push(stream)
         });
       }
+      // create movies
       else if (packag.vods.length !== 0) {
         movies.data.packages.push(packag)
-
+        // create vodsList
         packag.vods.forEach(vod => {
           vodsList.push(vod)
-
         });
       }
+      // create serials
       else if (packag.serials.length !== 0) {
         packag.serials.forEach(serial => {
           serials.push(serial)
         });
       }
     })
+    // Save streams, movies, serials in localStorege
     localStorage.setItem('streams_crocOTT', JSON.stringify(streams))
     setLiveTvList(JSON.parse(localStorage.getItem('streams_crocOTT')))
     localStorage.setItem('movies_crocOTT', JSON.stringify(movies))
@@ -148,9 +147,28 @@ function App() {
 
   // HANDLE BTN LOGIN 
   function handleLogin(values) {
-    const authorization = mainApi.createHeaders(values.name, values.password);
-    localStorage.setItem("Basic_authorization_CrocOtt", authorization);
-    login(authorization);
+    console.log(values);
+    if (localStorage.getItem('url_CrocOtt') === null) {
+      if (values.url) {
+        localStorage.setItem('url_CrocOtt', values.url)
+      }
+      else {
+        localStorage.setItem('url_CrocOtt', 'https://ott.crocott.com')
+      }
+    }
+    else {
+      console.log("NOT NULL");
+    }
+    mainApi.getInfo()
+      .then((res) => {
+        // console.log(res);
+        const authorization = mainApi.createHeaders(values.name, values.password);
+        localStorage.setItem("Basic_authorization_CrocOtt", authorization);
+        login(authorization);
+      })
+      .catch((err) => {
+        setApiError(err.toString());
+      })
   };
 
   // HANDLE BTN LOGIN  WITH CODE
@@ -165,6 +183,7 @@ function App() {
   function login(authorization) {
     let deviceId = JSON.parse(localStorage.getItem('deviceId_Crocott'));
     let dataForLogin = JSON.parse(localStorage.getItem("deviceData_Crocott"))
+    // Login without add deviceId
     if (deviceId !== null) {
       dataForLogin.id = deviceId;
       mainApi.login(authorization, dataForLogin)
@@ -172,14 +191,24 @@ function App() {
           saveJwt(res);
           getInfo();
           getContentFull();
-          setIsLoggedIn(true)
+          setIsLoggedIn(true);
           navigate('/test_main');
         })
         .catch((err) => {
-          setApiError(err.error.message)
+          console.log(err);
+          if (err.error.message === 'wrong login or password') {
+            setApiError('Wrong login or password');
+          } else if (err.error.message === 'wrong code') {
+            setApiError('Wrong code');
+          }
+          else {
+            setApiError(err.error.message);
+            localStorage.removeItem('url_CrocOtt')
+          }
         })
     }
     else {
+      // Login with add deviceId
       mainApi.getListDevices(authorization)
         .then((res) => {
         })
@@ -209,6 +238,7 @@ function App() {
           }
           else {
             setApiError(err.error.message);
+            localStorage.removeItem('url_CrocOtt');
           }
         })
     }
@@ -218,6 +248,7 @@ function App() {
   function handleLogOut() {
     navigate('/signinlogin');
     setIsLoggedIn(false);
+    setApiError('');
     localStorage.removeItem('jwt_CrocOtt');
     localStorage.removeItem('jwt_refresh_CrocOtt');
     localStorage.removeItem("Basic_authorization_CrocOtt");

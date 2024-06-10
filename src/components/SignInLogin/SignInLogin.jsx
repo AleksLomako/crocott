@@ -12,7 +12,9 @@ function SignInLogin({ onLogin, errorMessage }) {
     const navigate = useNavigate();
     const { values, errors, isValid, handleChangeInputs} = useFormWithValidation();
     const [visible, setVisible] = useState(true);
+    const url = localStorage.getItem('url_CrocOtt');
 
+    
     function handleSubmitLogin(e) {
         e.preventDefault();
         onLogin(values);
@@ -60,7 +62,7 @@ function SignInLogin({ onLogin, errorMessage }) {
                     type="url"
                     id="login-url"
                     placeholder="Url"
-                    value={values.url ?? 'https://ott.crocott.com'} 
+                    value={url ? url : values.url ?? 'https://ott.crocott.com'} 
                     onChange={handleChangeInputs}
                     errorMessage={errors.url || ''}
                 />

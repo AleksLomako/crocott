@@ -39,19 +39,42 @@ function AuthForm({ title, children, button, link, onSubmit, name, disabled, cla
             }
         }
         else if (e.keyCode === 38) {
-            if (elementIndex !== 0 && keyboardState !== true) {
-                focusElementsList[index].classList.remove('active')
-                index = elementIndex - 1;
-                if (focusElementsList[index]) {
-                    if (focusElementsList[index].className === 'auth__submit-button auth__submit-button_disabled') {
-                        index = elementIndex - 2;
-                        focusElementsList[index].classList.add('active')
-                        setElementIndex(index)
+            if (elementIndex !== 0) {
+                if (keyboardState !== true) {
+                    // console.log(focusElementsList[index]);
+                    focusElementsList[index].classList.remove('active')
+                    index = elementIndex - 1;
+                    if (focusElementsList[index]) {
+                        if (focusElementsList[index].className === 'auth__submit-button auth__submit-button_disabled') {
+                            index = elementIndex - 2;
+                            focusElementsList[index].classList.add('active')
+                            setElementIndex(index)
+                        }
+                        else {
+                            focusElementsList[index].classList.add('active')
+                            setElementIndex(index)
+                        }
                     }
-                    else {
-                        focusElementsList[index].classList.add('active')
-                        setElementIndex(index)
-                    }
+
+                }
+                else if (focusElementsList[index].tagName === "BUTTON" || focusElementsList[index].tagName === "A") {
+                    setKeyboardState(false)
+                    focusElementsList[index].classList.remove('active')
+                    index = elementIndex - 1;
+                    focusElementsList[index].classList.add('active')
+                    setElementIndex(index)
+                }
+            }
+
+
+            else if (focusElementsList[index].tagName === "BUTTON" || focusElementsList[index].tagName === "A") {
+                console.log(elementIndex);
+                if (elementIndex !== 0) {
+                    focusElementsList[index].classList.remove('active')
+                    index = elementIndex - 1;
+                    setElementIndex(index)
+
+                    focusElementsList[index].classList.add('active')
                 }
             }
         }
@@ -71,10 +94,14 @@ function AuthForm({ title, children, button, link, onSubmit, name, disabled, cla
             else if (focusElementsList[index].tagName === "A") {
                 focusElementsList[index].click()
             }
+
+
             else {
                 focusElementsList[index].focus()
                 setKeyboardState(false)
             }
+
+
         }
         else if (e.keyCode === 461) {
             if (focusElementsList[index].tagName === "INPUT") {

@@ -52,4 +52,5 @@
 .channels__icon {
     font-size: 24px;
     color: rgba(243, 237, 237, 0.5);
+    cursor: pointer;
 }

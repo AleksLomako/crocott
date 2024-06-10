@@ -263,7 +263,9 @@ function LiveTv({ liveTvList }) {
 
     // HANDLE CLICK MOUSE OUTSIDE
     const handleClickOutside = useCallback((e) => {
+        // console.log(document.activeElement);
         let indexElem = 0;
+        let indexGroup = activeGroupIndex;
         let elementClassName = (document.activeElement.className.split(' ')[0]);
         if (channelsElemList !== '' && document.activeElement.className === "channel") {
             channelsElemList.forEach((element) => {
@@ -285,6 +287,35 @@ function LiveTv({ liveTvList }) {
                 indexElem++
             })
         }
+        else if (elementClassName === 'right_arrow') {
+            console.log(elementClassName);
+            setElementNav('.groups')
+            if (activeGroupIndex !== groupsList().length - 1) {
+                indexGroup = activeGroupIndex + 1
+                setActiveGroupIndex(indexGroup)
+                setActiveGroup(groupsList()[indexGroup])
+            }
+            else {
+                indexGroup = 0;
+                setActiveGroupIndex(indexGroup)
+                setActiveGroup(groupsList()[indexGroup])
+            }
+        }
+        else if (elementClassName === 'left_arrow') {
+            console.log(elementClassName);
+            setElementNav('.groups')
+            if (activeGroupIndex !== 0) {
+                indexGroup = activeGroupIndex - 1
+                setActiveGroupIndex(indexGroup)
+                setActiveGroup(groupsList()[indexGroup])
+            }
+            else {
+                indexGroup = groupsList().length - 1;
+                setActiveGroupIndex(indexGroup)
+                setActiveGroup(groupsList()[indexGroup])
+            }
+        }
+
     }, [headerElemList, channelsElemList]);
 
     // ADD & REMOVE LISTENER

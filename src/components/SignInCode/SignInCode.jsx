@@ -9,6 +9,7 @@ function SignInCode({ onLoginCode, errorMessage }) {
 
     const navigate = useNavigate();
     const { values, errors, isValid, handleChangeInputs } = useFormWithValidation();
+    const url = localStorage.getItem('url_CrocOtt');
 
     function handleSubmitCode(e) {
         e.preventDefault();
@@ -46,7 +47,7 @@ function SignInCode({ onLoginCode, errorMessage }) {
                     type="url"
                     id="login-url"
                     placeholder="Url"
-                    value={values.url ?? 'https://ott.crocott.com'}
+                    value={url ? url : values.url ?? 'https://ott.crocott.com'}
                     onChange={handleChangeInputs}
                     errorMessage={errors.url || ''}
                 />
