@@ -13,6 +13,7 @@ function AuthFooter() {
             })
             .catch((err) => {
                 console.log(err);
+                setLinkPrivacyTerms('https://landing.crocott.com/')
             })
     }, [linkPrivacyTerms])
 

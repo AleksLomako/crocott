@@ -3,6 +3,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    width: 428px;
 }
 
 .channel:focus { 
@@ -22,4 +23,7 @@
     font-size: 24px;
     font-weight: 400;
     line-height: 29px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }

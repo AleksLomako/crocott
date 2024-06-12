@@ -1,8 +1,13 @@
 .moviecard {
     position: relative;
-    width: 145px;
-    height: 210px;
+    width: 150px;
+    height: 238px;
     cursor: pointer;
+}
+
+.moviecard:focus {
+    outline: none;
+    box-shadow: 0px 2px 10px 2px #ffc107 ;
 }
 
 .moviecard__img {
@@ -16,21 +21,21 @@
     bottom: 6px;
     display: flex;
     background: black;
-    padding: 9px;
+    padding: 14px 16px;
     border-radius: 50px;
     align-items: center;
     justify-content: center;
 }
 
 .moviecard__eye {
-    width: 29px;
-    height: 28px;
+    width: 32px;
+    height: 22px;
     margin-right: 6px;
 }
 
 .moviecard__count {
     color: #FFF;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 16px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
 }
