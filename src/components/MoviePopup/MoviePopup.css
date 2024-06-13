@@ -110,6 +110,7 @@
     width: 25%;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 .popup__info-title {
@@ -125,6 +126,14 @@
 .popup__info-subtitle {
     font-size: 18px;
     font-weight: 400;
+}
+
+.popupinfo-subtitle_rating {
+    /* position: absolute;
+    top: 40px;
+    left: 135px;
+    font-size: 30px;
+    font-weight: 500; */
 }
 
 .popup__description {
@@ -146,4 +155,31 @@
     font-size: 26px;
     font-weight: 400;
     padding-top: 40px;
+}
+
+.popup__info-circular {
+    position: relative;
+    height: 110px;
+    width: 110px;
+    border-radius: 50%;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup__info-progress {
+    position: relative;
+    /* color: #fff; */
+    font-size: 30px;
+    font-weight: 600;
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+    background-color: #04AA6D;
+    text-align: center;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

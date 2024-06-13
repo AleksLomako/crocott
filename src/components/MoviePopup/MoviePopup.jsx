@@ -9,7 +9,12 @@ import dateConvertor from "../../utils/dateConvertor";
 
 function MoviePopup({ movie, onClose }) {
 
-    // console.log(movie)
+    // raiting score
+    let progress = movie?.movie.vod.user_score;
+    let dashArray = (2 * 3.14 * 70);
+    let dashOffset = dashArray * ((10 - progress) / 10);
+
+
 
     return (
         <div className={`popup ${movie ? 'popup_opened' : ''}`}>
@@ -24,16 +29,26 @@ function MoviePopup({ movie, onClose }) {
                         <p className="popup__play-text">Play</p>
                         <img className="popup__icon" src={Lock} alt="Lock" />
                     </button>
-                    <button className="popupplay-btn popupplay-btn_trailer">Trailer</button>
+                    <button className="popup__play-btn popup__play-btn_trailer">Trailer</button>
                     <img className="popup__icon" src={Star} alt="Star" />
                 </div>
             </header>
             <main className="popup__main"
                 style={{ backgroundImage: `url(${movie?.movie.vod.background_url})` }}>
                 <ul className="popup__info">
-                    <li className="popupinfo-item popupinfo-item_rating">
-                        <h2 className="popupinfo-title popupinfo-title_rating">Rating</h2>
-                        <p className="popupinfo-subtitle popupinfo-subtitle_rating">{movie?.movie.vod.user_score}</p>
+                    <li className="popup__info-item popup__info-item_rating">
+                        <h2 className="popup__info-title popup__info-title_rating">Rating</h2>
+                        {/* <div id='myBar' class="popup__info-circular">
+                            <div  class="popup__info-progress">{movie?.movie.vod.user_score}</div>
+                        </div> */}
+                        <svg width="110" height="110" viewBox="0 0 160 160" style={{ transform: "rotate(-90deg)" }}>
+                            <circle r="70" cx="80" cy="80" fill="transparent" stroke="rgba(85, 84, 84, 0.5)" stroke-width="12px"></circle>
+                            <circle r="70" cx="80" cy="80" fill="transparent" stroke="#fd5252" stroke-linecap="round" stroke-width="12px" stroke-dasharray={dashArray} stroke-dashoffset={dashOffset}></circle>
+                            <text x="50px" y="-63px" fill="#fff" font-size="42px" font-weight="500"
+                                style={{ transform: "rotate(90deg)" }}>{movie?.movie.vod.user_score.toFixed(1)}</text>
+                        </svg>
+
+                        {/* <p className="popupinfo-subtitle popupinfo-subtitle_rating">{movie?.movie.vod.user_score}</p> */}
                     </li>
                     <li className="popup__info-item">
                         <h2 className="popup__info-title">Country</h2>

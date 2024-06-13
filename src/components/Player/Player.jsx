@@ -52,14 +52,14 @@ function Player({ videoData, setVideoData }) {
 
 
     function playVideo() {
-        console.log("PLAY VIDEO");
+        // console.log("PLAY VIDEO");
         try {
-            console.log('TRY');
+            // console.log('TRY');
             let playBtn = document.querySelector('.vjs-big-play-button');
             playBtn.click();
         }
         catch {
-            console.log("await player");
+            // console.log("await player");
             setTimeout(function () { playVideo(); }, 2000);
         }
 
