@@ -21,6 +21,9 @@ function Movies({ moviesList }) {
     const [showMovies, setShowMovies] = useState(0);
     const [moviesIndex, setMoviesIndex] = useState(0);
     const column = Math.floor((window.screen.width - 60) / 170);
+    // POPUM NAV
+    const [popupNavElem, setPopupNavElem] = useState('arrow')
+
 
 
     useEffect(() => {
@@ -59,7 +62,7 @@ function Movies({ moviesList }) {
         if (elementNav === ".header") {
             if (e.keyCode === 39) {
                 document.activeElement.blur();
-                navigate('/serials')
+                navigate('/series')
             }
             else if (e.keyCode === 37) {
                 document.activeElement.blur();
@@ -145,16 +148,112 @@ function Movies({ moviesList }) {
                 document.activeElement.click();
             }
         }
-    }, [column, showMovies, moviesIndex, groupMoviesList, activeGroupIndex, navigate, elementNav, endIndex, moviesGroups, header])
+        // POPUP NAV
+        else if (elementNav === '.movies_popup') {
+            if (e.keyCode === 8) {
+                handleCloseMovie()
+                const oldPlayer = document.getElementById('videoStream');
+                if (oldPlayer !== null) {
+                    oldPlayer.remove();
+                }
+                showMovies[moviesIndex].focus()
+                setPopupNavElem('arrow');
+                setElementNav('.movies');
+                console.log(column);
+            }
+            else if (popupNavElem === 'arrow') {
+                if (e.keyCode === 13) {
+                    handleCloseMovie()
+                    const oldPlayer = document.getElementById('videoStream');
+                    if (oldPlayer !== null) {
+                        oldPlayer.remove();
+                    }
+                    document.activeElement.blur();
+                    showMovies[moviesIndex].focus()
+                    setPopupNavElem('arrow');
+                    setElementNav('.movies');
+                }
+                else if (e.keyCode === 39) {
+                    setPopupNavElem('popup__play')
+                    document.querySelector('.popup__play-btn').focus()
+                }
+            }
+            else if (popupNavElem === 'popup__play') {
+                if (e.keyCode === 13) {
+                    console.log('PLAY');
+                    document.activeElement.click();
+                }
+                else if (e.keyCode === 37) {
+                    setPopupNavElem('arrow');
+                    document.querySelector('.arrow').focus()
+                }
+                else if (e.keyCode === 39) {
+                    setPopupNavElem('trailer');
+                    document.querySelector('.popup__play-btn_trailer').focus()
+                }
+            }
+            else if (popupNavElem === 'trailer') {
+                if (e.keyCode === 13) {
+                    console.log('PLAY TREILER');
+                }
+                else if (e.keyCode === 37) {
+                    setPopupNavElem('popup__play');
+                    document.querySelector('.popup__play-btn').focus()
+                }
+                else if (e.keyCode === 39) {
+                    setPopupNavElem('star');
+                    document.querySelector('.star').focus()
+                }
+            }
+            else if (popupNavElem === 'star') {
+                if (e.keyCode === 13) {
+                    console.log('PLAY TREILER');
+                }
+                else if (e.keyCode === 37) {
+                    setPopupNavElem('trailer');
+                    document.querySelector('.popup__play-btn_trailer').focus()
+                }
+            }
+        }
+
+        // }
+    }, [popupNavElem, column, showMovies, moviesIndex, groupMoviesList, activeGroupIndex, navigate, elementNav, endIndex, moviesGroups, header])
+
+
+    // HANDLE CLICK MOUSE
+    const handleClickOutside = useCallback((e) => {
+        try {
+            let indexGroup = 0;
+            moviesGroups.forEach((group) => {
+                group.classList.remove('header__link_active');
+                if (document.activeElement.textContent === group.textContent) {
+                    moviesGroups[indexGroup].classList.remove('header__link_active');
+                    setActiveGroupIndex(indexGroup);
+                    setActiveGroup((moviesGroups[indexGroup]).textContent);
+                    moviesGroups[indexGroup].focus();
+                    setMoviesIndex(0);
+                    moviesGroups[indexGroup].classList.add('header__link_active');
+                    setElementNav('.groups');
+                }
+                indexGroup++
+            })
+        }
+        catch {
+        }
+
+
+    }, [moviesGroups])
 
 
     // ADD & REMOVE LISTENER
     useEffect(() => {
         document.addEventListener('keydown', handleKeyPress);
+        document.addEventListener('click', handleClickOutside);
         return () => {
             document.removeEventListener('keydown', handleKeyPress);
+            document.removeEventListener('click', handleClickOutside);
         };
-    }, [handleKeyPress]);
+    }, [handleKeyPress, handleClickOutside]);
 
 
     // HEADER FOCUS and MOVIES GROUPS
@@ -169,7 +268,8 @@ function Movies({ moviesList }) {
     }, [moviesGroups.length, header]);
 
     function handleMovieClick(movie) {
-        setSelectedMovie(movie)
+        setSelectedMovie(movie);
+        setElementNav('.movies_popup');
     }
 
     function handleCloseMovie() {

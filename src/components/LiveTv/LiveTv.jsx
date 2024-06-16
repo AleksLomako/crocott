@@ -45,6 +45,10 @@ function LiveTv({ liveTvList }) {
         //  HEADER NAV
         if (elementNav === ".header") {
             if (e.keyCode === 39) {
+                const oldPlayer = document.getElementById('videoStream');
+                if (oldPlayer !== null) {
+                    oldPlayer.remove();
+                }
                 document.activeElement.blur();
                 navigate('/movies')
             }
@@ -173,11 +177,7 @@ function LiveTv({ liveTvList }) {
 
                 }
                 catch { }
-
-
-
             }
-
             else if (e.keyCode === 13) {
                 document.querySelector('.vjs-fullscreen-control').click()
                 if (fullScreen === false) {
@@ -485,7 +485,9 @@ function LiveTv({ liveTvList }) {
         setLoading(true)
         setVideoData({
             "videoUrl": urls[0]["url"],
-            "videoName": display_name
+            "videoName": display_name,
+            "width": window.innerWidth / 2 + 'px',
+            "height": window.innerHeight / 1.8 + 'px'
         })
     }
 

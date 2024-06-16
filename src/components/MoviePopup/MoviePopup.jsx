@@ -1,18 +1,56 @@
-import React from "react";
+import { React, useState } from "react";
 import './MoviePopup.css';
 import BackBtn from '../../images/icons8-left-24.png';
 import Lock from '../../images/icons8-lock-24.png';
 import Star from '../../images/icons8-star-24.png';
 import timeConvertor from "../../utils/timeConvertor";
 import dateConvertor from "../../utils/dateConvertor";
+import Player from "../Player/Player";
 
 
 function MoviePopup({ movie, onClose }) {
 
+    const [loading, setLoading] = useState(false);
+    const [videoData, setVideoData] = useState({});
     // raiting score
     let progress = movie?.movie.vod.user_score;
     let dashArray = (2 * 3.14 * 70);
     let dashOffset = dashArray * ((10 - progress) / 10);
+
+    // TESTING CODE
+    // console.log(movie)
+    function playVod() {
+        console.log("PLAY VOD");
+        console.log(movie.movie.vod.urls[0].url);
+        startPlayer('test', 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8')
+    }
+
+    function startPlayer(display_name, urls) {
+        setLoading(true)
+        setVideoData({
+            "videoUrl": urls,
+            "videoName": display_name,
+            "width": window.innerWidth / 2 + 'px',
+            "height": window.innerHeight / 2 + 'px'
+        })
+        // document.getElementById('video').style.position = 'fixed'
+        // test()
+    }
+
+
+    function test() {
+        const video = document.getElementById('videoStream_html5_api');
+        // const video = document.getElementById('videoStream');
+        console.log(video.currentTime);
+
+
+        // video.currentTime += 10
+
+
+
+
+    }
+
 
 
 
@@ -21,16 +59,16 @@ function MoviePopup({ movie, onClose }) {
             <header className="popup__header">
                 <div className="popup__back-btn"
                     onClick={onClose}>
-                    <img className="popup__icon" src={BackBtn} alt="Back-arrow" />
+                    <img className="popup__icon arrow" src={BackBtn} alt="Back-arrow" tabIndex={0}  />
                 </div>
                 <h1 className="popup__title">{movie?.movie.vod.display_name}</h1>
                 <div className="popup__header-buttons">
-                    <button className="popup__play-btn">
+                    <button className="popup__play-btn" tabIndex={0} onClick={playVod}>
                         <p className="popup__play-text">Play</p>
                         <img className="popup__icon" src={Lock} alt="Lock" />
                     </button>
-                    <button className="popup__play-btn popup__play-btn_trailer">Trailer</button>
-                    <img className="popup__icon" src={Star} alt="Star" />
+                    <button className="popup__play-btn popup__play-btn_trailer" tabIndex={0} onClick={test}>Trailer</button>
+                    <img className="popup__icon star" src={Star} alt="Star" tabIndex={0} />
                 </div>
             </header>
             <main className="popup__main"
@@ -75,6 +113,7 @@ function MoviePopup({ movie, onClose }) {
                     <p className="popup__text">{movie?.movie.vod.description}</p>
                 </div>
             </main>
+            {loading && <Player videoData={videoData} setVideoData={setVideoData} />}
         </div >
     );
 }

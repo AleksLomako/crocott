@@ -12,12 +12,13 @@ function Player({ videoData, setVideoData }) {
         const newVideo = document.createElement('video');
         newVideo.id = 'videoStream';
         newVideo.className = 'video-js vjs-default-skin';
-        newVideo.style.width = window.innerWidth / 2 + 'px'
-        newVideo.style.height = window.innerHeight / 1.8 + 'px'
+        newVideo.style.width = videoData.width;
+        newVideo.style.height = videoData.height;
         // newVideo.setAttribute("controls", "controls");
         // newVideo.setAttribute("autoplay", "any");
+
         // newVideo.setAttribute("muted", "muted");
-        newVideo.setAttribute('data-setup', '{ "fluid": false,  "inactivityTimeout": 0}');
+        newVideo.setAttribute('data-setup', '{ "fluid": false,  "inactivityTimeout": 0},');
         document.getElementById('video').append(newVideo);
         // VIDEO SOURCE
         const newSource = document.createElement('source');
@@ -52,15 +53,22 @@ function Player({ videoData, setVideoData }) {
 
 
     function playVideo() {
-        // console.log("PLAY VIDEO");
+        console.log("PLAY VIDEO");
         try {
-            // console.log('TRY');
+            console.log('TRY');
+
             let playBtn = document.querySelector('.vjs-big-play-button');
             playBtn.click();
         }
         catch {
-            // console.log("await player");
-            setTimeout(function () { playVideo(); }, 2000);
+            console.log("await player");
+            if (document.getElementById('videoStream')) {
+                setTimeout(function () { playVideo(); }, 2000);
+            }
+            else {
+                console.log("close player");
+            }
+            // setTimeout(function () { playVideo(); }, 3000);
         }
 
     }
