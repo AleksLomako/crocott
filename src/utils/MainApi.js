@@ -128,6 +128,30 @@ class MainApi {
             .then(res => this._checkResponse(res));
     }
 
+// change favorite flag for vod
+changeFavoriteVod(vodId, favorite) {
+    this.checkUrl();
+    this.setJwt();
+    return fetch(`${this._url}/client/vod/favorite/${vodId}`, {
+        method: 'POST',
+        headers: this._headers,
+        body: JSON.stringify(
+            favorite
+        )
+    })
+        .then(res => this._checkResponse(res));
+}
+
+// get vods
+// getVods() {
+//     this.checkUrl();
+//     this.setJwt();
+//     return fetch(`${this._url}/client/content/vods`, {
+//         headers: this._headers
+//     })
+//         .then(res => this._checkResponse(res));
+// }
+
 
 
     // NOT AUTH

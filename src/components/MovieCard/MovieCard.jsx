@@ -10,7 +10,7 @@ function MovieCard(movie) {
     }
 
     return (
-        <li className="moviecard" tabIndex={0} onClick={handleClick}>
+        <li className="moviecard" id={movie.movie.id} tabIndex={0} onClick={handleClick}>
             <img className="moviecard__img" src={movie.movieImg} alt="Eye" />
             <button className="moviecard__btn">
                 <img className="moviecard__eye" src={ViewCountEye} alt="Eye" />

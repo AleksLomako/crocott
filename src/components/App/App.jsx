@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import Preloader from '../Preloader/Preloader';
 import Header from '../Header/Header';
 import LiveTv from '../LiveTv/LiveTv';
 import Movies from '../Movies/Movies';
+import Serials from '../Serials/Serials';
 import SignInCode from '../SignInCode/SignInCode';
 import SignInLogin from '../SignInLogin/SignInLogin';
 import mainApi from '../../utils/MainApi';
@@ -13,6 +15,7 @@ import saveJwt from '../../utils/saveJwt';
 
 function App() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [apiError, setApiError] = useState('');
   const [token, setToken] = useState('');
@@ -37,6 +40,7 @@ function App() {
 
   // Check Token
   function checkToken(jwt) {
+    setLoading(true);
     mainApi.checkToken(jwt)
       .then((res) => {
         if (res) {
@@ -48,6 +52,9 @@ function App() {
       .catch((err) => {
         console.log(err.error);
         refreshToken();
+      })
+      .finally(() => {
+        setLoading(false);
       })
   }
 
@@ -93,12 +100,14 @@ function App() {
       })
   }
 
-  // Get Full Content
-  function getContentFull() {
+   // Get Full Content
+   function getContentFull() {
     mainApi.getFullContent()
       .then((res) => {
         if (res) {
-          parseFullContent(res)
+          parseStreams(res);
+          parseVods(res);
+          parseSerials(res);
         }
       })
       .catch((err) => {
@@ -106,42 +115,48 @@ function App() {
       })
   }
 
-  // Parse Full Content
-  function parseFullContent(res) {
-    const content = res
+  // Parse streams
+  function parseStreams(content) {
     const streams = [];
-    const movies = { 'data': {} };
-    const vodsList = [];
-    movies.data = { "packages": [] }
-    const serials = [];
-    // parse
     content.data.packages.forEach(packag => {
-      // create streams
       if (packag.streams.length !== 0) {
         packag.streams.forEach(stream => {
           streams.push(stream)
         });
       }
-      // create movies
-      else if (packag.vods.length !== 0) {
+    })
+    localStorage.setItem('streams_crocOTT', JSON.stringify(streams))
+    setLiveTvList(JSON.parse(localStorage.getItem('streams_crocOTT')))
+  }
+
+  // Parse vods
+  function parseVods(content) {
+    const movies = { 'data': {} };
+    const vodsList = [];
+    movies.data = { "packages": [] }
+    content.data.packages.forEach(packag => {
+      if (packag.vods.length !== 0) {
         movies.data.packages.push(packag)
-        // create vodsList
         packag.vods.forEach(vod => {
           vodsList.push(vod)
         });
       }
+    })
+    localStorage.setItem('movies_crocOTT', JSON.stringify(movies))
+    setMoviesList(vodsList)
+  }
+
+  // Parse serials
+  function parseSerials(content) {
+    const serials = [];
+    content.data.packages.forEach(pack => {
       // create serials
-      else if (packag.serials.length !== 0) {
-        packag.serials.forEach(serial => {
+      if (pack.serials.length !== 0) {
+        pack.serials.forEach(serial => {
           serials.push(serial)
         });
       }
     })
-    // Save streams, movies, serials in localStorege
-    localStorage.setItem('streams_crocOTT', JSON.stringify(streams))
-    setLiveTvList(JSON.parse(localStorage.getItem('streams_crocOTT')))
-    localStorage.setItem('movies_crocOTT', JSON.stringify(movies))
-    setMoviesList(vodsList)
     localStorage.setItem('serials_crocOTT', JSON.stringify(serials))
   }
 
@@ -249,8 +264,8 @@ function App() {
     navigate('/signinlogin');
     setIsLoggedIn(false);
     setApiError('');
-    localStorage.removeItem('jwt_CrocOtt');
-    localStorage.removeItem('jwt_refresh_CrocOtt');
+    // localStorage.removeItem('jwt_CrocOtt');
+    // localStorage.removeItem('jwt_refresh_CrocOtt');
     localStorage.removeItem("Basic_authorization_CrocOtt");
     localStorage.removeItem("Code_authorization_CrocOtt");
     localStorage.removeItem('streams_crocOTT');
@@ -260,6 +275,7 @@ function App() {
 
   return (
     <div className="page">
+      {loading && <Preloader />}
       <Routes>
         <Route path="/test_main" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
@@ -278,7 +294,7 @@ function App() {
         <Route path="/series" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleLogOut} logo={logo} />
-            <h2>SERIES</h2>
+            <Serials />
           </ProtectedRoute>
         }
         />
