@@ -1,7 +1,9 @@
 import { React, useEffect } from "react";
 import './Player.css';
+import IconRight from '../../images/icons8-конец-64.png';
+import IconBack from '../../images/icons8-перейти-в-начало-64.png';
 
-function Player({ videoData, setVideoData }) {
+function Player({ movie, videoData, setVideoData }) {
 
     useEffect(() => {
         //REMOVE OLD PLAYER
@@ -14,9 +16,11 @@ function Player({ videoData, setVideoData }) {
         newVideo.className = 'video-js vjs-default-skin';
         newVideo.style.width = videoData.width;
         newVideo.style.height = videoData.height;
+        if (videoData.controls) {
+            newVideo.setAttribute("controls", "controls");
+        }
         // newVideo.setAttribute("controls", "controls");
         // newVideo.setAttribute("autoplay", "any");
-
         // newVideo.setAttribute("muted", "muted");
         newVideo.setAttribute('data-setup', '{ "fluid": false,  "inactivityTimeout": 0},');
         document.getElementById('video').append(newVideo);
@@ -30,7 +34,6 @@ function Player({ videoData, setVideoData }) {
         }
         newSource.src = videoData.videoUrl;
         document.getElementById('videoStream').appendChild(newSource)
-
         // CREATE SCRIPT TAG & ADD TO PAGE
         const sp = document.createElement('script');
         sp.setAttribute('type', 'text/javascript');
@@ -40,7 +43,14 @@ function Player({ videoData, setVideoData }) {
         document.body.appendChild(sp);
         // AUTOPLAY VIDEO
         if (document.getElementById('videoStream')) {
-            setTimeout(function () { playVideo(); }, 1000);
+            if (videoData.controls) {
+                document.getElementById('video').classList.add('test_style')
+                setTimeout(function () { playVod(); }, 1000);
+            }
+            else {
+                setTimeout(function () { playVideo(); }, 1000);
+            }
+            // setTimeout(function () { playVideo(); }, 1000);
         }
         else {
             console.log("NOT VIDEO STREEM");
@@ -49,6 +59,8 @@ function Player({ videoData, setVideoData }) {
         return () => {
             document.body.removeChild(sp);
         }
+
+
     }, [setVideoData, videoData]);
 
 
@@ -56,7 +68,6 @@ function Player({ videoData, setVideoData }) {
         console.log("PLAY VIDEO");
         try {
             console.log('TRY');
-
             let playBtn = document.querySelector('.vjs-big-play-button');
             playBtn.click();
         }
@@ -72,6 +83,65 @@ function Player({ videoData, setVideoData }) {
         }
 
     }
+
+    function playVod() {
+        console.log("PLAY VOD");
+        try {
+            let controlBar = document.querySelector('.vjs-control-bar');
+            let playerOverlay = document.createElement('div');
+            playerOverlay.id = 'testElem';
+            controlBar.appendChild(playerOverlay)
+            playerOverlay.textContent = movie.movie.vod.preview_icon
+            playerOverlay.innerHTML = `<img style="width: 150px; 
+                    height: 250px; 
+                    position: absolute;
+                    top: 20px; 
+                    left: 170px;" src=${movie.movie.vod.preview_icon} alt="Movie Icon" 
+                    />
+                    <h1 style="position: absolute;
+                    top: 20px;
+                    left: 362px;
+                    font-size: 26px;
+                    font-weight: 400;">${movie.movie.vod.display_name}
+                    </h1>
+                    <img tabindex='0' style="width: 25px; 
+                    height: 25px;
+                    position: absolute;
+                    top: 210px;
+                    left: 920px;" src=${IconBack} alt="Icon Back"/>
+                    <img id='skip_forward' tabindex='0' style="width: 25px; 
+                    height: 25px;
+                    position: absolute;
+                    top: 210px;
+                    left: 1025px;" src=${IconRight} alt="Icon Back"/>
+                    `
+            let playBtn = document.querySelector('.vjs-big-play-button');
+            playBtn.click();
+            setTimeout(function () { removeFocus(); }, 500);
+
+
+
+        }
+        catch {
+            console.log("await player");
+            if (document.getElementById('videoStream')) {
+                setTimeout(function () { playVod(); }, 2000);
+            }
+            else {
+                console.log("close player");
+            }
+            // setTimeout(function () { playVod(); }, 3000);
+        }
+
+
+
+    }
+
+    function removeFocus() {
+        document.activeElement.blur()
+
+    }
+
 
     return (
         <div id="video" className="video-style" tabIndex={0}>

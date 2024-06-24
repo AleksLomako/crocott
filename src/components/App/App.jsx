@@ -26,9 +26,6 @@ function App() {
 
   // Check Token
   useEffect(() => {
-
-    // localStorage.removeItem('url_CrocOtt')
-
     const jwt = localStorage.getItem('jwt_CrocOtt');
     if (jwt === null) {
       navigate('/signinlogin')
@@ -176,7 +173,6 @@ function App() {
     }
     mainApi.getInfo()
       .then((res) => {
-        // console.log(res);
         const authorization = mainApi.createHeaders(values.name, values.password);
         localStorage.setItem("Basic_authorization_CrocOtt", authorization);
         login(authorization);
@@ -215,6 +211,8 @@ function App() {
             setApiError('Wrong login or password');
           } else if (err.error.message === 'wrong code') {
             setApiError('Wrong code');
+          } else if(err.error.message === 'client or device not found'){
+            localStorage.removeItem('deviceId_Crocott');
           }
           else {
             setApiError(err.error.message);
@@ -264,10 +262,6 @@ function App() {
     navigate('/signinlogin');
     setIsLoggedIn(false);
     setApiError('');
-    // localStorage.removeItem('jwt_CrocOtt');
-    // localStorage.removeItem('jwt_refresh_CrocOtt');
-    localStorage.removeItem("Basic_authorization_CrocOtt");
-    localStorage.removeItem("Code_authorization_CrocOtt");
     localStorage.removeItem('streams_crocOTT');
     localStorage.removeItem('movies_crocOTT');
   }

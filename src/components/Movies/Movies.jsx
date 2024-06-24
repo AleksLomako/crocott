@@ -9,7 +9,7 @@ function Movies({ moviesList }) {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const header = document.querySelector('.header__link_active');
     const content = JSON.parse(localStorage.getItem('movies_crocOTT'));
-    console.log(content)
+    // console.log(content)
     const navigate = useNavigate();
     // GROUPS NAVIGATE CONST
     const [moviesGroups, setMoviesGroups] = useState('');
@@ -25,6 +25,9 @@ function Movies({ moviesList }) {
     // POPUM NAV
     const [popupNavElem, setPopupNavElem] = useState('arrow');
     const [playerState, setPlayerState] = useState(false);
+    const [movieFavorite, setMovieFavorite] = useState();
+
+
 
 
     useEffect(() => {
@@ -55,6 +58,7 @@ function Movies({ moviesList }) {
 
     // HANDLE REMOTE CONTROL
     const handleKeyPress = useCallback((e) => {
+
         e.preventDefault();
         // INDEXES
         let indexGroup = activeGroupIndex
@@ -178,6 +182,8 @@ function Movies({ moviesList }) {
                         document.activeElement.click();
                         setPlayerState(true);
                         setElementNav('.movies_popup_player')
+
+
                     }
                     else if (e.keyCode === 37) {
                         setPopupNavElem('arrow');
@@ -217,20 +223,29 @@ function Movies({ moviesList }) {
             }
             // IF PLAYER === TRUE (CLOSE PLAYER)
             else {
-                if (e.keyCode === 461) {
+                if (e.keyCode === 461 || e.keyCode === 8) {
                     const oldPlayer = document.getElementById('videoStream');
                     if (oldPlayer !== null) {
                         oldPlayer.remove();
                     }
                     setPlayerState(false);
                     setPopupNavElem(popupNavElem);
-                    setElementNav('.movies_popup_player')
+                    setElementNav('.movies_popup_player');
+                    document.activeElement.blur();
                 }
             }
         }
         // POPUP NAV PLAYER
         else if (elementNav === '.movies_popup_player') {
-            if (e.keyCode === 461) {
+            const video = document.getElementById('videoStream_html5_api');
+            console.log("test");
+            // console.log(document.activeElement);
+            // document.activeElement.blur()
+            document.querySelector('.vjs-tech').focus()
+
+
+            // 461
+            if (e.keyCode === 461 || e.keyCode === 8) {
                 const oldPlayer = document.getElementById('videoStream');
                 if (oldPlayer !== null) {
                     oldPlayer.remove();
@@ -243,6 +258,30 @@ function Movies({ moviesList }) {
                     setPopupNavElem('trailer')
                 }
                 setElementNav('.movies_popup')
+            }
+            else if (e.keyCode === 38) {
+                console.log('Show overlay');
+                document.activeElement.blur()
+                document.querySelector('.vjs-tech').focus()
+
+            }
+            else if (e.keyCode === 13) {
+                if (document.activeElement.className === 'popup__play-btn' || document.activeElement.className === 'popup__play-btn popup__play-btn_trailer') {
+                    document.querySelector('.vjs-tech').focus()
+                    document.activeElement.click();
+                }
+                else {
+                    console.log(document.activeElement.tagName);
+                    console.log(document.activeElement);
+                    console.log('Show');
+                    document.activeElement.click();
+                }
+            }
+            else if (e.keyCode === 39) {
+                video.currentTime += 10
+            }
+            else if (e.keyCode === 37) {
+                video.currentTime -= 10
             }
         }
     }, [handleCloseMovie, playerState, popupNavElem, column, showMovies, moviesIndex, groupMoviesList, activeGroupIndex, navigate, elementNav, endIndex, moviesGroups, header])
@@ -311,11 +350,22 @@ function Movies({ moviesList }) {
         }
     }, [moviesGroups.length, header]);
 
+    // HANDLE CLICK ON MOVIE
     function handleMovieClick(movie) {
         setSelectedMovie(movie);
         setElementNav('.movies_popup');
+        content.data.packages.forEach(packag => {
+            if (packag.vods.length !== 0) {
+                packag.vods.forEach(vod => {
+                    if (vod.id === movie?.movie.id) {
+                        setMovieFavorite(vod.favorite)
+                    }
+                })
+            }
+        })
     }
 
+    // CLOSE MOVIE POPUP
     function handleCloseMovie() {
         setSelectedMovie(null);
         setPopupNavElem('arrow');
@@ -341,6 +391,7 @@ function Movies({ moviesList }) {
                 groupMoviesList={groupMoviesList} />
             <MoviePopup
                 movie={selectedMovie}
+                favorite={movieFavorite}
                 onClose={handleCloseMovie} />
         </section>
     );

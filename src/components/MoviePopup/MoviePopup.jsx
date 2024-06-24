@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import './MoviePopup.css';
 import BackBtn from '../../images/icons8-left-24.png';
 import Play from '../../images/icons8-play-30.png';
@@ -9,58 +9,69 @@ import Player from "../Player/Player";
 import mainApi from "../../utils/MainApi";
 
 
-function MoviePopup({ movie, onClose }) {
-
+function MoviePopup({ movie, onClose, favorite }) {
     const [loading, setLoading] = useState(false);
     const [videoData, setVideoData] = useState({});
+    const [localFavorite, setLocalFavorite] = useState('');
+    const [movieId, setMovieId] = useState();
+
     // raiting score
     let progress = movie?.movie.vod.user_score;
     let dashArray = (2 * 3.14 * 70);
     let dashOffset = dashArray * ((10 - progress) / 10);
 
-    // TESTING CODE
+    useEffect(() => {
+        setLocalFavorite(favorite)
+        setMovieId(movie?.movie.id)
+    }, [favorite, movie?.movie.id])
+
     // change favorite flag
     function changeFavorite() {
+        const content = JSON.parse(localStorage.getItem('movies_crocOTT'))
+        let flag_value;
+        content.data.packages.forEach(packag => {
+            if (packag.vods.length !== 0) {
+                packag.vods.forEach(vod => {
+                    if (vod.id === movie.movie.id) {
+                        if (vod.favorite === false) {
+                            vod.favorite = true;
+                            flag_value = true;
+                            changeFavoriteApi(flag_value)
+                        }
+                        else {
+                            vod.favorite = false
+                            flag_value = false
+                            changeFavoriteApi(flag_value)
+                        }
+                    }
+                })
+            }
+        })
+        localStorage.setItem('movies_crocOTT', JSON.stringify(content))
+    }
+
+    function changeFavoriteApi(flag_value) {
+        setLocalFavorite(flag_value);
         let vodId = movie.movie.id;
-        console.log(movie.movie.favorite);
-        if (movie.movie.favorite === false) {
-            let favorite = { "favorite": true };
-            mainApi.changeFavoriteVod(vodId, favorite)
-                .then((res) => {
-                    console.log(res);
-                })
-                .catch((err) => {
-                    console.log(err);;
-                })
-        }
-        else {
-            let favorite = { "favorite": false }
-            mainApi.changeFavoriteVod(vodId, favorite)
-                .then((res) => {
-                    console.log(res);
-                })
-                .catch((err) => {
-                    console.log(err);;
-                })
-        }
+        let favorite = { "favorite": flag_value };
+        mainApi.changeFavoriteVod(vodId, favorite)
+            .then((res) => {
+                // console.log(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
     }
 
-
-    // console.log(movie)
+    // PLAY MOVIE
     function playVod() {
-        console.log("PLAY VOD");
-        // console.log(movie.movie.vod.urls[0].url);
-        console.log(movie.movie);
-        // startPlayer('test', 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8')
-        // startPlayer('test', movie.movie.vod.trailer_url)
-        startPlayer(movie.movie.vod.display_name, movie.movie.vod.urls[0].url)
+        startPlayer(movie.movie.vod.display_name, movie.movie.vod.urls[0].url);
     }
 
-
+    // PLAY TREILER
     function playVodTreiler() {
         startPlayer(movie.movie.vod.display_name, movie.movie.vod.trailer_url)
     }
-
 
     function startPlayer(display_name, urls) {
         setLoading(true)
@@ -68,37 +79,21 @@ function MoviePopup({ movie, onClose }) {
             "videoUrl": urls,
             "videoName": display_name,
             "width": window.innerWidth + 'px',
-            "height": window.innerHeight + 'px'
+            "height": window.innerHeight + 'px',
+            "controls": "controls"
         })
-        // document.getElementById('video').style.position = 'fixed'
-        // test()
     }
 
-
-    // function test() {
-    //     if (document.getElementById('video')) {
-    //         document.getElementById('video').style.position = 'fixed'
-    //     }
-        // const video = document.getElementById('videoStream_html5_api');
-        // const video = document.getElementById('videoStream');
-
-
-
-        // console.log(video.currentTime);
-
-        // skip
-        // video.currentTime += 10
-        // continue watching
-        // video.currentTime = 100
-
-        // test fun player
-        // video.play()
-        // video.pause()
-        // video.width =500;
+    // console.log(video.currentTime);
+    // skip
+    // video.currentTime += 10
+    // continue watching
+    // video.currentTime = 100
+    // test fun player
+    // video.play()
+    // video.pause()
+    // video.width =500;
     // }
-
-
-
 
     return (
         <div className={`popup ${movie ? 'popup_opened' : ''}`}>
@@ -111,10 +106,10 @@ function MoviePopup({ movie, onClose }) {
                 <div className="popup__header-buttons">
                     <button className="popup__play-btn" tabIndex={0} onClick={playVod}>
                         <p className="popup__play-text">Play</p>
-                        <img className="popup__icon" src={Play} alt="Lock" />
+                        <img className="popup__icon" src={Play} alt="Play" />
                     </button>
                     <button className="popup__play-btn popup__play-btn_trailer" tabIndex={0} onClick={playVodTreiler}>Trailer</button>
-                    <img className="popup__icon star" src={Star} alt="Star" tabIndex={0} onClick={changeFavorite} />
+                    <img className={`star popup__icon ${localFavorite && 'popup__icon_active'}`} src={Star} alt="Star" tabIndex={0} onClick={changeFavorite} />
                 </div>
             </header>
             <main className="popup__main"
@@ -123,9 +118,9 @@ function MoviePopup({ movie, onClose }) {
                     <li className="popup__info-item popup__info-item_rating">
                         <h2 className="popup__info-title popup__info-title_rating">Raiting</h2>
                         <svg width="110" height="110" viewBox="0 0 160 160" style={{ transform: "rotate(-90deg)" }}>
-                            <circle r="70" cx="80" cy="80" fill="transparent" stroke="rgba(85, 84, 84, 0.5)" stroke-width="12px"></circle>
-                            <circle r="70" cx="80" cy="80" fill="transparent" stroke="#fd5252" stroke-linecap="round" stroke-width="12px" stroke-dasharray={dashArray} stroke-dashoffset={dashOffset}></circle>
-                            <text x="50px" y="-63px" fill="#fff" font-size="42px" font-weight="500"
+                            <circle r="70" cx="80" cy="80" fill="transparent" stroke="rgba(85, 84, 84, 0.5)" strokeWidth="12px"></circle>
+                            <circle r="70" cx="80" cy="80" fill="transparent" stroke="#fd5252" strokeLinecap="round" strokeWidth="12px" strokeDasharray={dashArray} strokeDashoffset={dashOffset}></circle>
+                            <text x="50px" y="-63px" fill="#fff" fontSize="42px" fontWeight="500"
                                 style={{ transform: "rotate(90deg)" }}>{movie?.movie.vod.user_score.toFixed(1)}</text>
                         </svg>
                     </li>
@@ -152,7 +147,10 @@ function MoviePopup({ movie, onClose }) {
                     <p className="popup__text">{movie?.movie.vod.description}</p>
                 </div>
             </main>
-            {loading && <Player videoData={videoData} setVideoData={setVideoData} />}
+            {loading && <Player
+                videoData={videoData}
+                setVideoData={setVideoData}
+                movie={movie} />}
         </div >
     );
 }
