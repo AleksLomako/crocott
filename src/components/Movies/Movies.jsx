@@ -23,11 +23,10 @@ function Movies({ moviesList }) {
     const [moviesIndex, setMoviesIndex] = useState(0);
     const column = Math.floor((window.screen.width - 60) / 170);
     // POPUM NAV
-    const [popupNavElem, setPopupNavElem] = useState('arrow');
+    const [popupNavElem, setPopupNavElem] = useState('');
     const [playerState, setPlayerState] = useState(false);
     const [movieFavorite, setMovieFavorite] = useState();
-
-
+    const [popupShow, setPopupShow] = useState(false);
 
 
     useEffect(() => {
@@ -58,7 +57,6 @@ function Movies({ moviesList }) {
 
     // HANDLE REMOTE CONTROL
     const handleKeyPress = useCallback((e) => {
-
         e.preventDefault();
         // INDEXES
         let indexGroup = activeGroupIndex
@@ -150,13 +148,15 @@ function Movies({ moviesList }) {
             }
             else if (e.keyCode === 13) {
                 document.activeElement.click();
+                setPopupShow(true);
+                setPopupNavElem('popup__play')
             }
         }
         // POPUP NAV
-        else if (elementNav === '.movies_popup') {
+        else if (elementNav === '.movies_popup' || popupShow === true) {
             // IF PLAYER === FALSE
             if (playerState === false) {
-                if (e.keyCode === 461) {
+                if (e.keyCode === 461 || e.keyCode === 8) {
                     handleCloseMovie()
                     showMovies[moviesIndex].focus()
                     setPopupNavElem('arrow');
@@ -167,13 +167,13 @@ function Movies({ moviesList }) {
                     if (e.keyCode === 13) {
                         handleCloseMovie()
                         document.activeElement.blur();
-                        showMovies[moviesIndex].focus()
+                        showMovies[moviesIndex].focus();
                         setPopupNavElem('arrow');
                         setElementNav('.movies');
                     }
                     else if (e.keyCode === 39) {
                         setPopupNavElem('popup__play')
-                        document.querySelector('.popup__play-btn').focus()
+                        document.querySelector('.popup__play-btn').focus();
                     }
                 }
                 // button play
@@ -181,9 +181,10 @@ function Movies({ moviesList }) {
                     if (e.keyCode === 13) {
                         document.activeElement.click();
                         setPlayerState(true);
+
+                        setPopupShow(false)
+
                         setElementNav('.movies_popup_player')
-
-
                     }
                     else if (e.keyCode === 37) {
                         setPopupNavElem('arrow');
@@ -238,13 +239,7 @@ function Movies({ moviesList }) {
         // POPUP NAV PLAYER
         else if (elementNav === '.movies_popup_player') {
             const video = document.getElementById('videoStream_html5_api');
-            console.log("test");
-            // console.log(document.activeElement);
-            // document.activeElement.blur()
             document.querySelector('.vjs-tech').focus()
-
-
-            // 461
             if (e.keyCode === 461 || e.keyCode === 8) {
                 const oldPlayer = document.getElementById('videoStream');
                 if (oldPlayer !== null) {
@@ -260,10 +255,8 @@ function Movies({ moviesList }) {
                 setElementNav('.movies_popup')
             }
             else if (e.keyCode === 38) {
-                console.log('Show overlay');
                 document.activeElement.blur()
                 document.querySelector('.vjs-tech').focus()
-
             }
             else if (e.keyCode === 13) {
                 if (document.activeElement.className === 'popup__play-btn' || document.activeElement.className === 'popup__play-btn popup__play-btn_trailer') {
@@ -271,9 +264,6 @@ function Movies({ moviesList }) {
                     document.activeElement.click();
                 }
                 else {
-                    console.log(document.activeElement.tagName);
-                    console.log(document.activeElement);
-                    console.log('Show');
                     document.activeElement.click();
                 }
             }
@@ -284,11 +274,27 @@ function Movies({ moviesList }) {
                 video.currentTime -= 10
             }
         }
-    }, [handleCloseMovie, playerState, popupNavElem, column, showMovies, moviesIndex, groupMoviesList, activeGroupIndex, navigate, elementNav, endIndex, moviesGroups, header])
+    }, [handleCloseMovie, playerState, popupNavElem, column, showMovies, moviesIndex, groupMoviesList, activeGroupIndex, navigate, elementNav, endIndex, moviesGroups, header]);
 
+
+    useEffect(() => {
+        document.querySelector('.popup__play-btn').focus();
+    }, [popupShow])
 
     // HANDLE CLICK MOUSE
     const handleClickOutside = useCallback((e) => {
+        let elementId = document.activeElement.id;
+        switch (elementId) {
+            case 'skip_forward':
+                let skip_forward = document.getElementById('videoStream_html5_api');
+                skip_forward.currentTime += 10
+                break;
+            case 'skip_back':
+                let skip_back = document.getElementById('videoStream_html5_api');
+                skip_back.currentTime -= 10
+                break;
+            default:
+        }
         if (document.activeElement.className === 'movies__item') {
             try {
                 let indexGroup = 0;
@@ -305,8 +311,7 @@ function Movies({ moviesList }) {
                     }
                     indexGroup++
                 })
-            }
-            catch { }
+            } catch { }
         }
         else {
             try {
@@ -314,19 +319,15 @@ function Movies({ moviesList }) {
                 showMovies.forEach((vod) => {
                     if (vod.id === document.activeElement.id) {
                         setMoviesIndex(indexElem)
-
                     }
                     indexElem++
                 })
                 if (document.activeElement.tagName === 'BUTTON') {
                     setElementNav('.movies_popup_player')
                 }
-            }
-            catch { }
-
+            } catch { }
         }
     }, [showMovies, elementNav, moviesGroups])
-
 
     // ADD & REMOVE LISTENER
     useEffect(() => {
@@ -337,7 +338,6 @@ function Movies({ moviesList }) {
             document.removeEventListener('click', handleClickOutside);
         };
     }, [handleKeyPress, handleClickOutside]);
-
 
     // HEADER FOCUS and MOVIES GROUPS
     useEffect(() => {
@@ -352,6 +352,7 @@ function Movies({ moviesList }) {
 
     // HANDLE CLICK ON MOVIE
     function handleMovieClick(movie) {
+        // setPopupShow(true)
         setSelectedMovie(movie);
         setElementNav('.movies_popup');
         content.data.packages.forEach(packag => {
@@ -367,6 +368,7 @@ function Movies({ moviesList }) {
 
     // CLOSE MOVIE POPUP
     function handleCloseMovie() {
+        setPopupShow(false)
         setSelectedMovie(null);
         setPopupNavElem('arrow');
         setElementNav('.movies');

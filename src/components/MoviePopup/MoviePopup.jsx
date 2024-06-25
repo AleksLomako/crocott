@@ -3,6 +3,7 @@ import './MoviePopup.css';
 import BackBtn from '../../images/icons8-left-24.png';
 import Play from '../../images/icons8-play-30.png';
 import Star from '../../images/icons8-star-24.png';
+import FavoriteStar from '../../images/icons8-star-yellow.png';
 import timeConvertor from "../../utils/timeConvertor";
 import dateConvertor from "../../utils/dateConvertor";
 import Player from "../Player/Player";
@@ -84,17 +85,6 @@ function MoviePopup({ movie, onClose, favorite }) {
         })
     }
 
-    // console.log(video.currentTime);
-    // skip
-    // video.currentTime += 10
-    // continue watching
-    // video.currentTime = 100
-    // test fun player
-    // video.play()
-    // video.pause()
-    // video.width =500;
-    // }
-
     return (
         <div className={`popup ${movie ? 'popup_opened' : ''}`}>
             <header className="popup__header">
@@ -109,7 +99,7 @@ function MoviePopup({ movie, onClose, favorite }) {
                         <img className="popup__icon" src={Play} alt="Play" />
                     </button>
                     <button className="popup__play-btn popup__play-btn_trailer" tabIndex={0} onClick={playVodTreiler}>Trailer</button>
-                    <img className={`star popup__icon ${localFavorite && 'popup__icon_active'}`} src={Star} alt="Star" tabIndex={0} onClick={changeFavorite} />
+                    <img className="star popup__icon" src={localFavorite ? FavoriteStar : Star} alt="Star" tabIndex={0} onClick={changeFavorite} />
                 </div>
             </header>
             <main className="popup__main"

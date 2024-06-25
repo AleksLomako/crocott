@@ -11,6 +11,7 @@ import SignInCode from '../SignInCode/SignInCode';
 import SignInLogin from '../SignInLogin/SignInLogin';
 import mainApi from '../../utils/MainApi';
 import saveJwt from '../../utils/saveJwt';
+import { parseStreams, parseVods, parseSerials } from '../../utils/parseContent';
 
 
 function App() {
@@ -97,64 +98,19 @@ function App() {
       })
   }
 
-   // Get Full Content
-   function getContentFull() {
+  // Get Full Content
+  function getContentFull() {
     mainApi.getFullContent()
       .then((res) => {
         if (res) {
-          parseStreams(res);
-          parseVods(res);
+          setLiveTvList(parseStreams(res));
+          setMoviesList(parseVods(res));
           parseSerials(res);
         }
       })
       .catch((err) => {
         console.log(err);
       })
-  }
-
-  // Parse streams
-  function parseStreams(content) {
-    const streams = [];
-    content.data.packages.forEach(packag => {
-      if (packag.streams.length !== 0) {
-        packag.streams.forEach(stream => {
-          streams.push(stream)
-        });
-      }
-    })
-    localStorage.setItem('streams_crocOTT', JSON.stringify(streams))
-    setLiveTvList(JSON.parse(localStorage.getItem('streams_crocOTT')))
-  }
-
-  // Parse vods
-  function parseVods(content) {
-    const movies = { 'data': {} };
-    const vodsList = [];
-    movies.data = { "packages": [] }
-    content.data.packages.forEach(packag => {
-      if (packag.vods.length !== 0) {
-        movies.data.packages.push(packag)
-        packag.vods.forEach(vod => {
-          vodsList.push(vod)
-        });
-      }
-    })
-    localStorage.setItem('movies_crocOTT', JSON.stringify(movies))
-    setMoviesList(vodsList)
-  }
-
-  // Parse serials
-  function parseSerials(content) {
-    const serials = [];
-    content.data.packages.forEach(pack => {
-      // create serials
-      if (pack.serials.length !== 0) {
-        pack.serials.forEach(serial => {
-          serials.push(serial)
-        });
-      }
-    })
-    localStorage.setItem('serials_crocOTT', JSON.stringify(serials))
   }
 
   // HANDLE BTN LOGIN 
@@ -211,7 +167,7 @@ function App() {
             setApiError('Wrong login or password');
           } else if (err.error.message === 'wrong code') {
             setApiError('Wrong code');
-          } else if(err.error.message === 'client or device not found'){
+          } else if (err.error.message === 'client or device not found') {
             localStorage.removeItem('deviceId_Crocott');
           }
           else {
