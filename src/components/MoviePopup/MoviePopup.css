@@ -109,11 +109,17 @@
 .popup__info {
     display: flex;
     z-index: 2;
-    width: 53%;
+    width: 55%;
     justify-content: space-between;
     align-items: center;
     padding: 20px 0px 35px;
-    margin-left: 300px;
+    margin: 8px 0px 30px 300px;
+}
+
+.popup__info:focus {
+    outline: 6px solid #ffc107;
+    border-radius: 0px; 
+    outline-offset: 2px; 
 }
 
 .popup__info-item {
@@ -158,11 +164,23 @@
     object-fit: cover;
 }
 
+.popup__image:focus {
+    outline: 6px solid #ffc107;
+    border-radius: 0px; 
+    outline-offset: 2px; 
+}
+
 .popup__text {
     width: 70%;
     font-size: 26px;
     font-weight: 400;
     padding-top: 40px;
+}
+
+.popup__text:focus {
+    outline: 6px solid #ffc107;
+    border-radius: 0px; 
+    outline-offset: 2px; 
 }
 
 .test_style {

@@ -22,7 +22,7 @@ function Header({ onExit, logo }) {
                     <Link to="/settings" tabIndex="0" className="header__link">
                         <img className="header__icon" src={IconGear} alt="Gear icon" />
                     </Link>
-                    <Link to="/signinlogin" onClick={onExit} tabIndex="0" className="header__link">
+                    <Link to="" onClick={onExit} tabIndex="0" className="header__link">
                         <img className="header__icon" src={IconPower} alt="Power button" />
                     </Link>
                 </div>

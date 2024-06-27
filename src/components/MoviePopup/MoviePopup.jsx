@@ -104,7 +104,7 @@ function MoviePopup({ movie, onClose, favorite }) {
             </header>
             <main className="popup__main"
                 style={{ backgroundImage: `url(${movie?.movie.vod.background_url})` }}>
-                <ul className="popup__info">
+                <ul className="popup__info" tabIndex={0}>
                     <li className="popup__info-item popup__info-item_rating">
                         <h2 className="popup__info-title popup__info-title_rating">Raiting</h2>
                         <svg width="110" height="110" viewBox="0 0 160 160" style={{ transform: "rotate(-90deg)" }}>
@@ -133,8 +133,8 @@ function MoviePopup({ movie, onClose, favorite }) {
                     </li>
                 </ul>
                 <div className="popup__description">
-                    <img className="popup__image" src={movie?.movie.vod.preview_icon} alt="Movie Icon" />
-                    <p className="popup__text">{movie?.movie.vod.description}</p>
+                    <img className="popup__image" src={movie?.movie.vod.preview_icon} alt="Movie Icon" tabIndex={0}/>
+                    <p className="popup__text" tabIndex={0}>{movie?.movie.vod.description}</p>
                 </div>
             </main>
             {loading && <Player

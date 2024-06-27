@@ -9,6 +9,7 @@ import Movies from '../Movies/Movies';
 import Serials from '../Serials/Serials';
 import SignInCode from '../SignInCode/SignInCode';
 import SignInLogin from '../SignInLogin/SignInLogin';
+import ExitPopup from '../ExitPopup/ExitPopup';
 import mainApi from '../../utils/MainApi';
 import saveJwt from '../../utils/saveJwt';
 import { parseStreams, parseVods, parseSerials } from '../../utils/parseContent';
@@ -24,6 +25,7 @@ function App() {
   const [liveTvList, setLiveTvList] = useState([]);
   const [moviesList, setMoviesList] = useState([]);
   // const [serialsList, setSerialsList] = useState([]);
+  const [isExitPopupOpen, setIsExitPopupOpen] = useState(false);
 
   // Check Token
   useEffect(() => {
@@ -213,8 +215,17 @@ function App() {
     }
   }
 
+  function handleOpenExitPopup() {
+    setIsExitPopupOpen(true);
+  }
+
+  function handleCloseExitPopup() {
+    setIsExitPopupOpen(false);
+  }
+
   // LOGOUT
   function handleLogOut() {
+    setIsExitPopupOpen(false);
     navigate('/signinlogin');
     setIsLoggedIn(false);
     setApiError('');
@@ -229,35 +240,35 @@ function App() {
       <Routes>
         <Route path="/test_main" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <Header onExit={handleLogOut} logo={logo} />
+            <Header onExit={handleOpenExitPopup} logo={logo} />
             <LiveTv liveTvList={liveTvList} />
           </ProtectedRoute>
         }
         />
         <Route path="/movies" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <Header onExit={handleLogOut} logo={logo} />
+            <Header onExit={handleOpenExitPopup} logo={logo} />
             <Movies moviesList={moviesList} />
           </ProtectedRoute>
         }
         />
         <Route path="/series" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <Header onExit={handleLogOut} logo={logo} />
+            <Header onExit={handleOpenExitPopup} logo={logo} />
             <Serials />
           </ProtectedRoute>
         }
         />
         <Route path="/packages" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <Header onExit={handleLogOut} logo={logo} />
+            <Header onExit={handleOpenExitPopup} logo={logo} />
             <h2>PACKAGES</h2>
           </ProtectedRoute>
         }
         />
         <Route path="/settings" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <Header onExit={handleLogOut} logo={logo} />
+            <Header onExit={handleOpenExitPopup} logo={logo} />
             <h2>SETTINGS</h2>
           </ProtectedRoute>
         }
@@ -265,6 +276,7 @@ function App() {
         <Route path="/signincode" element={isLoggedIn ? <Navigate to="/test_main" replace /> : <SignInCode onLoginCode={handleLoginCode} errorMessage={apiError} />} />
         <Route path="/signinlogin" element={isLoggedIn ? <Navigate to="/test_main" replace /> : <SignInLogin onLogin={handleLogin} errorMessage={apiError} />} />
       </Routes>
+      <ExitPopup isOpen={isExitPopupOpen} isNotExit={handleCloseExitPopup} isExit={handleLogOut}/>
     </div>
   );
 }
