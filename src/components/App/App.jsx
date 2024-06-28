@@ -35,6 +35,7 @@ function App() {
     }
     else {
       checkToken(jwt)
+      getInfo();
     }
   }, [token])
 
@@ -98,6 +99,9 @@ function App() {
       .then((res) => {
         setLogo(res.data.brand.logo)
       })
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
   // Get Full Content
@@ -115,12 +119,12 @@ function App() {
       })
   }
 
-  // HANDLE BTN LOGIN 
-  function handleLogin(values) {
-    console.log(values);
+  // HANDLE URL
+  function handleUrl(url) {
+    console.log(url);
     if (localStorage.getItem('url_CrocOtt') === null) {
-      if (values.url) {
-        localStorage.setItem('url_CrocOtt', values.url)
+      if (url) {
+        localStorage.setItem('url_CrocOtt', url)
       }
       else {
         localStorage.setItem('url_CrocOtt', 'https://ott.crocott.com')
@@ -129,6 +133,11 @@ function App() {
     else {
       console.log("NOT NULL");
     }
+  }
+
+  // HANDLE BTN LOGIN 
+  function handleLogin(values) {
+    handleUrl(values.url);
     mainApi.getInfo()
       .then((res) => {
         const authorization = mainApi.createHeaders(values.name, values.password);
@@ -136,16 +145,23 @@ function App() {
         login(authorization);
       })
       .catch((err) => {
+        localStorage.removeItem('url_CrocOtt');
         setApiError(err.toString());
       })
   };
 
   // HANDLE BTN LOGIN  WITH CODE
   function handleLoginCode(values) {
-    const authorization = mainApi.createHeadersWithCode(values.code);
-    localStorage.setItem("Code_authorization_CrocOtt", authorization);
-    login(authorization);
-    // setIsLoggedIn(true)
+    handleUrl(values.url);
+    mainApi.getInfo()
+      .then((res) => {
+        const authorization = mainApi.createHeadersWithCode(values.code);
+        localStorage.setItem("Code_authorization_CrocOtt", authorization);
+        login(authorization);
+      })
+      .catch((err) => {
+        setApiError(err.toString());
+      })
   }
 
   // LOGIN 
@@ -209,7 +225,6 @@ function App() {
           }
           else {
             setApiError(err.error.message);
-            localStorage.removeItem('url_CrocOtt');
           }
         })
     }
@@ -241,14 +256,14 @@ function App() {
         <Route path="/test_main" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleOpenExitPopup} logo={logo} />
-            <LiveTv liveTvList={liveTvList} />
+            <LiveTv liveTvList={liveTvList} isExitPopupOpen={isExitPopupOpen} />
           </ProtectedRoute>
         }
         />
         <Route path="/movies" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleOpenExitPopup} logo={logo} />
-            <Movies moviesList={moviesList} />
+            <Movies moviesList={moviesList} isExitPopupOpen={isExitPopupOpen} />
           </ProtectedRoute>
         }
         />
@@ -276,7 +291,7 @@ function App() {
         <Route path="/signincode" element={isLoggedIn ? <Navigate to="/test_main" replace /> : <SignInCode onLoginCode={handleLoginCode} errorMessage={apiError} />} />
         <Route path="/signinlogin" element={isLoggedIn ? <Navigate to="/test_main" replace /> : <SignInLogin onLogin={handleLogin} errorMessage={apiError} />} />
       </Routes>
-      <ExitPopup isOpen={isExitPopupOpen} isNotExit={handleCloseExitPopup} isExit={handleLogOut}/>
+      <ExitPopup isOpen={isExitPopupOpen} isNotExit={handleCloseExitPopup} isExit={handleLogOut} />
     </div>
   );
 }

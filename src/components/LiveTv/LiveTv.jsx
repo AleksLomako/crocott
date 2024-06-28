@@ -8,7 +8,7 @@ import mainApi from '../../utils/MainApi';
 import saveJwt from '../../utils/saveJwt';
 import processingProgramData from '../../utils/processingProgData';
 
-function LiveTv({ liveTvList }) {
+function LiveTv({ liveTvList, isExitPopupOpen }) {
     // PLAYER STATES
     const [videoData, setVideoData] = useState({});
     const [loading, setLoading] = useState(false);
@@ -42,224 +42,230 @@ function LiveTv({ liveTvList }) {
         let indexGroup = activeGroupIndex
         let indexElem = elementIndex;
         let programIndexElem = programElemIndex;
-        //  HEADER NAV
-        if (elementNav === ".header") {
-            if (e.keyCode === 39) {
-                const oldPlayer = document.getElementById('videoStream');
-                if (oldPlayer !== null) {
-                    oldPlayer.remove();
+
+        if (isExitPopupOpen !== true) {
+            console.log('TEST');
+            console.log(isExitPopupOpen);
+            //  HEADER NAV
+            if (elementNav === ".header") {
+                if (e.keyCode === 39) {
+                    const oldPlayer = document.getElementById('videoStream');
+                    if (oldPlayer !== null) {
+                        oldPlayer.remove();
+                    }
+                    document.activeElement.blur();
+                    navigate('/movies')
                 }
-                document.activeElement.blur();
-                navigate('/movies')
-            }
-            else if (e.keyCode === 40) {
-                setElementNav('.groups');
-                setElementIndex(0)
-                channelsGroupsElement.focus()
-            }
-        }
-        // GROUPS NAV
-        else if (elementNav === ".groups") {
-            if (e.keyCode === 39) {
-                if (activeGroupIndex !== groupsList().length - 1) {
-                    indexGroup = activeGroupIndex + 1
-                    setActiveGroupIndex(indexGroup)
-                    setActiveGroup(groupsList()[indexGroup])
-                }
-                else {
-                    indexGroup = 0;
-                    setActiveGroupIndex(indexGroup)
-                    setActiveGroup(groupsList()[indexGroup])
+                else if (e.keyCode === 40) {
+                    setElementNav('.groups');
+                    setElementIndex(0)
+                    channelsGroupsElement.focus()
                 }
             }
-            else if (e.keyCode === 37) {
-                if (activeGroupIndex !== 0) {
-                    indexGroup = activeGroupIndex - 1
-                    setActiveGroupIndex(indexGroup)
-                    setActiveGroup(groupsList()[indexGroup])
+            // GROUPS NAV
+            else if (elementNav === ".groups") {
+                if (e.keyCode === 39) {
+                    if (activeGroupIndex !== groupsList().length - 1) {
+                        indexGroup = activeGroupIndex + 1
+                        setActiveGroupIndex(indexGroup)
+                        setActiveGroup(groupsList()[indexGroup])
+                    }
+                    else {
+                        indexGroup = 0;
+                        setActiveGroupIndex(indexGroup)
+                        setActiveGroup(groupsList()[indexGroup])
+                    }
                 }
-                else {
-                    indexGroup = groupsList().length - 1;
-                    setActiveGroupIndex(indexGroup)
-                    setActiveGroup(groupsList()[indexGroup])
+                else if (e.keyCode === 37) {
+                    if (activeGroupIndex !== 0) {
+                        indexGroup = activeGroupIndex - 1
+                        setActiveGroupIndex(indexGroup)
+                        setActiveGroup(groupsList()[indexGroup])
+                    }
+                    else {
+                        indexGroup = groupsList().length - 1;
+                        setActiveGroupIndex(indexGroup)
+                        setActiveGroup(groupsList()[indexGroup])
+                    }
+                }
+                else if (e.keyCode === 38) {
+                    setElementNav('.header');
+                    setElementIndex(0)
+                    headerElemList[0].focus()
+                }
+                else if (e.keyCode === 40) {
+                    setElementNav('.channels');
+                    setElementIndex(0)
+                    channelsElemList[0].focus()
                 }
             }
-            else if (e.keyCode === 38) {
-                setElementNav('.header');
-                setElementIndex(0)
-                headerElemList[0].focus()
-            }
-            else if (e.keyCode === 40) {
-                setElementNav('.channels');
-                setElementIndex(0)
-                channelsElemList[0].focus()
-            }
-        }
-        // CHANNEL NAV
-        else if (elementNav === ".channels") {
-            setEndIndex(channelsElemList.length)
-            let wrap = document.querySelector('.channels__wrap');
-            if (e.keyCode === 40 && indexElem !== endIndex - 1) {
-                try {
-                    indexElem = elementIndex + 1;
+            // CHANNEL NAV
+            else if (elementNav === ".channels") {
+                setEndIndex(channelsElemList.length)
+                let wrap = document.querySelector('.channels__wrap');
+                if (e.keyCode === 40 && indexElem !== endIndex - 1) {
+                    try {
+                        indexElem = elementIndex + 1;
+                        channelsElemList[indexElem].focus();
+                        setElementIndex(indexElem)
+                        // SCROLL POSITION
+                        setScrollY('')
+                        if (scrollY === 'end') {
+                            channelsElemList[indexElem].scrollIntoView(false)
+                            wrap.scrollBy({ top: +6 })
+                        }
+                        let scroll = channelsElemList[indexElem].getBoundingClientRect();
+                        if (scroll.y > window.screen.height - 305) {
+                            setScrollY('end')
+                        }
+                    }
+                    catch { }
+                }
+                else if (e.keyCode === 38 && elementIndex !== 0) {
+                    indexElem = elementIndex - 1;
                     channelsElemList[indexElem].focus();
                     setElementIndex(indexElem)
                     // SCROLL POSITION
+
                     setScrollY('')
-                    if (scrollY === 'end') {
-                        channelsElemList[indexElem].scrollIntoView(false)
-                        wrap.scrollBy({ top: +6 })
+                    if (scrollY === 'start') {
+                        channelsElemList[indexElem].scrollIntoView(true)
+                        wrap.scrollBy({ top: -6 })
+
                     }
                     let scroll = channelsElemList[indexElem].getBoundingClientRect();
-                    if (scroll.y > window.screen.height - 305) {
-                        setScrollY('end')
+                    if (scroll.y < 200) {
+                        setScrollY('start')
                     }
                 }
-                catch { }
-            }
-            else if (e.keyCode === 38 && elementIndex !== 0) {
-                indexElem = elementIndex - 1;
-                channelsElemList[indexElem].focus();
-                setElementIndex(indexElem)
-                // SCROLL POSITION
+                else if (e.keyCode === 38 && elementIndex === 0) {
+                    setElementNav('.groups');
+                    setElementIndex(0)
+                    channelsGroupsElement.focus()
+                }
+                else if (e.keyCode === 13) {
+                    document.activeElement.click();
+                }
+                else if (e.keyCode === 39) {
+                    console.log();
 
-                setScrollY('')
-                if (scrollY === 'start') {
-                    channelsElemList[indexElem].scrollIntoView(true)
-                    wrap.scrollBy({ top: -6 })
+                    setElementNav('.player');
+                    document.getElementById('video').focus()
+                }
+            }
+            // PLAYER NAV
+            else if (elementNav === ".player") {
+                let player = document.getElementById('video');
+                player.classList.add('video-style__active')
+                // document.getElementById('video').focus()
 
-                }
-                let scroll = channelsElemList[indexElem].getBoundingClientRect();
-                if (scroll.y < 200) {
-                    setScrollY('start')
-                }
-            }
-            else if (e.keyCode === 38 && elementIndex === 0) {
-                setElementNav('.groups');
-                setElementIndex(0)
-                channelsGroupsElement.focus()
-            }
-            else if (e.keyCode === 13) {
-                document.activeElement.click();
-            }
-            else if (e.keyCode === 39) {
-                console.log();
-
-                setElementNav('.player');
-                document.getElementById('video').focus()
-            }
-        }
-        // PLAYER NAV
-        else if (elementNav === ".player") {
-            let player = document.getElementById('video');
-            player.classList.add('video-style__active')
-            // document.getElementById('video').focus()
-
-            if (e.keyCode === 37 && fullScreen === false) {
-                setElementNav('.channels');
-                channelsElemList[elementIndex].focus()
-                player.classList.remove('video-style__active')
-            }
-            else if (e.keyCode === 38 && fullScreen === false) {
-                setElementNav('.groups');
-                // setElementIndex(0)
-                channelsGroupsElement.focus()
-                player.classList.remove('video-style__active')
-            }
-            else if (e.keyCode === 40 && fullScreen === false) {
-                try {
-                    let description = document.querySelector('.livetv__description')
-                    if (description.textContent !== '') {
-                        description.focus()
-                        setElementNav('.description');
-                        player.classList.remove('video-style__active')
-                    }
-
-                }
-                catch { }
-            }
-            else if (e.keyCode === 13) {
-                document.querySelector('.vjs-fullscreen-control').click()
-                if (fullScreen === false) {
-                    setFullScreen(true)
-                }
-                else {
-                    setFullScreen(false)
-                }
-            }
-            else if (e.keyCode === 461) {
-                if (fullScreen === true) {
-                    document.querySelector('.vjs-fullscreen-control').click()
-                    setFullScreen(false)
-                }
-            }
-            else if (e.keyCode === 39 && fullScreen === false) {
-                if (processedProgData.length !== 0) {
-                    setElementNav('.programs');
-                    let programsList = document.querySelector('.programs__list');
-                    setProgramElemList(programsList.querySelectorAll('.program'));
-                    try {
-                        programElemList[programIndexElem].focus()
-                    }
-                    catch {
-                        document.querySelector('.program_active').focus();
-                    }
+                if (e.keyCode === 37 && fullScreen === false) {
+                    setElementNav('.channels');
+                    channelsElemList[elementIndex].focus()
                     player.classList.remove('video-style__active')
                 }
-            }
-        }
-        // Description nav
-        else if (elementNav === ".description") {
-            if (e.keyCode === 38) {
-                setElementNav('.player');
-                document.getElementById('video').focus();
-            }
-        }
-        // PROGRAM NAV
-        else if (elementNav === ".programs") {
-            setEndIndex(processedProgData.length)
-            let programsList = document.querySelector('.programs');
-            if (e.keyCode === 37) {
-                setElementNav('.player');
-                document.getElementById('video').focus();
-            }
-            else if (e.keyCode === 40 && programIndexElem !== endIndex - 1) {
-                programIndexElem = programElemIndex + 1;
-                programElemList[programIndexElem].focus()
-                setProgramElemIndex(programIndexElem)
-                // SCROLL POSITION
-                setScrollYProgram('')
-                if (scrollYProgram === 'end') {
-                    programElemList[programIndexElem].scrollIntoView(false)
-                    programsList.scrollBy({ top: +6 })
+                else if (e.keyCode === 38 && fullScreen === false) {
+                    setElementNav('.groups');
+                    // setElementIndex(0)
+                    channelsGroupsElement.focus()
+                    player.classList.remove('video-style__active')
                 }
-                let scroll = programElemList[programIndexElem].getBoundingClientRect();
-                if (scroll.y > window.screen.height - 205) {
-                    setScrollYProgram('end')
-                }
-            }
-            else if (e.keyCode === 38 && programElemIndex !== 0) {
-                programIndexElem = programElemIndex - 1;
-                programElemList[programIndexElem].focus()
-                setProgramElemIndex(programIndexElem)
-                // SCROLL POSITION
-                setScrollYProgram('')
-                if (scrollYProgram === 'start') {
-                    programElemList[programIndexElem].scrollIntoView(true)
-                    programsList.scrollBy({ top: -6 })
+                else if (e.keyCode === 40 && fullScreen === false) {
+                    try {
+                        let description = document.querySelector('.livetv__description')
+                        if (description.textContent !== '') {
+                            description.focus()
+                            setElementNav('.description');
+                            player.classList.remove('video-style__active')
+                        }
 
+                    }
+                    catch { }
                 }
-                let scroll = programElemList[programIndexElem].getBoundingClientRect();
-                if (scroll.y < 172) {
-                    setScrollYProgram('start')
+                else if (e.keyCode === 13) {
+                    document.querySelector('.vjs-fullscreen-control').click()
+                    if (fullScreen === false) {
+                        setFullScreen(true)
+                    }
+                    else {
+                        setFullScreen(false)
+                    }
+                }
+                else if (e.keyCode === 461) {
+                    if (fullScreen === true) {
+                        document.querySelector('.vjs-fullscreen-control').click()
+                        setFullScreen(false)
+                    }
+                }
+                else if (e.keyCode === 39) {
+                    if (processedProgData.length !== 0) {
+                        setElementNav('.programs');
+                        let programsList = document.querySelector('.programs__list');
+                        setProgramElemList(programsList.querySelectorAll('.program'));
+                        try {
+                            programElemList[programIndexElem].focus()
+                        }
+                        catch {
+                            document.querySelector('.program_active').focus();
+                        }
+                        player.classList.remove('video-style__active')
+                    }
                 }
             }
-            // else if (e.keyCode === 38 && programElemIndex === 0) {
-            //     setElementNav('.groups');
-            //     channelsGroupsElement.focus()
-            // }
+            // Description nav
+            else if (elementNav === ".description") {
+                if (e.keyCode === 38) {
+                    setElementNav('.player');
+                    document.getElementById('video').focus();
+                }
+            }
+            // PROGRAM NAV
+            else if (elementNav === ".programs") {
+                setEndIndex(processedProgData.length)
+                let programsList = document.querySelector('.programs');
+                if (e.keyCode === 37) {
+                    setElementNav('.player');
+                    document.getElementById('video').focus();
+                }
+                else if (e.keyCode === 40 && programIndexElem !== endIndex - 1) {
+                    programIndexElem = programElemIndex + 1;
+                    programElemList[programIndexElem].focus()
+                    setProgramElemIndex(programIndexElem)
+                    // SCROLL POSITION
+                    setScrollYProgram('')
+                    if (scrollYProgram === 'end') {
+                        programElemList[programIndexElem].scrollIntoView(false)
+                        programsList.scrollBy({ top: +6 })
+                    }
+                    let scroll = programElemList[programIndexElem].getBoundingClientRect();
+                    if (scroll.y > window.screen.height - 205) {
+                        setScrollYProgram('end')
+                    }
+                }
+                else if (e.keyCode === 38 && programElemIndex !== 0) {
+                    programIndexElem = programElemIndex - 1;
+                    programElemList[programIndexElem].focus()
+                    setProgramElemIndex(programIndexElem)
+                    // SCROLL POSITION
+                    setScrollYProgram('')
+                    if (scrollYProgram === 'start') {
+                        programElemList[programIndexElem].scrollIntoView(true)
+                        programsList.scrollBy({ top: -6 })
+
+                    }
+                    let scroll = programElemList[programIndexElem].getBoundingClientRect();
+                    if (scroll.y < 172) {
+                        setScrollYProgram('start')
+                    }
+                }
+                // else if (e.keyCode === 38 && programElemIndex === 0) {
+                //     setElementNav('.groups');
+                //     channelsGroupsElement.focus()
+                // }
+            }
         }
-    }, [programElemIndex, fullScreen, navigate, activeGroupIndex, elementIndex, elementNav, endIndex, headerElemList, channelsElemList, channelsGroupsElement])
+
+    }, [isExitPopupOpen, programElemIndex, fullScreen, navigate, activeGroupIndex, elementIndex, elementNav, endIndex, headerElemList, channelsElemList, channelsGroupsElement])
 
     // HANDLE CLICK MOUSE OUTSIDE
     const handleClickOutside = useCallback((e) => {

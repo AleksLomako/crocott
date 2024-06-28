@@ -7,7 +7,7 @@
     height: 100%;
     justify-content: center;
     align-items: center;
-    background:rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.658);
     opacity: 0;
     transition: visibility 0s, opacity 0.5s linear;
 }
@@ -19,7 +19,7 @@
 }
 
 .exit-popup__content {
-    background: rgba(85, 84, 84, 0.5);
+    background: rgb(0, 0, 0);
     border-radius: 20px;
     color: #FFF;
     box-sizing: border-box;
@@ -29,6 +29,7 @@
     display: grid;
     row-gap: 50px;
     padding: 40px;
+    border: 2px solid #585858;
 }
 
 .exit-popup__title {
@@ -55,6 +56,6 @@
 
 .exit-popup__button:focus {
     outline: 6px solid #ffc107;
-    border-radius: 0px; 
-    outline-offset: 2px; 
+    border-radius: 0px;
+    outline-offset: 2px;
 }
