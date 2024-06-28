@@ -191,13 +191,13 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                         setFullScreen(false)
                     }
                 }
-                else if (e.keyCode === 461) {
+                else if (e.keyCode === 461 || e.keyCode === 8) {
                     if (fullScreen === true) {
                         document.querySelector('.vjs-fullscreen-control').click()
                         setFullScreen(false)
                     }
                 }
-                else if (e.keyCode === 39) {
+                else if (e.keyCode === 39 && fullScreen === false) {
                     if (processedProgData.length !== 0) {
                         setElementNav('.programs');
                         let programsList = document.querySelector('.programs__list');
