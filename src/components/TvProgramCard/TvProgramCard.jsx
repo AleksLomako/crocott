@@ -3,11 +3,7 @@ import './TvProgramCard.css';
 
 
 function TvProgramCard({ title, programInfo, programActive }) {
-
     let activeProgram;
-
-
-
     if (programActive === true) {
         activeProgram = <li id="actual_program" className="program program_active" tabIndex="0">
             <h1 className="program__title">{title}</h1>
@@ -26,8 +22,6 @@ function TvProgramCard({ title, programInfo, programActive }) {
             <p className="program__time">{programInfo}</p>
         </li>
     }
-
-
     return (
         activeProgram
     );

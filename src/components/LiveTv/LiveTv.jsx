@@ -9,6 +9,7 @@ import saveJwt from '../../utils/saveJwt';
 import processingProgramData from '../../utils/processingProgData';
 
 function LiveTv({ liveTvList, isExitPopupOpen }) {
+    const content = JSON.parse(localStorage.getItem('streams_crocOTT'))
     // PLAYER STATES
     const [videoData, setVideoData] = useState({});
     const [loading, setLoading] = useState(false);
@@ -34,6 +35,7 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
     const [fullScreen, setFullScreen] = useState(false)
     const [scrollY, setScrollY] = useState('')
     const [scrollYProgram, setScrollYProgram] = useState('')
+    const [exitPopupElement, setExitPopupElement] = useState('exit-popup__no');
 
     // HANDLE REMOTE CONTROL
     const handleKeyPress = useCallback((e) => {
@@ -42,10 +44,9 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
         let indexGroup = activeGroupIndex
         let indexElem = elementIndex;
         let programIndexElem = programElemIndex;
-
+        let exitPopupElem = exitPopupElement;
+        // EXIT POPUP CLOSE
         if (isExitPopupOpen !== true) {
-            console.log('TEST');
-            console.log(isExitPopupOpen);
             //  HEADER NAV
             if (elementNav === ".header") {
                 if (e.keyCode === 39) {
@@ -156,18 +157,15 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
             // PLAYER NAV
             else if (elementNav === ".player") {
                 let player = document.getElementById('video');
-                player.classList.add('video-style__active')
-                // document.getElementById('video').focus()
-
+                player.classList.add('video-style__active');
                 if (e.keyCode === 37 && fullScreen === false) {
                     setElementNav('.channels');
-                    channelsElemList[elementIndex].focus()
+                    channelsElemList[elementIndex].focus();
                     player.classList.remove('video-style__active')
                 }
                 else if (e.keyCode === 38 && fullScreen === false) {
                     setElementNav('.groups');
-                    // setElementIndex(0)
-                    channelsGroupsElement.focus()
+                    channelsGroupsElement.focus();
                     player.classList.remove('video-style__active')
                 }
                 else if (e.keyCode === 40 && fullScreen === false) {
@@ -178,7 +176,6 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                             setElementNav('.description');
                             player.classList.remove('video-style__active')
                         }
-
                     }
                     catch { }
                 }
@@ -258,18 +255,30 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                         setScrollYProgram('start')
                     }
                 }
-                // else if (e.keyCode === 38 && programElemIndex === 0) {
-                //     setElementNav('.groups');
-                //     channelsGroupsElement.focus()
-                // }
             }
         }
-
-    }, [isExitPopupOpen, programElemIndex, fullScreen, navigate, activeGroupIndex, elementIndex, elementNav, endIndex, headerElemList, channelsElemList, channelsGroupsElement])
+        // EXIT POPUP OPEN
+        else {
+            document.getElementById(exitPopupElem).focus()
+            if (e.keyCode === 461 || e.keyCode === 8) {
+                document.getElementById('exit-popup__no').click();
+            }
+            else if (e.keyCode === 39 && exitPopupElem !== 'exit-popup__yes') {
+                document.getElementById('exit-popup__yes').focus();
+                setExitPopupElement('exit-popup__yes');
+            }
+            else if (e.keyCode === 37 && exitPopupElem !== 'exit-popup__no') {
+                document.getElementById('exit-popup__no').focus();
+                setExitPopupElement('exit-popup__no');
+            }
+            else if (e.keyCode === 13) {
+                document.activeElement.click()
+            }
+        }
+    }, [exitPopupElement, isExitPopupOpen, programElemIndex, fullScreen, navigate, activeGroupIndex, elementIndex, elementNav, endIndex, headerElemList, channelsElemList, channelsGroupsElement])
 
     // HANDLE CLICK MOUSE OUTSIDE
     const handleClickOutside = useCallback((e) => {
-        // console.log(document.activeElement);
         let indexElem = 0;
         let indexGroup = activeGroupIndex;
         let elementClassName = (document.activeElement.className.split(' ')[0]);
@@ -365,8 +374,7 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
         }
     }, [liveTvList]);
 
-    // live TV TESTING
-    const content = JSON.parse(localStorage.getItem('streams_crocOTT'))
+    // live TV GROUPS
     const groupsList = () => {
         let groups = ["All"]
         content.forEach(stream => {

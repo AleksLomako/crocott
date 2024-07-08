@@ -21,10 +21,8 @@ function MoviesList({ groupMoviesList, onMovieClick }) {
                             movie={movie}
                         />
                     ))}
-
                 </ul> : ''
             )}
-
             {location.pathname === '/series' && (
                 groupMoviesList ? <ul className="movieslist__items">
                     {groupMoviesList.map((movie) => (
@@ -36,22 +34,8 @@ function MoviesList({ groupMoviesList, onMovieClick }) {
                             movie={movie}
                         />
                     ))}
-
                 </ul> : ''
             )}
-
-            {/* {groupMoviesList ? <ul className="movieslist__items">
-                {groupMoviesList.map((movie) => (
-                    <MovieCard
-                        movieImg={movie.vod.preview_icon}
-                        movieCount={movie.view_count}
-                        key={movie.id}
-                        onMovieClick={onMovieClick}
-                        movie={movie}
-                    />
-                ))}
-
-            </ul> : ''} */}
         </div>
     );
 }

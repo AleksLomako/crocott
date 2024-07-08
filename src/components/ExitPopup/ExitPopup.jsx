@@ -1,36 +1,7 @@
-import { React, useEffect, useCallback } from "react";
+import { React } from "react";
 import './ExitPopup.css';
 
 function ExitPopup({ isOpen, isNotExit, isExit }) {
-
-    // useEffect(() => {
-    //     if (isOpen === true) {
-    //         document.getElementById('exit-popup__no').focus();
-    //     }
-    // }, [isOpen])
-
-    // const handleKeyPressExitPopup = useCallback((e) => {
-    //     if (e.keyCode === 461 || e.keyCode === 8) {
-    //         isNotExit();
-    //     }
-    //     else if (e.keyCode === 13) {
-    //         document.activeElement.click();
-    //     }
-    //     else if (e.keyCode === 39) {
-    //         document.getElementById('exit-popup__yes').focus();
-    //     }
-    //     else if (e.keyCode === 37) {
-    //         document.getElementById('exit-popup__no').focus();
-    //     }
-    // })
-
-    // // ADD & REMOVE LISTENER
-    // useEffect(() => {
-    //     document.addEventListener('keydown', handleKeyPressExitPopup);
-    //     return () => {
-    //         document.removeEventListener('keydown', handleKeyPressExitPopup);
-    //     };
-    // }, [handleKeyPressExitPopup]);
 
 
     return (

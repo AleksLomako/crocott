@@ -121,7 +121,6 @@ function App() {
 
   // HANDLE URL
   function handleUrl(url) {
-    console.log(url);
     if (localStorage.getItem('url_CrocOtt') === null) {
       if (url) {
         localStorage.setItem('url_CrocOtt', url)
@@ -131,7 +130,7 @@ function App() {
       }
     }
     else {
-      console.log("NOT NULL");
+      console.log(localStorage.getItem('url_CrocOtt'));
     }
   }
 
@@ -190,7 +189,8 @@ function App() {
           }
           else {
             setApiError(err.error.message);
-            localStorage.removeItem('url_CrocOtt')
+            localStorage.removeItem('url_CrocOtt');
+            localStorage.removeItem('deviceId_Crocott');
           }
         })
     }
@@ -230,10 +230,12 @@ function App() {
     }
   }
 
+  // OPEN EXIT POPUP
   function handleOpenExitPopup() {
     setIsExitPopupOpen(true);
   }
 
+  // CLOSE EXIT POPUP
   function handleCloseExitPopup() {
     setIsExitPopupOpen(false);
   }

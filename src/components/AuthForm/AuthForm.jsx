@@ -1,7 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import './AuthForm.css';
-// import '../../utils/webOSTV.js';
-
 
 
 function AuthForm({ title, children, button, link, onSubmit, name, disabled, className, errorMessage, onClick }) {
@@ -10,7 +8,7 @@ function AuthForm({ title, children, button, link, onSubmit, name, disabled, cla
     const [focusElementsList, setFocusElementsList] = useState([]);
     const [elementIndex, setElementIndex] = useState(0);
     const [keyboardState, setKeyboardState] = useState(false);
-
+    // HANDLE REMOTE CONTROL
     const handleKeyPress = useCallback((e) => {
         let index = elementIndex;
         if (e.keyCode === 40) {
@@ -116,6 +114,7 @@ function AuthForm({ title, children, button, link, onSubmit, name, disabled, cla
 
     }, [focusElementsList, elementIndex, keyboardState]);
 
+    // HANDLE CLICK MOUSE
     const handleClickOutside = useCallback((e) => {
         setKeyboardState(false)
         focusElementsList.forEach((element) => {
@@ -162,7 +161,6 @@ function AuthForm({ title, children, button, link, onSubmit, name, disabled, cla
     return (
         <main className="auth">
             <h1 className="auth__title">{title}</h1>
-
             <form className="auth__form"
                 onSubmit={onSubmit}
                 name={name}

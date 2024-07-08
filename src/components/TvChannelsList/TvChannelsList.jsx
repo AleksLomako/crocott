@@ -25,7 +25,6 @@ function TvChannelsList({ onClick, activeGroup }) {
         else {
             return [];
         }
-
     }
 
     const channels = content(streams, activeGroup).map(function (stream) {
@@ -54,7 +53,6 @@ function TvChannelsList({ onClick, activeGroup }) {
                             />
                         )) : ""
                     }
-
                 </ul>
             </div>
         </div>
