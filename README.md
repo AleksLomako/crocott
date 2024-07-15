@@ -2,7 +2,10 @@
 <h2 align="center">Разработка TV-плеера на React с нуля для LG.</h2>
 
 <div align="center">
+    <img width="600" src="./login.png" alt="Демонстрация формы авторизации">
     <img width="600" src="./screen.png" alt="Демонстрация стартовой страницы сайта">
+    <img width="600" src="./movies.png" alt="Демонстрация фильмов">
+    <img width="600" src="./movie.png" alt="Демонстрация карточки фильма">
 </div>
 
 ## Cсылки:
@@ -28,7 +31,7 @@
 - Авторизация пользователя
 - Реализованы асинхронные GET- и POST-запросы к API
 - Компонент Live TV : Player, Channels, Programs
+- Компонент Movies, фильтр по фильмам
 
 ## Разрабатываемый функционал:
-- Компоненты Movies, Series, Settings
-- Фильтр по фильмам, сериалам
+- Series, Settings, Packages

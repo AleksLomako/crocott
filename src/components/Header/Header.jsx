@@ -1,7 +1,7 @@
 import React from 'react';
 import './Header.css';
-import IconGear from '../../images/icon-gear.png'
-import IconPower from '../../images/icons8-shutdown.png';
+// import IconGear from '../../images/icon-gear.png';
+// import IconPower from '../../images/icons8-shutdown.png';
 import { NavLink, Link } from 'react-router-dom';
 
 function Header({ onExit, logo }) {
@@ -18,11 +18,11 @@ function Header({ onExit, logo }) {
                     <NavLink to="/packages" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Packages</NavLink>
                 </div>
                 <div className="header__settings">
-                    <Link to="/settings" tabIndex="0" className="header__link">
-                        <img className="header__icon" src={IconGear} alt="Gear icon" />
-                    </Link>
-                    <Link to="" onClick={onExit} tabIndex="0" className="header__link">
-                        <img className="header__icon" src={IconPower} alt="Power button" />
+                    <NavLink to="/settings" tabIndex="0" className={({ isActive }) => `header__icon header__icon_settings ${isActive ? "header__link_active" : ""}`}>
+                        {/* <img className="header__icon" src={IconGear} alt="Gear icon" /> */}
+                    </NavLink>
+                    <Link to="" onClick={onExit} tabIndex="0" className="header__icon header__icon_exit">
+                        {/* <img className="header__icon" src={IconPower} alt="Power button" /> */}
                     </Link>
                 </div>
             </nav>

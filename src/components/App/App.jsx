@@ -7,6 +7,8 @@ import Header from '../Header/Header';
 import LiveTv from '../LiveTv/LiveTv';
 import Movies from '../Movies/Movies';
 import Serials from '../Serials/Serials';
+import Packages from '../Packages/Packages';
+import Settings from '../Settings/Settings';
 import SignInCode from '../SignInCode/SignInCode';
 import SignInLogin from '../SignInLogin/SignInLogin';
 import ExitPopup from '../ExitPopup/ExitPopup';
@@ -279,14 +281,14 @@ function App() {
         <Route path="/packages" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleOpenExitPopup} logo={logo} />
-            <h2>PACKAGES</h2>
+            <Packages />
           </ProtectedRoute>
         }
         />
         <Route path="/settings" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleOpenExitPopup} logo={logo} />
-            <h2>SETTINGS</h2>
+            <Settings />
           </ProtectedRoute>
         }
         />
