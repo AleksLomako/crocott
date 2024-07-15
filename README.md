@@ -28,7 +28,7 @@
 - Авторизация пользователя
 - Реализованы асинхронные GET- и POST-запросы к API
 - Компонент Live TV : Player, Channels, Programs
+- Компонент Movies, фильтр по фильмам
 
 ## Разрабатываемый функционал:
-- Компоненты Movies, Series, Settings
-- Фильтр по фильмам, сериалам
+- Компоненты Series, Settings, Packages
