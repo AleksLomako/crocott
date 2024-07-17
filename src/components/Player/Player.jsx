@@ -1,7 +1,7 @@
 import { React, useEffect } from "react";
 import './Player.css';
-import IconRight from '../../images/icons8-конец-64.png';
-import IconBack from '../../images/icons8-перейти-в-начало-64.png';
+import IconRight from '../../images/icons8-forward-5-30.png';
+import IconBack from '../../images/icons8-replay-5-30.png';
 
 function Player({ movie, videoData, setVideoData }) {
 
@@ -99,18 +99,22 @@ function Player({ movie, videoData, setVideoData }) {
                     left: 170px;" src=${movie.movie.vod.preview_icon} alt="Movie Icon" 
                     />
                     <h1 style="position: absolute;
-                    top: 20px;
+                    top: 60px;
                     left: 362px;
-                    font-size: 26px;
-                    font-weight: 400;">${movie.movie.vod.display_name}
+                    font-size: 40px;
+                    font-weight: 500;
+                    max-width: 800px;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;">${movie.movie.vod.display_name}
                     </h1>
-                    <img tabindex='0' style="width: 25px; 
-                    height: 25px;
+                    <img tabindex='0' style="width: 30px; 
+                    height: 30px;
                     position: absolute;
                     top: 210px;
                     left: 920px;" src=${IconBack} alt="Icon Back"/>
-                    <img id='skip_forward' tabindex='0' style="width: 25px; 
-                    height: 25px;
+                    <img id='skip_forward' tabindex='0' style="width: 30px; 
+                    height: 30px;
                     position: absolute;
                     top: 210px;
                     left: 1025px;" src=${IconRight} alt="Icon Back"/>

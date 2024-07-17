@@ -873,9 +873,9 @@ body.vjs-full-window {
   left: 0;
   right: 0;
   height: 3em;
-  background-color: #000000;
+  background-color: rgba(0, 0, 0, 0.5);
   height: 300px;
-  opacity: 0.5;
+  /* opacity: 0.5; */
 }
 
 .vjs-has-started .vjs-control-bar {
@@ -1523,11 +1523,11 @@ body.vjs-full-window {
   padding-left: 1em;
   padding-right: 1em;
   /*  */
-  font-size: 24px;
+  font-size: 36px;
   position: absolute;
-  top: 20px;
+  top: 60px;
   /* right: 77px; */
-  right: 110px;
+  right: 160px;
 }
 
 .vjs-live .vjs-time-control {
@@ -2143,7 +2143,7 @@ video::-webkit-media-text-track-display {
 .video-js .vjs-time-control.vjs-time-divider {
   /* width: 14px; */
   /* right: 70px; */
-  right: 100px;
+  right: 140px;
 }
 
 .video-js .vjs-time-control.vjs-time-divider div {
@@ -2187,11 +2187,13 @@ video::-webkit-media-text-track-display {
 
 /* ИЗМЕНИЛА БЕГУНОК ПРОГРЕССА ВИДЕО */
 .video-js .vjs-progress-control {
-  position: absolute;
+  /* position: absolute; */
+  position: fixed;
+  bottom: 150px;
   right: 20px;
   width: 80%;
   height: 0.5em;
-  top: 4.5em;
+  /* top: 4.5em; */
   /* position: absolute;
   left: 0;
   right: 0;
