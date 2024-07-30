@@ -12,7 +12,7 @@ function Header({ onExit, logo }) {
             <img className="header__logo" src={logo} alt="logo"></img>
             <nav className="header__navigate">
                 <div className="header__links">
-                    <NavLink to="/test_main" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>LiveTV</NavLink>
+                    <NavLink to="/livetv" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>LiveTV</NavLink>
                     <NavLink to="/movies" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Movies</NavLink>
                     <NavLink to="/series" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Series</NavLink>
                     <NavLink to="/packages" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Packages</NavLink>

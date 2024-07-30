@@ -5,7 +5,7 @@ import FormInput from "../FormInput/FormInput";
 import AuthFooter from "../AuthFooter/AuthFooter";
 import useFormWithValidation from "../../hooks/useFormWithValidation";
 
-function SignInCode({ onLoginCode, errorMessage }) {
+function SignInCode({isExitPopupOpen, onExit, onLoginCode, errorMessage }) {
 
     const navigate = useNavigate();
     const { values, errors, isValid, handleChangeInputs } = useFormWithValidation();
@@ -32,6 +32,8 @@ function SignInCode({ onLoginCode, errorMessage }) {
                 className={`auth__submit-button ${!isValid && 'auth__submit-button_disabled'}`}
                 errorMessage={errorMessage}
                 onClick={handleClickRoute}
+                onExit={onExit}
+                isExitPopupOpen={isExitPopupOpen}
             >
                 <FormInput
                     name="code"

@@ -62,6 +62,9 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                     setElementIndex(0)
                     channelsGroupsElement.focus()
                 }
+                else if (e.keyCode === 461 || e.keyCode === 8) {
+                    document.querySelector('.header__icon_exit').click()
+                }
             }
             // GROUPS NAV
             else if (elementNav === ".groups") {
@@ -98,6 +101,9 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                     setElementNav('.channels');
                     setElementIndex(0)
                     channelsElemList[0].focus()
+                }
+                else if (e.keyCode === 461 || e.keyCode === 8) {
+                    document.querySelector('.header__icon_exit').click()
                 }
             }
             // CHANNEL NAV
@@ -153,6 +159,9 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                     setElementNav('.player');
                     document.getElementById('video').focus()
                 }
+                else if (e.keyCode === 461 || e.keyCode === 8) {
+                    document.querySelector('.header__icon_exit').click()
+                }
             }
             // PLAYER NAV
             else if (elementNav === ".player") {
@@ -193,6 +202,9 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                         document.querySelector('.vjs-fullscreen-control').click()
                         setFullScreen(false)
                     }
+                    else {
+                        document.querySelector('.header__icon_exit').click();
+                    }
                 }
                 else if (e.keyCode === 39 && fullScreen === false) {
                     if (processedProgData.length !== 0) {
@@ -214,6 +226,9 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                 if (e.keyCode === 38) {
                     setElementNav('.player');
                     document.getElementById('video').focus();
+                }
+                else if (e.keyCode === 461 || e.keyCode === 8) {
+                    document.querySelector('.header__icon_exit').click();
                 }
             }
             // PROGRAM NAV
@@ -255,6 +270,9 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                         setScrollYProgram('start')
                     }
                 }
+                else if (e.keyCode === 461 || e.keyCode === 8) {
+                    document.querySelector('.header__icon_exit').click()
+                }
             }
         }
         // EXIT POPUP OPEN
@@ -262,10 +280,26 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
             document.getElementById(exitPopupElem).focus()
             if (e.keyCode === 461 || e.keyCode === 8) {
                 document.getElementById('exit-popup__no').click();
+                document.getElementById('exit-popup__no').classList.add('open__focus');
+                setExitPopupElement('exit-popup__no');
+                console.log(elementNav, elementIndex);
+                if (elementNav === ".channels") {
+                    channelsElemList[elementIndex].focus();
+                }
+                else if (elementNav === ".groups") {
+                    channelsGroupsElement.focus();
+                }
+                else if (elementNav === ".description") {
+                    document.querySelector('.livetv__description').focus();
+                }
+                else if (elementNav === ".programs") {
+                    document.querySelector('.program_active').focus();
+                }
             }
             else if (e.keyCode === 39 && exitPopupElem !== 'exit-popup__yes') {
                 document.getElementById('exit-popup__yes').focus();
                 setExitPopupElement('exit-popup__yes');
+                document.getElementById('exit-popup__no').classList.remove('open__focus');
             }
             else if (e.keyCode === 37 && exitPopupElem !== 'exit-popup__no') {
                 document.getElementById('exit-popup__no').focus();
@@ -273,6 +307,7 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
             }
             else if (e.keyCode === 13) {
                 document.activeElement.click()
+                document.getElementById('exit-popup__no').classList.add('open__focus');
             }
         }
     }, [exitPopupElement, isExitPopupOpen, programElemIndex, fullScreen, navigate, activeGroupIndex, elementIndex, elementNav, endIndex, headerElemList, channelsElemList, channelsGroupsElement])

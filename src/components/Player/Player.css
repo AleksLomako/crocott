@@ -2143,7 +2143,7 @@ video::-webkit-media-text-track-display {
 .video-js .vjs-time-control.vjs-time-divider {
   /* width: 14px; */
   /* right: 70px; */
-  right: 140px;
+  right: 115px;
 }
 
 .video-js .vjs-time-control.vjs-time-divider div {
@@ -2187,11 +2187,12 @@ video::-webkit-media-text-track-display {
 
 /* ИЗМЕНИЛА БЕГУНОК ПРОГРЕССА ВИДЕО */
 .video-js .vjs-progress-control {
-  /* position: absolute; */
-  position: fixed;
+  position: absolute;
+  /* position: fixed; */
   bottom: 150px;
   right: 20px;
   width: 80%;
+  /* width: 100%; */
   height: 0.5em;
   /* top: 4.5em; */
   /* position: absolute;
@@ -2212,10 +2213,10 @@ video::-webkit-media-text-track-display {
   margin: 0;
 }
 
-.video-js .vjs-progress-control:hover {
+/* .video-js .vjs-progress-control:hover {
   height: 1.5em;
   top: -1.5em;
-}
+} */
 
 .video-js .vjs-control-bar {
   -webkit-transition: -webkit-transform 0.1s ease 0s;

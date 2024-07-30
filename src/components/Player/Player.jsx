@@ -108,16 +108,16 @@ function Player({ movie, videoData, setVideoData }) {
                     white-space: nowrap;
                     overflow: hidden;">${movie.movie.vod.display_name}
                     </h1>
-                    <img tabindex='0' style="width: 30px; 
-                    height: 30px;
+                    <img id='skip_back' tabindex='0' style="padding: 10px;
+                    border-radius: 3px;
                     position: absolute;
-                    top: 210px;
-                    left: 920px;" src=${IconBack} alt="Icon Back"/>
-                    <img id='skip_forward' tabindex='0' style="width: 30px; 
-                    height: 30px;
+                    top: 200px;
+                    left: 900px;" src=${IconBack} alt="Icon Back"/>
+                    <img id='skip_forward' tabindex='0' style="padding: 10px;
+                    border-radius: 3px;
                     position: absolute;
-                    top: 210px;
-                    left: 1025px;" src=${IconRight} alt="Icon Back"/>
+                    top: 200px;
+                    left: 1020px;" src=${IconRight} alt="Icon Back"/>
                     `
             let playBtn = document.querySelector('.vjs-big-play-button');
             playBtn.click();

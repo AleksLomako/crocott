@@ -36,7 +36,8 @@ function App() {
       navigate('/signinlogin')
     }
     else {
-      checkToken(jwt)
+      // checkToken(jwt)
+      navigate('/')
       getInfo();
     }
   }, [token])
@@ -49,7 +50,7 @@ function App() {
         if (res) {
           setIsLoggedIn(true)
           getContentFull();
-          navigate('/test_main')
+          navigate('/livetv')
         }
       })
       .catch((err) => {
@@ -178,7 +179,7 @@ function App() {
           getInfo();
           getContentFull();
           setIsLoggedIn(true);
-          navigate('/test_main');
+          navigate('/livetv');
         })
         .catch((err) => {
           console.log(err);
@@ -215,7 +216,7 @@ function App() {
                   getInfo();
                   getContentFull();
                   setIsLoggedIn(true)
-                  navigate('/test_main');
+                  navigate('/livetv');
                 })
             })
         })
@@ -250,6 +251,7 @@ function App() {
     setApiError('');
     localStorage.removeItem('streams_crocOTT');
     localStorage.removeItem('movies_crocOTT');
+    // webOS.platformBack();
   }
 
 
@@ -257,7 +259,7 @@ function App() {
     <div className="page">
       {loading && <Preloader />}
       <Routes>
-        <Route path="/test_main" element={
+        <Route path="/livetv" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleOpenExitPopup} logo={logo} />
             <LiveTv liveTvList={liveTvList} isExitPopupOpen={isExitPopupOpen} />
@@ -292,8 +294,9 @@ function App() {
           </ProtectedRoute>
         }
         />
-        <Route path="/signincode" element={isLoggedIn ? <Navigate to="/test_main" replace /> : <SignInCode onLoginCode={handleLoginCode} errorMessage={apiError} />} />
-        <Route path="/signinlogin" element={isLoggedIn ? <Navigate to="/test_main" replace /> : <SignInLogin onLogin={handleLogin} errorMessage={apiError} />} />
+        <Route path="/signincode" element={isLoggedIn ? <Navigate to="/livetv" replace /> : <SignInCode onLoginCode={handleLoginCode} errorMessage={apiError} onExit={handleOpenExitPopup} isExitPopupOpen={isExitPopupOpen} />} />
+        <Route path="/signinlogin" element={isLoggedIn ? <Navigate to="/livetv" replace /> : <SignInLogin onLogin={handleLogin} errorMessage={apiError}  onExit={handleOpenExitPopup} isExitPopupOpen={isExitPopupOpen} />} />
+        <Route path="/" element={isLoggedIn ? <Navigate to="/livetv" replace /> : <SignInLogin onLogin={handleLogin} errorMessage={apiError} onExit={handleOpenExitPopup} isExitPopupOpen={isExitPopupOpen} />} />
       </Routes>
       <ExitPopup isOpen={isExitPopupOpen} isNotExit={handleCloseExitPopup} isExit={handleLogOut} />
     </div>

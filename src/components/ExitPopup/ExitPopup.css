@@ -59,3 +59,9 @@
     border-radius: 0px;
     outline-offset: 2px;
 }
+
+.open__focus {
+    outline: 6px solid #ffc107;
+    border-radius: 0px;
+    outline-offset: 2px;
+}

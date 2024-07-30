@@ -7,7 +7,7 @@ import EyeOff from "../../images/icons8-invisible-16.png";
 import AuthFooter from "../AuthFooter/AuthFooter";
 import useFormWithValidation from "../../hooks/useFormWithValidation";
 
-function SignInLogin({ onLogin, errorMessage }) {
+function SignInLogin({isExitPopupOpen, onExit, onLogin, errorMessage  }) {
 
     const navigate = useNavigate();
     const { values, errors, isValid, handleChangeInputs} = useFormWithValidation();
@@ -36,6 +36,9 @@ function SignInLogin({ onLogin, errorMessage }) {
                 onSubmit={handleSubmitLogin}
                 errorMessage={errorMessage}
                 onClick={handleClickRoute}
+                onExit={onExit}
+                isExitPopupOpen={isExitPopupOpen}
+                
             >
                 <FormInput
                     name="name"
@@ -45,6 +48,7 @@ function SignInLogin({ onLogin, errorMessage }) {
                     value={values.name || ''}
                     onChange={handleChangeInputs}
                     errorMessage={errors.name || ''}
+                    
                 />
                 <FormInput
                     name="password"
