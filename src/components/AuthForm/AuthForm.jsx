@@ -104,7 +104,7 @@ function AuthForm({ isExitPopupOpen, onExit, title, children, button, link, onSu
 
 
             }
-            else if (e.keyCode === 461 || e.keyCode === 8) {
+            else if (e.keyCode === 461) {
                 if (focusElementsList[index].tagName === "INPUT") {
                     focusElementsList[index].classList.add('active')
                     if (keyboardState === true) {

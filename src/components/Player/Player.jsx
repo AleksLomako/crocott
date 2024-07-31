@@ -45,7 +45,7 @@ function Player({ movie, videoData, setVideoData }) {
         if (document.getElementById('videoStream')) {
             if (videoData.controls) {
                 document.getElementById('video').classList.add('test_style')
-                setTimeout(function () { playVod(); }, 1000);
+                setTimeout(function () { playVod(); }, 2000);
             }
             else {
                 setTimeout(function () { playVideo(); }, 1000);
@@ -121,7 +121,7 @@ function Player({ movie, videoData, setVideoData }) {
                     `
             let playBtn = document.querySelector('.vjs-big-play-button');
             playBtn.click();
-            setTimeout(function () { removeFocus(); }, 500);
+            setTimeout(function () { removeFocus(); }, 1000);
 
 
 
@@ -142,7 +142,17 @@ function Player({ movie, videoData, setVideoData }) {
     }
 
     function removeFocus() {
-        document.activeElement.blur()
+        try {
+            // document.activeElement.blur()
+            console.log("TEST");
+            document.activeElement.blur()
+            document.getElementById("videoStream_html5_api").focus()
+        }
+        catch{
+            console.log("close player");
+            setTimeout(function () { removeFocus(); }, 1000);
+        }
+        // document.activeElement.blur()
 
     }
 

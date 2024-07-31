@@ -32,6 +32,9 @@ function Settings({ isExitPopupOpen }) {
                 else if (e.keyCode === 13) {
                     document.activeElement.click()
                 }
+                else if (e.keyCode === 461 || e.keyCode === 8) {
+                    document.querySelector('.header__icon_exit').click()
+                }
             }
         }
         // EXIT POPUP OPEN
@@ -41,6 +44,9 @@ function Settings({ isExitPopupOpen }) {
                 document.getElementById('exit-popup__no').click();
                 document.getElementById('exit-popup__no').classList.add('open__focus');
                 setExitPopupElement('exit-popup__no')
+                if (elementNav === '.header') {
+                    setElementNav('.header')
+                }
             }
             else if (e.keyCode === 39 && exitPopupElem !== 'exit-popup__yes') {
                 document.getElementById('exit-popup__yes').focus();
@@ -53,6 +59,9 @@ function Settings({ isExitPopupOpen }) {
             }
             else if (e.keyCode === 13) {
                 document.activeElement.click()
+                if (elementNav === '.header') {
+                    setElementNav('.header')
+                }
                 document.getElementById('exit-popup__no').classList.add('open__focus');
             }
         }

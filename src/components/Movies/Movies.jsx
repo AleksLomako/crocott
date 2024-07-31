@@ -84,7 +84,7 @@ function Movies({ moviesList, isExitPopupOpen }) {
                     moviesGroups[activeGroupIndex].focus()
                 }
                 else if (e.keyCode === 461 || e.keyCode === 8) {
-                    document.querySelector('.header__icon_exit').click() 
+                    document.querySelector('.header__icon_exit').click()
                 }
             }
             // GROUPS NAV
@@ -304,7 +304,8 @@ function Movies({ moviesList, isExitPopupOpen }) {
             else if (elementNav === '.movies_popup_player') {
                 try {
                     const video = document.getElementById('videoStream_html5_api');
-                    document.querySelector('.vjs-tech').focus()
+                    video.focus()
+                    // document.querySelector('.vjs-tech').focus()
                     if (e.keyCode === 461 || e.keyCode === 8) {
                         const oldPlayer = document.getElementById('videoStream');
                         if (oldPlayer !== null) {
@@ -323,18 +324,22 @@ function Movies({ moviesList, isExitPopupOpen }) {
                     }
                     else if (e.keyCode === 38) {
                         setNavPlayerElem('progress_bar');
+                        document.querySelector('.vjs-progress-control').style.border = '1px solid #ffc107'
                         document.querySelector('.vjs-play-control').style.background = 'none';
                         document.getElementById('skip_back').style.background = "none";
                         document.getElementById('skip_forward').style.background = "none"
                     }
                     else if (e.keyCode === 40) {
                         setNavPlayerElem('play');
+                        document.querySelector('.vjs-progress-control').style.border = 'none'
                         document.querySelector('.vjs-play-control').style.background = '#ffc107';
                     }
                     else if (e.keyCode === 13) {
                         if (document.activeElement.className === 'popup__play-btn' || document.activeElement.className === 'popup__play-btn popup__play-btn_trailer') {
-                            document.querySelector('.vjs-tech').focus()
+                            // document.querySelector('.vjs-tech').focus()
+                            video.focus()
                             document.activeElement.click();
+                            console.log("TEST");
                         }
                         else {
                             if (navPlayerElem === 'play') {
@@ -390,7 +395,9 @@ function Movies({ moviesList, isExitPopupOpen }) {
                     }
                 }
                 catch {
-                    setElementNav('.header')
+                    // console.log("catch");
+                    // setElementNav('.header')
+                    document.querySelector('.vjs-tech').focus();
                 }
 
             }
@@ -403,18 +410,16 @@ function Movies({ moviesList, isExitPopupOpen }) {
                 document.getElementById('exit-popup__no').click();
                 document.getElementById('exit-popup__no').classList.add('open__focus');
                 setExitPopupElement('exit-popup__no');
-                console.log(elementNav);
-                if (elementNav === '.header'){
+                if (elementNav === '.header') {
                     setElementNav('.header')
                 }
-                if (elementNav === '.groups'){
+                if (elementNav === '.groups') {
                     moviesGroups[indexGroup].focus()
                     setElementNav('.groups')
                 }
-                if (elementNav === '.movies'){
+                if (elementNav === '.movies') {
                     setElementNav('.movies')
                 }
-
             }
             else if (e.keyCode === 39 && exitPopupElem !== 'exit-popup__yes') {
                 document.getElementById('exit-popup__yes').focus();
@@ -427,10 +432,24 @@ function Movies({ moviesList, isExitPopupOpen }) {
             }
             else if (e.keyCode === 13) {
                 document.activeElement.click();
+                if (elementNav === '.header') {
+                    setElementNav('.header')
+                }
+                if (elementNav === '.groups') {
+                    moviesGroups[indexGroup].focus()
+                    setElementNav('.groups')
+                }
+                if (elementNav === '.movies') {
+                    setElementNav('.movies')
+                }
+
                 document.getElementById('exit-popup__no').classList.add('open__focus');
             }
         }
     }, [navPlayerElem, exitPopupElement, isExitPopupOpen, handleCloseMovie, playerState, popupNavElem, column, showMovies, moviesIndex, groupMoviesList, activeGroupIndex, navigate, elementNav, endIndex, moviesGroups, header]);
+
+
+
 
 
     useEffect(() => {
@@ -446,7 +465,6 @@ function Movies({ moviesList, isExitPopupOpen }) {
             default:
                 document.querySelector('.arrow').focus();
                 setPopupNavElem('arrow');
-
         }
     }, [popupShow])
 

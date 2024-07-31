@@ -1,13 +1,13 @@
 import { React, useState, useEffect, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
-import './Serials.css';
-import MoviesList from "../MoviesList/MoviesList";
+import './Series.css';
+// import MoviesList from "../MoviesList/MoviesList";
 
 
-function Serials({ isExitPopupOpen }) {
-    const [selectedMovie, setSelectedMovie] = useState(null);
+function Series({ isExitPopupOpen }) {
+    // const [selectedMovie, setSelectedMovie] = useState(null);
     const header = document.querySelector('.header__link_active');
-    const serials = JSON.parse(localStorage.getItem('serials_crocOTT'));
+    // const serials = JSON.parse(localStorage.getItem('serials_crocOTT'));
     const navigate = useNavigate();
     const [elementNav, setElementNav] = useState('');
     // POPUP EXIT
@@ -45,15 +45,22 @@ function Serials({ isExitPopupOpen }) {
                 else if (e.keyCode === 13) {
                     document.activeElement.click()
                 }
+                else if (e.keyCode === 461 || e.keyCode === 8) {
+                    document.querySelector('.header__icon_exit').click()
+                }
             }
         }
         // EXIT POPUP OPEN
         else {
             document.getElementById(exitPopupElem).focus()
+            console.log(elementNav);
             if (e.keyCode === 461 || e.keyCode === 8) {
                 document.getElementById('exit-popup__no').click();
                 document.getElementById('exit-popup__no').classList.add('open__focus');
                 setExitPopupElement('exit-popup__no');
+                if (elementNav === '.header') {
+                    setElementNav('.header')
+                }
             }
             else if (e.keyCode === 39 && exitPopupElem !== 'exit-popup__yes') {
                 document.getElementById('exit-popup__yes').focus();
@@ -65,7 +72,11 @@ function Serials({ isExitPopupOpen }) {
                 setExitPopupElement('exit-popup__no');
             }
             else if (e.keyCode === 13) {
+
                 document.activeElement.click()
+                if (elementNav === '.header') {
+                    setElementNav('.header')
+                }
                 document.getElementById('exit-popup__no').classList.add('open__focus');
             }
         }
@@ -98,14 +109,15 @@ function Serials({ isExitPopupOpen }) {
     }, [header]);
 
     return (
-        <section className="movies">
-            <div className="movies__links">
+        <section className="series">
+            <h1>SERIES</h1>
+            {/* <div className="movies__links">
                 <li className="movies__item header__link_active" tabIndex={0}>All</li>
             </div>
             <MoviesList
-                groupMoviesList={serials} />
+                groupMoviesList={serials} /> */}
         </section>
     );
 }
 
-export default Serials;
+export default Series;

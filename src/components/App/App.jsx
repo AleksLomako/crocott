@@ -6,7 +6,7 @@ import Preloader from '../Preloader/Preloader';
 import Header from '../Header/Header';
 import LiveTv from '../LiveTv/LiveTv';
 import Movies from '../Movies/Movies';
-import Serials from '../Serials/Serials';
+import Series from '../Series/Series';
 import Packages from '../Packages/Packages';
 import Settings from '../Settings/Settings';
 import SignInCode from '../SignInCode/SignInCode';
@@ -36,8 +36,7 @@ function App() {
       navigate('/signinlogin')
     }
     else {
-      // checkToken(jwt)
-      navigate('/')
+      checkToken(jwt)
       getInfo();
     }
   }, [token])
@@ -246,12 +245,28 @@ function App() {
   // LOGOUT
   function handleLogOut() {
     setIsExitPopupOpen(false);
-    navigate('/signinlogin');
-    setIsLoggedIn(false);
-    setApiError('');
-    localStorage.removeItem('streams_crocOTT');
-    localStorage.removeItem('movies_crocOTT');
-    // webOS.platformBack();
+    let exit = `function exitWEBOS() {
+      console.log('TEST WEB OS');
+      if (webOS.platform.tv === true) {
+      setIsLoggedIn(false);
+      setApiError('');
+      localStorage.removeItem('movies_crocOTT');
+      localStorage.removeItem('streams_crocOTT');
+        navigate('/signinlogin', { replace: true })
+        webOS.platformBack();
+      }
+      else {
+        console.log('This device is not TV.');
+      setIsLoggedIn(false);
+      setApiError('');
+      navigate('/signinlogin');
+      localStorage.removeItem('movies_crocOTT');
+      localStorage.removeItem('streams_crocOTT');
+
+      }
+    };
+    exitWEBOS()`
+    eval(exit)
   }
 
 
@@ -276,27 +291,27 @@ function App() {
         <Route path="/series" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleOpenExitPopup} logo={logo} />
-            <Serials />
+            <Series isExitPopupOpen={isExitPopupOpen} />
           </ProtectedRoute>
         }
         />
         <Route path="/packages" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleOpenExitPopup} logo={logo} />
-            <Packages />
+            <Packages isExitPopupOpen={isExitPopupOpen} />
           </ProtectedRoute>
         }
         />
         <Route path="/settings" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <Header onExit={handleOpenExitPopup} logo={logo} />
-            <Settings />
+            <Settings isExitPopupOpen={isExitPopupOpen} />
           </ProtectedRoute>
         }
         />
         <Route path="/signincode" element={isLoggedIn ? <Navigate to="/livetv" replace /> : <SignInCode onLoginCode={handleLoginCode} errorMessage={apiError} onExit={handleOpenExitPopup} isExitPopupOpen={isExitPopupOpen} />} />
-        <Route path="/signinlogin" element={isLoggedIn ? <Navigate to="/livetv" replace /> : <SignInLogin onLogin={handleLogin} errorMessage={apiError}  onExit={handleOpenExitPopup} isExitPopupOpen={isExitPopupOpen} />} />
-        <Route path="/" element={isLoggedIn ? <Navigate to="/livetv" replace /> : <SignInLogin onLogin={handleLogin} errorMessage={apiError} onExit={handleOpenExitPopup} isExitPopupOpen={isExitPopupOpen} />} />
+        <Route path="/signinlogin" element={isLoggedIn ? <Navigate to="/livetv" replace /> : <SignInLogin onLogin={handleLogin} errorMessage={apiError} onExit={handleOpenExitPopup} isExitPopupOpen={isExitPopupOpen} />} />
+        <Route path="*" element={isLoggedIn ? <Navigate to="/livetv" replace /> : <SignInLogin onLogin={handleLogin} errorMessage={apiError} onExit={handleOpenExitPopup} isExitPopupOpen={isExitPopupOpen} />} />
       </Routes>
       <ExitPopup isOpen={isExitPopupOpen} isNotExit={handleCloseExitPopup} isExit={handleLogOut} />
     </div>

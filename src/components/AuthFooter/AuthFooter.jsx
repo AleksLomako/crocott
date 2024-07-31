@@ -1,7 +1,7 @@
 import { React } from "react";
 import { useEffect, useState } from 'react';
 import './AuthFooter.css';
-import LangIcon from '../../images/icons8-world-24.png';
+// import LangIcon from '../../images/icons8-world-24.png';
 import mainApi from '../../utils/MainApi';
 
 function AuthFooter() {
@@ -20,10 +20,10 @@ function AuthFooter() {
 
     return (
         <footer className="footer">
-            <a href="#!" className="footer__link footer__link_lang">
+            {/* <a href="#!" className="footer__link footer__link_lang">
                 <img className="footer__icon" src={LangIcon} alt="Icon World" />
                 <p>English</p>
-            </a>
+            </a> */}
             <a className="footer__link" href={linkPrivacyTerms + "/#/pivacy"}>Privacy policy</a>
             <a className="footer__link" href={linkPrivacyTerms + "/#/terms"}>Terms & conditions</a>
             <p className="footer__link">1.0.0</p>
