@@ -33,11 +33,12 @@
 }
 
 .header__icon {
-    width: 33px;
-    height: 33px;
+    width: 30px;
+    height: 28px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    padding-bottom: 1px;
 }
 
 .header__icon_settings {
@@ -56,9 +57,9 @@
     display: flex;
     justify-content: space-between;
     width: 8%;
-}
+} 
 
-/* .header__icon {
+ /* .header__icon {
     width: 33px;
     height: 33px;
 } */

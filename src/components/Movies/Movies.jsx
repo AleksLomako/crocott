@@ -395,9 +395,9 @@ function Movies({ moviesList, isExitPopupOpen }) {
                     }
                 }
                 catch {
-                    // console.log("catch");
+                    console.log("catch");
                     // setElementNav('.header')
-                    document.querySelector('.vjs-tech').focus();
+                    // document.querySelector('.vjs-tech').focus();
                 }
 
             }

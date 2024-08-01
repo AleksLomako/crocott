@@ -1,9 +1,11 @@
 import { React, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import './Player.css';
 import IconRight from '../../images/icons8-forward-5-30.png';
 import IconBack from '../../images/icons8-replay-5-30.png';
 
 function Player({ movie, videoData, setVideoData }) {
+    const location = useLocation();
 
     useEffect(() => {
         //REMOVE OLD PLAYER
@@ -48,40 +50,33 @@ function Player({ movie, videoData, setVideoData }) {
                 setTimeout(function () { playVod(); }, 2000);
             }
             else {
-                setTimeout(function () { playVideo(); }, 1000);
+                setTimeout(function () { playLiveTv(); }, 2000);
             }
-            // setTimeout(function () { playVideo(); }, 1000);
         }
         else {
             console.log("NOT VIDEO STREEM");
-            // setTimeout(function () { playVideo(); }, 2000);
         }
         return () => {
             document.body.removeChild(sp);
         }
-
-
     }, [setVideoData, videoData]);
 
 
-    function playVideo() {
-        console.log("PLAY VIDEO");
+    function playLiveTv() {
+        console.log("PLAY LIVE TV");
         try {
-            console.log('TRY');
             let playBtn = document.querySelector('.vjs-big-play-button');
             playBtn.click();
         }
         catch {
             console.log("await player");
-            if (document.getElementById('videoStream')) {
-                setTimeout(function () { playVideo(); }, 2000);
+            if (document.getElementById('videoStream') && location.pathname === '/livetv') {
+                setTimeout(function () { playLiveTv(); }, 2000);
             }
             else {
                 console.log("close player");
             }
-            // setTimeout(function () { playVideo(); }, 3000);
         }
-
     }
 
     function playVod() {
@@ -121,39 +116,31 @@ function Player({ movie, videoData, setVideoData }) {
                     `
             let playBtn = document.querySelector('.vjs-big-play-button');
             playBtn.click();
-            setTimeout(function () { removeFocus(); }, 1000);
-
-
-
+            setTimeout(function () { removeFocus(); }, 5000);
         }
         catch {
             console.log("await player");
-            if (document.getElementById('videoStream')) {
+            if (document.getElementById('videoStream') && location.pathname === "/movies") {
                 setTimeout(function () { playVod(); }, 2000);
             }
             else {
                 console.log("close player");
             }
-            // setTimeout(function () { playVod(); }, 3000);
         }
-
-
-
     }
 
     function removeFocus() {
         try {
-            // document.activeElement.blur()
-            console.log("TEST");
-            document.activeElement.blur()
-            document.getElementById("videoStream_html5_api").focus()
+            let video = document.getElementById('video');
+            video.focus();
+            if (document.activeElement.id !== 'video' && location.pathname === "/movies") {
+                console.log("LOADING");
+                setTimeout(function () { removeFocus(); }, 1000);
+            }
         }
         catch{
             console.log("close player");
-            setTimeout(function () { removeFocus(); }, 1000);
         }
-        // document.activeElement.blur()
-
     }
 
 
