@@ -1,18 +1,41 @@
-import { React, useEffect } from "react";
+import { React, useEffect, useState, memo } from "react";
 import { useLocation } from "react-router-dom";
 import './Player.css';
 import IconRight from '../../images/icons8-forward-5-30.png';
 import IconBack from '../../images/icons8-replay-5-30.png';
 
-function Player({ movie, videoData, setVideoData }) {
+function Player({ movie, videoData }) {
+
+    const [state, setState] = useState(false)
     const location = useLocation();
+    const [actualLink, setActualLink] = useState('')
+
 
     useEffect(() => {
-        //REMOVE OLD PLAYER
-        const oldPlayer = document.getElementById('videoStream');
-        if (oldPlayer !== null) {
-            oldPlayer.remove();
+        if (state === true && actualLink !== videoData.videoUrl) {
+            deletePlayer()
+            setActualLink(videoData.videoUrl)
+
         }
+        setState(true)
+    }, [state, videoData])
+
+
+    // DELETE OLD PLAYER
+    function deletePlayer() {
+        try {
+            let player = document.getElementById('videoStream_html5_api');
+            eval(`videojs(player).dispose();`)
+            addPlayer()
+        }
+        catch {
+            addPlayer()
+        }
+    }
+
+    //CREATE AND ADD PLAYER
+    function addPlayer() {
+        // CREATE PLAYER DIV
         const newVideo = document.createElement('video');
         newVideo.id = 'videoStream';
         newVideo.className = 'video-js vjs-default-skin';
@@ -21,9 +44,6 @@ function Player({ movie, videoData, setVideoData }) {
         if (videoData.controls) {
             newVideo.setAttribute("controls", "controls");
         }
-        // newVideo.setAttribute("controls", "controls");
-        // newVideo.setAttribute("autoplay", "any");
-        // newVideo.setAttribute("muted", "muted");
         newVideo.setAttribute('data-setup', '{ "fluid": false,  "inactivityTimeout": 0},');
         document.getElementById('video').append(newVideo);
         // VIDEO SOURCE
@@ -39,31 +59,26 @@ function Player({ movie, videoData, setVideoData }) {
         // CREATE SCRIPT TAG & ADD TO PAGE
         const sp = document.createElement('script');
         sp.setAttribute('type', 'text/javascript');
-        sp.src = 'https://vjs.zencdn.net/8.10.0/video.min.js';
+        sp.src = 'https://vjs.zencdn.net/8.16.1/video.min.js';
         document.getElementById('videoStream').appendChild(sp);
         sp.async = true;
-        document.body.appendChild(sp);
         // AUTOPLAY VIDEO
         if (document.getElementById('videoStream')) {
             if (videoData.controls) {
-                document.getElementById('video').classList.add('test_style')
-                setTimeout(function () { playVod(); }, 2000);
+                document.getElementById('video').classList.add('popup_movie_style')
+                setTimeout(function () { playVod(); }, 3000);
             }
             else {
                 setTimeout(function () { playLiveTv(); }, 2000);
             }
         }
         else {
-            console.log("NOT VIDEO STREEM");
+            console.log("NOT FOUND VIDEO STREEM");
         }
-        return () => {
-            document.body.removeChild(sp);
-        }
-    }, [setVideoData, videoData]);
+    }
 
-
+    // RUN VIDEO IN LIVETV
     function playLiveTv() {
-        console.log("PLAY LIVE TV");
         try {
             let playBtn = document.querySelector('.vjs-big-play-button');
             playBtn.click();
@@ -79,12 +94,12 @@ function Player({ movie, videoData, setVideoData }) {
         }
     }
 
+    // CREATE PLAYER OVERLAY AND RUN VIDEO IN MOVIES
     function playVod() {
-        console.log("PLAY VOD");
         try {
             let controlBar = document.querySelector('.vjs-control-bar');
             let playerOverlay = document.createElement('div');
-            playerOverlay.id = 'testElem';
+            playerOverlay.id = 'playerOverlay';
             controlBar.appendChild(playerOverlay)
             playerOverlay.textContent = movie.movie.vod.preview_icon
             playerOverlay.innerHTML = `<img style="width: 150px; 
@@ -116,31 +131,26 @@ function Player({ movie, videoData, setVideoData }) {
                     `
             let playBtn = document.querySelector('.vjs-big-play-button');
             playBtn.click();
-            setTimeout(function () { removeFocus(); }, 5000);
+            setTimeout(function () { removeFocus(); }, 3000);
         }
         catch {
-            console.log("await player");
             if (document.getElementById('videoStream') && location.pathname === "/movies") {
                 setTimeout(function () { playVod(); }, 2000);
-            }
-            else {
-                console.log("close player");
             }
         }
     }
 
+    // REMOVE DEFAULT PLAYER FOCUS
     function removeFocus() {
         try {
-            let video = document.getElementById('video');
-            video.focus();
+            let video = document.getElementById('video')
+            video.focus()
             if (document.activeElement.id !== 'video' && location.pathname === "/movies") {
                 console.log("LOADING");
                 setTimeout(function () { removeFocus(); }, 1000);
             }
         }
-        catch{
-            console.log("close player");
-        }
+        catch { }
     }
 
 
@@ -150,4 +160,4 @@ function Player({ movie, videoData, setVideoData }) {
     );
 }
 
-export default Player;
+export default memo(Player);

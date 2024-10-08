@@ -262,7 +262,6 @@ function App() {
       navigate('/signinlogin');
       localStorage.removeItem('movies_crocOTT');
       localStorage.removeItem('streams_crocOTT');
-
       }
     };
     exitWEBOS()`

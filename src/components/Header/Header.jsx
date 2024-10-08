@@ -6,6 +6,16 @@ import { NavLink, Link } from 'react-router-dom';
 
 function Header({ onExit, logo }) {
 
+    function deletePlayer() {
+        try {
+            let player = document.getElementById('videoStream_html5_api');
+            player.pause()
+            eval(`videojs(player).dispose();`)
+        }
+        catch {
+        }
+    }
+
 
     return (
         <header className="header">
@@ -13,12 +23,12 @@ function Header({ onExit, logo }) {
             <nav className="header__navigate">
                 <div className="header__links">
                     <NavLink to="/livetv" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>LiveTV</NavLink>
-                    <NavLink to="/movies" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Movies</NavLink>
-                    <NavLink to="/series" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Series</NavLink>
-                    <NavLink to="/packages" tabIndex="0" className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Packages</NavLink>
+                    <NavLink to="/movies" tabIndex="0" onClick={deletePlayer} className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Movies</NavLink>
+                    <NavLink to="/series" tabIndex="0" onClick={deletePlayer} className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Series</NavLink>
+                    <NavLink to="/packages" tabIndex="0" onClick={deletePlayer} className={({ isActive }) => `header__link ${isActive ? "header__link_active" : ""}`}>Packages</NavLink>
                 </div>
                 <div className="header__settings">
-                    <NavLink to="/settings" tabIndex="0" className={({ isActive }) => `header__icon header__icon_settings ${isActive ? "header__link_active" : ""}`}>
+                    <NavLink to="/settings" tabIndex="0" onClick={deletePlayer} className={({ isActive }) => `header__icon header__icon_settings ${isActive ? "header__link_active" : ""}`}>
                         {/* <img className="header__icon" src={IconGear} alt="Gear icon" /> */}
                     </NavLink>
                     <Link to="" onClick={onExit} tabIndex="0" className="header__icon header__icon_exit">

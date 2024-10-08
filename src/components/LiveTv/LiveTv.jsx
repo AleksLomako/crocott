@@ -8,14 +8,19 @@ import mainApi from '../../utils/MainApi';
 import saveJwt from '../../utils/saveJwt';
 import processingProgramData from '../../utils/processingProgData';
 
+
 function LiveTv({ liveTvList, isExitPopupOpen }) {
+
     const content = JSON.parse(localStorage.getItem('streams_crocOTT'))
+
     // PLAYER STATES
     const [videoData, setVideoData] = useState({});
     const [loading, setLoading] = useState(false);
+
     // LIVE TV GROUPS STATES
     const [activeGroup, setActiveGroup] = useState("All");
     const [activeGroupIndex, setActiveGroupIndex] = useState(0);
+
     // Live Tv program STATES
     const [tvProgram, setTvProgram] = useState([]);
     const [programElemIndex, setProgramElemIndex] = useState(0);
@@ -24,6 +29,7 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
     const [programTitle, setProgramTitle] = useState('');
     const [programElemList, setProgramElemList] = useState('');
     const [scrollToActualProg, setScrollToActualProg] = useState(false);
+
     // NAVIGATION STATES
     const navigate = useNavigate();
     const [elementIndex, setElementIndex] = useState(0);
@@ -36,6 +42,12 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
     const [scrollY, setScrollY] = useState('')
     const [scrollYProgram, setScrollYProgram] = useState('')
     const [exitPopupElement, setExitPopupElement] = useState('exit-popup__no');
+
+    // PLAYER STATE
+    const [updatePlayer, setUpdatePlayer] = useState(false)
+    const [statePlayer, setStatePlayer] = useState(false)
+    const [firstRun, setFirstRun] = useState(false)
+
 
     // HANDLE REMOTE CONTROL
     const handleKeyPress = useCallback((e) => {
@@ -50,12 +62,8 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
             //  HEADER NAV
             if (elementNav === ".header") {
                 if (e.keyCode === 39) {
-                    const oldPlayer = document.getElementById('videoStream');
-                    if (oldPlayer !== null) {
-                        oldPlayer.remove();
-                    }
-                    document.activeElement.blur();
-                    navigate('/movies')
+                    deletePlayer();
+                    navigate('/movies');
                 }
                 else if (e.keyCode === 40) {
                     setElementNav('.groups');
@@ -467,10 +475,12 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
         updateProgramData()
     }
 
+    // UPDATE TV PROGRAM
     useEffect(() => {
         updateProgramData()
     }, [tvProgram])
 
+    // REFRESH TOKEN
     function refreshToken(id) {
         const refresh_token = localStorage.getItem('jwt_refresh_CrocOtt');
         const authorizationBasic = localStorage.getItem("Basic_authorization_CrocOtt");
@@ -509,10 +519,12 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
 
     }
 
+    // GET PROGRAMS FOR CHANNEL
     function getTvPrograms(id) {
         checkToken(id)
     }
 
+    // SROCLL TO ACTUAL PROGRAM
     useEffect(() => {
         try {
             let programsList = document.querySelector('.programs');
@@ -523,14 +535,16 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
         setScrollToActualProg(false)
     }, [scrollToActualProg])
 
+    // HANDLE CHANNEL CLICK
     function handleChannelClick(display_name, urls, id) {
         getTvPrograms(id)
         let programsList = document.querySelector('.programs__list');
         setProgramElemList(programsList.querySelectorAll('.program'));
-        startPlayer(display_name, urls)
+        runPlayer(display_name, urls)
     }
 
-    function startPlayer(display_name, urls) {
+    // RUN PLAYER
+    function runPlayer(display_name, urls) {
         setLoading(true)
         setVideoData({
             "videoUrl": urls[0]["url"],
@@ -538,16 +552,63 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
             "width": window.innerWidth / 2 + 'px',
             "height": window.innerHeight / 1.8 + 'px'
         })
+        if (Object.keys(videoData).length !== 0) {
+            setUpdatePlayer(true)
+        }
+        else {
+            console.log('false', videoData);
+            setUpdatePlayer(false)
+            setFirstRun(true)
+        }
     }
+
+    //DELETE OLD PLAYER
+    function deletePlayer() {
+        try {
+            let player = document.getElementById('videoStream_html5_api');
+            player.pause()
+            eval(`videojs(player).dispose();`)
+        }
+        catch {
+        }
+    }
+
+    // UPDATE PLAYER STATE
+    useEffect(() => {
+        if (statePlayer === true) {
+            setUpdatePlayer(true)
+        }
+        setStatePlayer(true)
+    }, [statePlayer])
+
+
+    // FIRST RUN autoplay
+    useEffect(() => {
+        if (firstRun === true) {
+            const channels = document.querySelector('.channels__list');
+            const activeChannel = channels.querySelectorAll('li')[0]
+            activeChannel.click();
+        }
+        else {
+            deletePlayer()
+        }
+    }, [firstRun])
+
 
     return (
         <main className="livetv">
             <TvChannelsList onClick={handleChannelClick} activeGroup={activeGroup} />
             <div>
-                {loading && <Player videoData={videoData} setVideoData={setVideoData} />}
-                <h1 className="livetv__title" >{videoData.videoName}</h1>
-                <h2 className="livetv__program" >{programTitle}</h2>
-                <p className="livetv__description" tabIndex="0">{programDesc}</p>
+                {loading &&
+                    <div>{updatePlayer ?
+                        <div>
+                            <Player videoData={videoData} />
+                            <h1 className="livetv__title" >{videoData.videoName}</h1>
+                            <h2 className="livetv__program" >{programTitle}</h2>
+                            <p className="livetv__description" tabIndex="0">{programDesc}</p>
+                        </div>
+                        : 'Plase click on channel'}</div>}
+
             </div>
             <TvProgramList tvProgram={processedProgData} />
         </main>
