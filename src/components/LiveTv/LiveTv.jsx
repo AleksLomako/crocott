@@ -4,6 +4,7 @@ import './LiveTv.css';
 import TvChannelsList from '../TvChannelsList/TvChannelsList';
 import Player from '../Player/Player';
 import TvProgramList from '../TvProgramList/TvProgramList';
+import EmptyContent from '../EmptyContent/EmptyContent';
 import mainApi from '../../utils/MainApi';
 import saveJwt from '../../utils/saveJwt';
 import processingProgramData from '../../utils/processingProgData';
@@ -66,9 +67,11 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                     navigate('/movies');
                 }
                 else if (e.keyCode === 40) {
-                    setElementNav('.groups');
+                    if(liveTvList.length !==0){
+                        setElementNav('.groups');
                     setElementIndex(0)
                     channelsGroupsElement.focus()
+                    } 
                 }
                 else if (e.keyCode === 461 || e.keyCode === 8) {
                     document.querySelector('.header__icon_exit').click()
@@ -596,6 +599,8 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
 
 
     return (
+        <>
+        {liveTvList.length !== 0 ?
         <main className="livetv">
             <TvChannelsList onClick={handleChannelClick} activeGroup={activeGroup} />
             <div>
@@ -608,10 +613,13 @@ function LiveTv({ liveTvList, isExitPopupOpen }) {
                             <p className="livetv__description" tabIndex="0">{programDesc}</p>
                         </div>
                         : 'Plase click on channel'}</div>}
-
             </div>
             <TvProgramList tvProgram={processedProgData} />
-        </main>
+        </main> 
+        : 
+        <EmptyContent emptyText='There are no LiveTv yet'/>
+    }
+        </>
     )
 }
 

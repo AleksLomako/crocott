@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Movies.css';
 import MoviesList from "../MoviesList/MoviesList";
 import MoviePopup from '../MoviePopup/MoviePopup';
+import EmptyContent from "../EmptyContent/EmptyContent";
 
 
 function Movies({ moviesList, isExitPopupOpen }) {
@@ -79,9 +80,11 @@ function Movies({ moviesList, isExitPopupOpen }) {
                     navigate('/livetv')
                 }
                 else if (e.keyCode === 40) {
+                    if(moviesList.length !==0){
                     document.activeElement.blur();
                     setElementNav('.groups');
                     moviesGroups[activeGroupIndex].focus()
+                    }                    
                 }
                 else if (e.keyCode === 461 || e.keyCode === 8) {
                     document.querySelector('.header__icon_exit').click()
@@ -443,9 +446,6 @@ function Movies({ moviesList, isExitPopupOpen }) {
     }, [navPlayerElem, exitPopupElement, isExitPopupOpen, handleCloseMovie, playerState, popupNavElem, column, showMovies, moviesIndex, groupMoviesList, activeGroupIndex, navigate, elementNav, endIndex, moviesGroups, header]);
 
 
-
-
-
     useEffect(() => {
         switch (popupNavElem) {
             case 'popup__play':
@@ -607,21 +607,50 @@ function Movies({ moviesList, isExitPopupOpen }) {
     }
 
     return (
-        <section className="movies">
-            <div className="movies__links">
-                <li className="movies__item header__link_active" tabIndex={0}>All</li>
-                {content.data.packages.map((element) => (
-                    <li className="movies__item" tabIndex={0}>{element.name}</li>
-                ))}
-            </div>
-            <MoviesList
-                onMovieClick={handleMovieClick}
-                groupMoviesList={groupMoviesList} />
-            <MoviePopup
-                movie={selectedMovie}
-                favorite={movieFavorite}
-                onClose={handleCloseMovie} />
-        </section>
+        <>
+            {moviesList.length !== 0 ?
+                <section className="movies">
+                    <div className="movies__links">
+                        <li className="movies__item header__link_active" tabIndex={0}>All</li>
+                        {content.data.packages.map((element) => (
+                            <li className="movies__item" tabIndex={0}>{element.name}</li>
+                        ))}
+                    </div>
+                    <MoviesList
+                        onMovieClick={handleMovieClick}
+                        groupMoviesList={groupMoviesList} />
+                    <MoviePopup
+                        movie={selectedMovie}
+                        favorite={movieFavorite}
+                        onClose={handleCloseMovie} />
+                </section>
+                :
+                <>
+                <EmptyContent emptyText='There are no Movies yet' />
+                <MoviePopup
+                        movie={selectedMovie}
+                        favorite={movieFavorite}
+                        onClose={handleCloseMovie} />
+                </>
+                
+                }
+        </>
+
+        // <section className="movies">
+        //     <div className="movies__links">
+        //         <li className="movies__item header__link_active" tabIndex={0}>All</li>
+        //         {content.data.packages.map((element) => (
+        //             <li className="movies__item" tabIndex={0}>{element.name}</li>
+        //         ))}
+        //     </div>
+        //     <MoviesList
+        //         onMovieClick={handleMovieClick}
+        //         groupMoviesList={groupMoviesList} />
+        //     <MoviePopup
+        //         movie={selectedMovie}
+        //         favorite={movieFavorite}
+        //         onClose={handleCloseMovie} />
+        // </section>
     );
 }
 
